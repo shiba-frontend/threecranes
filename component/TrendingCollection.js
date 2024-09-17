@@ -6,6 +6,8 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { IMAGE } from '@/utils/Theme';
 import Link from 'next/link';
+import heart from '@/public/assets/image/wish_icon.png'
+import bag from '@/public/assets/image/bag_icon.png'
 
 const TrendingCollection = () => {
     var settings = {
@@ -102,7 +104,7 @@ const TrendingCollection = () => {
                                             <button>
                                             <label>Add to wishlist</label>
                                                 <span>
-                                                    <img src={IMAGE.heart} />
+                                                    <img src={heart.src} />
                                                 </span>
                                               
                                             </button>
@@ -111,7 +113,7 @@ const TrendingCollection = () => {
                                             <button>
                                             <label>Add to cart</label>
                                                 <span>
-                                                    <img src={IMAGE.bag} />
+                                                    <img src={bag.src} />
                                                 </span>
                                
                                             </button>

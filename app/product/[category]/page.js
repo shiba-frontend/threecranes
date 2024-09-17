@@ -7,7 +7,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import { Button, Card } from 'react-bootstrap'
 import rightArrow from '@/public/assets/image/right_arrow.png'
 import productIMg from '@/public/assets/image/banner_img.png'
-import heart from '@/public/assets/image/heart.png'
+import heart from '@/public/assets/image/wish_icon.png'
 import bag from '@/public/assets/image/bag.png'
 import star_fill from '@/public/assets/image/start_fill.png'
 import star_default from '@/public/assets/image/star_default.png'

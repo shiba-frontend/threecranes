@@ -7,8 +7,8 @@ import "slick-carousel/slick/slick-theme.css";
 import { IMAGE } from '@/utils/Theme';
 import Link from 'next/link';
 import productIMg from '@/public/assets/image/banner_img.png'
-import heart from '@/public/assets/image/heart.png'
-import bag from '@/public/assets/image/bag.png'
+import heart from '@/public/assets/image/wish_icon.png'
+import bag from '@/public/assets/image/bag_icon.png'
 import star_fill from '@/public/assets/image/start_fill.png'
 import star_default from '@/public/assets/image/star_default.png'
 

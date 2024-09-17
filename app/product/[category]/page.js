@@ -14,7 +14,7 @@ import star_default from '@/public/assets/image/star_default.png'
 import grid_icon from '@/public/assets/image/grid_icon.png'
 
 
-const Page = () => {
+const page = () => {
     const {category} = useParams()
 
     var data = [
@@ -183,4 +183,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default page

@@ -21,7 +21,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from 'react-responsive-carousel';
 
 
-const Page = () => {
+const page = () => {
 
     const {category, details} = useParams()
 
@@ -249,4 +249,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default page

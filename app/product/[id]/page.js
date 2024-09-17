@@ -21,9 +21,9 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from 'react-responsive-carousel';
 
 
-const page = () => {
+export default function Page(){
 
-    const {category, details} = useParams()
+    const { id} = useParams()
 
     const settings = {
         dots: true,
@@ -86,13 +86,13 @@ const page = () => {
                 <img src={rightArrow.src} alt="icon" />
                 </li>
                 <li>
-                    <Link href="/product/categories" >{category}  </Link>
+                    <Link href="/product/categories" >women </Link>
                 </li>
                 <li>
                     <img src={rightArrow.src} alt="icon" />
                 </li>
                 <li>
-                    <b>{details}</b>
+                    <b>{id}</b>
                 </li>
             </ul>
         </div>
@@ -249,4 +249,3 @@ const page = () => {
   )
 }
 
-export default page

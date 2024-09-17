@@ -143,7 +143,7 @@ const ArrivalProduct = () => {
                                     </li>
                                 </ul>
                             </div>
-                                    <Link href={`/product/${item?.category}/123`}> {item?.title}</Link>
+                                    <Link href={`/product/123`}> {item?.title}</Link>
                                     <h5>₹ 2,601 <span>₹ 3,000</span></h5>
                             </div>
                         </div>

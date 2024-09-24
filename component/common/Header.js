@@ -36,13 +36,13 @@ const Header = () => {
                 <div className='col-lg-4'>
                     <ul>
                       <li>
-                          <Link href="/"> <img src={user_icon.src} alt='logo' /> <label>Account</label></Link>
+                          <Link href="/login"> <img src={user_icon.src} alt='logo' /> <label>Account</label></Link>
                       </li>
                       <li>
                           <Link href="/"> <img src={heart_icon.src} alt='logo' /> <label>Wishlist</label> <span>0</span></Link>
                       </li>
                       <li>
-                          <Link href="/"> <img src={cart_icon.src} alt='logo' /> <label>Your Cart</label><span>0</span></Link>
+                          <Link href="/cart"> <img src={cart_icon.src} alt='logo' /> <label>Your Cart</label><span>0</span></Link>
                       </li>
                     </ul>
                   </div>

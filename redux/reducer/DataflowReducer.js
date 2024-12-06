@@ -3,26 +3,31 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     loading: false,
-    user:{},
-    Teampreview:{}
+    uid:null,
+    sitedata:{},
+    token:null,
   };
 
   export const DataflowReducer = createSlice({
     name: "DataflowReducer",
     initialState,
     reducers: {
-      GetprofileAction(state, action) {
-        state.user = action.payload;
+      UserIdAction(state, action) {
+        state.uid = action.payload;
       },
-      GetTeampreviewAction(state, action) {
-        state.Teampreview = action.payload;
+      SitedataAction(state, action) {
+        state.sitedata = action.payload;
+      },
+      AuthTokenAction(state, action) {
+        state.token = action.payload;
       },
     },
   });
   
   export const {
-    GetprofileAction,
-    GetTeampreviewAction
+    UserIdAction,
+    SitedataAction,
+    AuthTokenAction
   } = DataflowReducer.actions;
   
   export default DataflowReducer.reducer;

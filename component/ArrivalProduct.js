@@ -9,7 +9,7 @@ import Link from 'next/link';
 import bag from '@/public/assets/image/bag_icon.png'
 import heart from '@/public/assets/image/wish_icon.png'
 
-const ArrivalProduct = () => {
+const ArrivalProduct = ({content}) => {
 
     var settings = {
         dots: true,
@@ -46,59 +46,22 @@ const ArrivalProduct = () => {
           ]
       };
 
-    var data = [
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        }
-    ]
+ 
 
 
   return (
     <div className='product-sec'> 
         <div className='container'>
-            <TitleStyle title="New Arrivals" sub="Check out most promising product bought by our buyers" />
+            <TitleStyle title={content?.sec3_title} sub={content?.sec3_description} />
 
             <Slider {...settings}>
 
-                {data.map((item, index)=>{
+                {content?.products?.map((item, index)=>{
                     return (
                         <div className='product-box' key={index}>
                             <div className='product-img'>
-                                <img src={IMAGE.banner_img} />
-                                <span className='discount-shape'>40%</span>
+                                <img src={item?.cover_image} />
+                                <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
                                 <div className='imag-cart'>
                                     <ul>
                                         <li>
@@ -124,7 +87,7 @@ const ArrivalProduct = () => {
                             </div>
                             <div className='product-info'>
                             <div className='product-info-t'>
-                                <h5>Women</h5>
+                                <h5>{item?.sub_category_name}</h5>
                                 <ul>
                                     <li>
                                         <img src={IMAGE.star_fill} />
@@ -143,8 +106,8 @@ const ArrivalProduct = () => {
                                     </li>
                                 </ul>
                             </div>
-                                    <Link href={`/product/123`}> {item?.title}</Link>
-                                    <h5>₹ 2,601 <span>₹ 3,000</span></h5>
+                                    <Link href={`/product/${item?.id}`}> {item?.name}</Link>
+                                    <h5>₹ ${item?.base_price} <span>₹ {item?.markup_price}</span></h5>
                             </div>
                         </div>
                     )

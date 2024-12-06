@@ -7,7 +7,7 @@ import { IMAGE } from '@/utils/Theme';
 import Link from 'next/link';
 import TitleStyle from '../common/TitleStyle'
 
-const Testimonial = () => {
+const Testimonial = ({content}) => {
     var settings = {
         dots: false,
         infinite: true,
@@ -18,48 +18,6 @@ const Testimonial = () => {
       
       };
 
-    var data = [
-        {
-            title:'Tie Dye mini wrap',
-            description:'"Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.”',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            description:'"Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.”',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            description:'"Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.”',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            description:'"Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.”',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            description:'"Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.”',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            description:'"Finding clothes that align with my personal style used to be a challenge until I discovered Shop.co. The range of options they offer is truly remarkable, catering to a variety of tastes and occasions.”',
-            discount:'3,000',
-            category:'Women'
-        }
-    ]
-
-
-
-
 
   return (
     <div className='testimonial-sec'>
@@ -68,21 +26,27 @@ const Testimonial = () => {
 
             <Slider {...settings}>
 
-{data.map((item, index)=>{
+{content?.map((item, index)=>{
+
+    var rate = Number(item?.rate)
+
+
     return (
         <div className='testimonial-box' key={index}>
            <div className='testi-avatar'>
-           <img src={IMAGE.banner_img} />
-            <span>Alex K.</span>
+           <img src={item?.image} />
+            <span>{item?.name}</span>
            </div>
           <ul>
-            <li><img src={IMAGE.star_fill} /></li>
-            <li><img src={IMAGE.star_fill} /></li>
-            <li><img src={IMAGE.star_fill} /></li>
-            <li><img src={IMAGE.star_fill} /></li>
-            <li><img src={IMAGE.star_fill} /></li>
+       
+          {Array(5).fill().map((_, i) => {
+                const ratingValue = i + 1;
+              return  <li key={i}><img src={ratingValue <= rate ? IMAGE.star_fill : IMAGE.star_default} /></li>
+            })}
+           
+            
           </ul>
-           <p>{item?.description}</p>
+           <p>{item?.review}</p>
             
         </div>
     )

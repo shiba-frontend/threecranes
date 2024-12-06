@@ -1,16 +1,22 @@
 import { IMAGE } from '@/utils/Theme'
 import React from 'react'
 
-const BannerInfo = () => {
+const BannerInfo = ({content}) => {
   return (
     <div className='bannerInfo'>
         <div className='container'>
             <ul>
-                <li>
-                    <img src={IMAGE.truck_icon} alt='truck' />
-                    <h5>Fast Delivery</h5>
-                    <p>We provide fast delivery to <br></br> our customers</p>
-                </li>
+                {content?.map((item, i)=>{
+                    return (
+                        <li key={i}>
+                        <img src={item?.icon} alt='truck' />
+                        <h5>{item?.name}</h5>
+                        <p>{item?.short_description}</p>
+                    </li>
+                    )
+                })}
+
+{/*                
                 <li>
                     <img src={IMAGE.return_icon} alt='truck' />
                     <h5>Easy Return</h5>
@@ -25,7 +31,7 @@ const BannerInfo = () => {
                     <img src={IMAGE.discount_icon} alt='truck' />
                     <h5>Best Offers</h5>
                     <p>We give best offers to our <br></br> customers</p>
-                </li>
+                </li> */}
             </ul>
         </div>
 

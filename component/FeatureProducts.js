@@ -12,7 +12,7 @@ import bag from '@/public/assets/image/bag_icon.png'
 import star_fill from '@/public/assets/image/start_fill.png'
 import star_default from '@/public/assets/image/star_default.png'
 
-const FeatureProducts = () => {
+const FeatureProducts = ({content}) => {
     var settings = {
         dots: true,
         infinite: true,
@@ -48,59 +48,22 @@ const FeatureProducts = () => {
           ]
       };
 
-    var data = [
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        }
-    ]
+
 
 
   return (
     <div className='product-sec'> 
-        <div className='container'>
-            <TitleStyle title="Featured Products" sub="Check out most promising product bought by our buyers" />
+    <div className='container'>
+        <TitleStyle title={content?.sec5_title} sub={content?.sec5_description} />
 
-            <Slider {...settings}>
+        <Slider {...settings}>
 
-                {data.map((item, index)=>{
-                    return (
-                        <div className='product-box' key={index}>
+            {content?.products?.map((item, index)=>{
+                return (
+                    <div className='product-box' key={index}>
                         <div className='product-img'>
-                            <img src={productIMg.src} />
-                            <span className='discount-shape'>40%</span>
+                            <img src={item?.cover_image} />
+                            <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
                             <div className='imag-cart'>
                                 <ul>
                                     <li>
@@ -126,36 +89,36 @@ const FeatureProducts = () => {
                         </div>
                         <div className='product-info'>
                         <div className='product-info-t'>
-                            <h5>Women</h5>
+                            <h5>{item?.sub_category_name}</h5>
                             <ul>
                                 <li>
-                                    <img src={star_fill.src} />
+                                    <img src={IMAGE.star_fill} />
                                 </li>
                                 <li>
-                                <img src={star_fill.src} />
+                                    <img src={IMAGE.star_fill} />
                                 </li>
                                 <li>
-                                <img src={star_fill.src} />
+                                    <img src={IMAGE.star_fill} />
                                 </li>
                                 <li>
-                                <img src={star_fill.src} />
+                                    <img src={IMAGE.star_fill} />
                                 </li>
                                 <li>
-                                    <img src={star_default.src} />
+                                    <img src={IMAGE.star_default} />
                                 </li>
                             </ul>
                         </div>
-                                <Link href={`/product/123`}> {item?.title}</Link>
-                                <h5>₹ 2,601 <span>₹ 3,000</span></h5>
+                                <Link href={`/product/${item?.id}`}> {item?.name}</Link>
+                                <h5>₹ ${item?.base_price} <span>₹ {item?.markup_price}</span></h5>
                         </div>
                     </div>
-                    )
-                })}
+                )
+            })}
 
-            </Slider>
+        </Slider>
 
-        </div>
     </div>
+</div>
   )
 }
 

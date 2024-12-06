@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import rightArrow from '@/public/assets/image/right_arrow.png'
@@ -19,56 +19,61 @@ import plus_icon from '@/public/assets/image/plus_icon.png'
 import minus_icon from '@/public/assets/image/minus_icon.png'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
+import { GetProductDetails } from '@/utils/Apirequest'
+import Loader from '@/utils/Loader'
 
 
 export default function Page(){
 
+    const [loading, setloading] = useState(false)
+    const [featureproduct, setfeatureproduct] = useState([])
+    const [productinfo, setproductinfo] = useState('')
     const { id} = useParams()
 
-    const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        customPaging: i => (
-          <div className='thumbnail_image'>
-            {i.category}
-          </div>
-        )
-      };
+    // const settings = {
+    //     dots: true,
+    //     infinite: true,
+    //     speed: 500,
+    //     slidesToShow: 1,
+    //     slidesToScroll: 1,
+    //     customPaging: i => (
+    //       <div className='thumbnail_image'>
+    //         {i.category}
+    //       </div>
+    //     )
+    //   };
 
-      var data = [
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        }
-    ]
+    useEffect(()=>{
+
+        const GetApiRequest = async () =>{
+            setloading(true)
+            let payload = {
+                "product_id": id
+            }
+         
+            let responsedata =  await GetProductDetails(payload)
+            setloading(false)
+            if(responsedata?.response_code == 200){
+                setfeatureproduct(responsedata?.data?.featured_product_list)
+                setproductinfo(responsedata?.data?.product_info)
+              console.log(responsedata?.data)
+      
+      
+            }
+           
+          }
+      
+          GetApiRequest()
+       
+    },[])
+
+ 
 
 
   return (
 
     <div className='inner-sec py-3'>
+          {loading && <Loader/>}
     <div className='container'>
         <div className='breadcrames'>
             <ul>
@@ -80,7 +85,7 @@ export default function Page(){
                 </li>
                 
                 <li>
-                    <Link href="/categories" >Categories  </Link>
+                    <Link href="/product" >Categories  </Link>
                 </li>
                 <li>
                 <img src={rightArrow.src} alt="icon" />
@@ -100,41 +105,27 @@ export default function Page(){
             <div className='col-lg-5'>
                 <div className='left-img'>
             <Carousel>
-                <div className='proImg'>
-                <img src={productIMg.src} />
-                </div>
-                <div className='proImg'>
-                <img src={productIMg.src} />
-                </div>
-                <div className='proImg'>
-                <img src={productIMg.src} />
-                </div>
+            {productinfo?.product_images?.map((item, i)=>{
+                return (
+                    <div className='proImg' key={i}>
+                         <img src={item} />
+                    </div>
+                )
+            })}
+               
+              
             </Carousel>
             </div>
-            {/* <Slider {...settings}>
-        {
-            data.map((item, index)=>{
-                return (
-                    <div>
-                        <img src={productIMg.src} />
-                  </div>
-                )
-            })
-        }
-      
-      
-
-      </Slider> */}
+        
             </div>
             <div className='col-lg-7'>
 
                 <div className='product-details'>
-                    <h2>Top Long Sleeve crop top hippy blouse</h2>
+                    <h2>{productinfo?.name}</h2>
                     <ul  className='rating-list'>
                         <li>
                         <ul>
-                        <li>
-                                        <img src={star_fill.src} />
+                        <li><img src={star_fill.src} />
                                     </li>
                                     <li>
                                     <img src={star_fill.src} />
@@ -151,19 +142,18 @@ export default function Page(){
                                 </ul>
                         </li>
                         <li>
-                            <span>3.00</span>
+                            <span>{productinfo?.rating}</span>
                         </li>
                         <li>
-                            <label>2 (Reviews)</label>
+                            <label>{productinfo?.review_list?.length} (Reviews)</label>
                         </li>
                         <li>
                             <label>SKU:</label>
-                            <b>E7F8G9H0</b>
+                            <b>{productinfo?.product_sku}</b>
                         </li>
                     </ul>
-                    <p>Vivamus adipiscing nisl ut dolor dignissim semper. Nulla luctus malesuada tincidunt. 
-                        Class aptent taciti sociosqu ad litora torquent Vivamus adipiscing nisl ut dolor dignissim semper.</p>
-                        <h5>₹ 2,601 <span>₹ 3,000</span></h5>
+                    <p>{productinfo?.short_description}</p>
+                        <h5>₹ {productinfo?.base_price} <span>₹ {productinfo?.markup_price}</span></h5>
 
                 <ul className='product-varient'>
                         <li>
@@ -229,19 +219,16 @@ export default function Page(){
       className="mb-3"
     >
       <Tab eventKey="description" title="Description">
-        <p>Quisque varius diam vel metus mattis, id aliquam diam rhoncus. Proin vitae magna in dui finibus malesuada et at nulla. 
-            Morbi elit ex, viverra vitae ante vel, blandit feugiat ligula. Fusce fermentum iaculis nibh, at sodales leo maximus a. Nullam ultricies sodales nunc, in pellentesque lorem mattis quis. Cras imperdiet est in nunc tristique lacinia. Nullam aliquam mauris eu accumsan tincidunt. Suspendisse velit ex, aliquet vel ornare vel, dignissim a tortor.</p>
-            <p>
-            Morbi ut sapien vitae odio accumsan gravida. Morbi vitae erat auctor, eleifend nunc a, lobortis neque.
-             Praesent aliquam dignissim viverra. Maecenas lacus odio, feugiat eu nunc sit amet, maximus sagittis dolor. Vivamus nisi sapien, elementum sit amet eros sit amet, ultricies cursus ipsum. Sed consequat luctus ligula. Curabitur laoreet rhoncus blandit. Aenean vel diam ut arcu pharetra dignissim ut sed leo. Vivamus faucibus, ipsum in vestibulum vulputate, lorem orci convallis quam, sit amet consequat nulla felis pharetra lacus. Duis semper erat mauris, sed egestas purus commodo vel.
-            </p>
+      <div dangerouslySetInnerHTML={{__html: productinfo?.long_description}} />
+      
+          
       </Tab>
-      <Tab eventKey="review" title="Reviews (2)">
+      <Tab eventKey="review" title={`Reviews (${productinfo?.review_list?.length})`}>
       Reviews
       </Tab>
     </Tabs>
     </div>
-    <FeatureProducts />
+    <FeatureProducts content={featureproduct} />
     </div>
 </div>
 

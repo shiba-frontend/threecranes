@@ -1,15 +1,50 @@
-import React from 'react'
-import Image from 'next/image'
-import { IMAGE } from '@/utils/Theme'
+'use client'
+import React, { useEffect, useState } from 'react'
+
 import Link from 'next/link'
 import logo from '@/public/assets/image/logo.png'
 import search_icon from '@/public/assets/image/search_icon.png'
 import user_icon from '@/public/assets/image/user_icon.png'
 import heart_icon from '@/public/assets/image/heart_icon.png'
 import cart_icon from '@/public/assets/image/cart_icon.png'
-
+import { getToken } from '@/utils/getToken';
+import { useDispatch, useSelector } from 'react-redux'
+import { AuthTokenAction } from '@/redux/reducer/DataflowReducer'
+import { GetParentCategory } from '@/utils/Apirequest'
 
 const Header = () => {
+
+const [token, settoken] = useState(null)
+const [category, setcategory] = useState([])
+
+
+let dispatch = useDispatch()
+const datareducer = useSelector((state) => state.Dataflowreducer.token)
+
+    const storedToken = getToken();
+
+    useEffect(()=>{
+
+        dispatch(AuthTokenAction(storedToken))
+
+        const GetApiRequest = async () =>{
+         
+            let responsedata =  await GetParentCategory()
+          
+            if(responsedata?.response_code == 200){
+                setcategory(responsedata?.data)
+              console.log(responsedata?.data)
+      
+      
+            }
+           
+          }
+      
+          GetApiRequest()
+       
+    },[])
+
+
   return (
     <div className='header'>
         <div className='top-header'>
@@ -36,7 +71,15 @@ const Header = () => {
                 <div className='col-lg-4'>
                     <ul>
                       <li>
-                          <Link href="/login"> <img src={user_icon.src} alt='logo' /> <label>Account</label></Link>
+                      {datareducer !== null ?
+                          <Link href="/login"> <img src={user_icon.src} alt='logo' /> <label> Dashboard</label>
+                          
+                           </Link>
+                        :
+                        <Link href="/login"> <img src={user_icon.src} alt='logo' /> <label> Login</label>
+                          
+                        </Link>
+                      }
                       </li>
                       <li>
                           <Link href="/"> <img src={heart_icon.src} alt='logo' /> <label>Wishlist</label> <span>0</span></Link>
@@ -52,20 +95,19 @@ const Header = () => {
         </div>
         <div className='menu-header'>
             <div className='container'>
-              <ul>
+           
                   <ul>
-                      <li>
+                  <li>
                           <Link href="/">Home</Link>
                       </li>
-                      <li>
-                          <Link href="/product">Men</Link>
-                      </li>
-                      <li>
-                          <Link href="/product">Women</Link>
-                      </li>
-                      <li>
-                          <Link href="/product">Others</Link>
-                      </li>
+                    {category?.map((item, i)=>{
+                        return (
+                            <li key={i}>
+                                <Link href={`/product/category/${item?.parent_category_id}`}>{item?.parent_category_name}</Link>
+                        </li>
+                        )
+                    })}
+                    
                       <li>
                           <Link href="/faq">Faq</Link>
                       </li>
@@ -73,7 +115,7 @@ const Header = () => {
                           <Link href="/contact-us">Contact</Link>
                       </li>
                   </ul>
-              </ul>
+            
             </div>
         </div>
     </div>

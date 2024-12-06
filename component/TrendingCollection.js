@@ -9,7 +9,7 @@ import Link from 'next/link';
 import heart from '@/public/assets/image/wish_icon.png'
 import bag from '@/public/assets/image/bag_icon.png'
 
-const TrendingCollection = () => {
+const TrendingCollection = ({content}) => {
     var settings = {
         dots: true,
         infinite: true,
@@ -45,114 +45,77 @@ const TrendingCollection = () => {
           ]
       };
 
-    var data = [
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        }
-    ]
+ 
 
 
   return (
     <div className='product-sec'> 
-        <div className='container'>
-            <TitleStyle title="Trending Collection" sub="Check out most promising product bought by our buyers" />
+    <div className='container'>
+        <TitleStyle title={content?.sec4_title} sub={content?.sec4_description} />
 
-            <Slider {...settings}>
+        <Slider {...settings}>
 
-                {data.map((item, index)=>{
-                    return (
-                        <div className='product-box' key={index}>
-                            <div className='product-img'>
-                                <img src={IMAGE.banner_img} />
-                                <span className='discount-shape'>40%</span>
-                                <div className='imag-cart'>
-                                    <ul>
-                                        <li>
-                                            <button>
-                                            <label>Add to wishlist</label>
-                                                <span>
-                                                    <img src={heart.src} />
-                                                </span>
-                                              
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <button>
-                                            <label>Add to cart</label>
-                                                <span>
-                                                    <img src={bag.src} />
-                                                </span>
-                               
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div className='product-info'>
-                            <div className='product-info-t'>
-                                <h5>Women</h5>
+            {content?.products?.map((item, index)=>{
+                return (
+                    <div className='product-box' key={index}>
+                        <div className='product-img'>
+                            <img src={item?.cover_image} />
+                            <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
+                            <div className='imag-cart'>
                                 <ul>
                                     <li>
-                                        <img src={IMAGE.star_fill} />
+                                        <button>
+                                        <label>Add to wishlist</label>
+                                            <span>
+                                                <img src={heart.src} />
+                                            </span>
+                                          
+                                        </button>
                                     </li>
                                     <li>
-                                        <img src={IMAGE.star_fill} />
-                                    </li>
-                                    <li>
-                                        <img src={IMAGE.star_fill} />
-                                    </li>
-                                    <li>
-                                        <img src={IMAGE.star_fill} />
-                                    </li>
-                                    <li>
-                                        <img src={IMAGE.star_default} />
+                                        <button>
+                                        <label>Add to cart</label>
+                                            <span>
+                                                <img src={bag.src} />
+                                            </span>
+                           
+                                        </button>
                                     </li>
                                 </ul>
                             </div>
-                                    <Link href={`/product/123`}> {item?.title}</Link>
-                                    <h5>₹ 2,601 <span>₹ 3,000</span></h5>
-                            </div>
                         </div>
-                    )
-                })}
+                        <div className='product-info'>
+                        <div className='product-info-t'>
+                            <h5>{item?.sub_category_name}</h5>
+                            <ul>
+                                <li>
+                                    <img src={IMAGE.star_fill} />
+                                </li>
+                                <li>
+                                    <img src={IMAGE.star_fill} />
+                                </li>
+                                <li>
+                                    <img src={IMAGE.star_fill} />
+                                </li>
+                                <li>
+                                    <img src={IMAGE.star_fill} />
+                                </li>
+                                <li>
+                                    <img src={IMAGE.star_default} />
+                                </li>
+                            </ul>
+                        </div>
+                                <Link href={`/product/${item?.id}`}> {item?.name}</Link>
+                                <h5>₹ ${item?.base_price} <span>₹ {item?.markup_price}</span></h5>
+                        </div>
+                    </div>
+                )
+            })}
 
-            </Slider>
+        </Slider>
 
-        </div>
     </div>
+</div>
   )
 }
 

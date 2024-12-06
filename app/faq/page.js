@@ -1,16 +1,41 @@
 "use client"
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { IMAGE } from '@/utils/Theme'
 import Accordion from 'react-bootstrap/Accordion';
 import { Button, Card } from 'react-bootstrap'
 import rightArrow from '@/public/assets/image/right_arrow.png'
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+import ApiConnection from '@/utils/ApiConnection'
+import Loader from '@/utils/Loader'
+
+const Page = () => {
+    const [loading, setloading] = useState(false)
+const [faq, setfaq] = useState([])
+
+    const getData = async () =>{
+        try{
+            setloading(true)
+            const response = await ApiConnection.get('faq')
+            setloading(false)
+            if(response?.data.status){
+                setfaq(response?.data?.data)
+          
+            } 
+        }catch(e){}
+    }
+    
+    useEffect(()=>{
+        getData() 
+    },[])
 
 
-const page = () => {
+
   return (
     <div className='inner-sec py-3'>
+         {loading && <Loader/>}
         <div className='container'>
             <div className='breadcrames'>
                 <ul>
@@ -26,31 +51,38 @@ const page = () => {
                     </li>
                 </ul>
             </div>
-          
-            <Accordion defaultActiveKey="0" className='faq-sec'>
-                             
-                             <Accordion.Item eventKey="0">
-                                 <Accordion.Header>Lorem ipsum</Accordion.Header>
-                                 <Accordion.Body className='p-2'>
-                                    <b>Lorem ipsum</b>
-                                    <p>Customize Bootstrap with our built-in custom variables file and easily toggle global 
-                                        CSS preferences with new $enable-* Sass variables. Override a variable’s 
-                                        value and recompile with npm run test as needed.</p>
-                                 </Accordion.Body>
-                             </Accordion.Item>
-                             <Accordion.Item eventKey="1">
-                                 <Accordion.Header>Lorem ipsum</Accordion.Header>
-                                 <Accordion.Body className='p-2'>
-                                 <b>Lorem ipsum</b>
-                                    <p>Customize Bootstrap with our built-in custom variables file and easily toggle global 
-                                        CSS preferences with new $enable-* Sass variables. Override a variable’s 
-                                        value and recompile with npm run test as needed.</p>
-                                 </Accordion.Body>
-                             </Accordion.Item>
+            <Tabs
+      defaultActiveKey={faq[0]?.faq_category_name}
+      id="uncontrolled-tab-example"
+      className="mb-3"
+    >
+       {faq&&faq.map((item, i)=>{
+        return (
+            <Tab eventKey={item?.faq_category_name} title={item?.faq_category_name} key={i}>
+              <Accordion defaultActiveKey="0" className='faq-sec'>
+                             {item?.faq_questions.map((list, index)=>{
+                                return (
+                                    <Accordion.Item eventKey={index.toString()} key={index}>
+                                    <Accordion.Header>{list?.question}</Accordion.Header>
+                                    <Accordion.Body className='p-2'>
+                                       <b>{list?.question}</b>
+                                       <p>{list?.answer}</p>
+                                    </Accordion.Body>
+                                </Accordion.Item>
+                                )
+                             })}
+                           
+                          
                              </Accordion>
+          </Tab>
+        )
+       })} 
+ 
+    </Tabs>
+         
         </div>
     </div>
   )
 }
 
-export default page
+export default Page

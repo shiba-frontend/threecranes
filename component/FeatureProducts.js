@@ -12,7 +12,7 @@ import bag from '@/public/assets/image/bag_icon.png'
 import star_fill from '@/public/assets/image/start_fill.png'
 import star_default from '@/public/assets/image/star_default.png'
 
-const FeatureProducts = ({content}) => {
+const FeatureProducts = ({content, sendDataToParent}) => {
     var settings = {
         dots: true,
         infinite: true,
@@ -48,7 +48,9 @@ const FeatureProducts = ({content}) => {
           ]
       };
 
-
+      function AddCartHandle(item){
+        sendDataToParent(item) 
+    }
 
 
   return (
@@ -76,14 +78,21 @@ const FeatureProducts = ({content}) => {
                                         </button>
                                     </li>
                                     <li>
-                                        <button>
-                                        <label>Add to cart</label>
-                                            <span>
-                                                <img src={bag.src} />
-                                            </span>
-                           
-                                        </button>
-                                    </li>
+                                            {item?.is_cart == 1 ? 
+                                            
+                                            <sub>Item added</sub>
+                                            :
+
+                                            <button onClick={()=>AddCartHandle(item)}>
+                                            <label>Add to cart</label>
+                                                <span>
+                                                    <img src={bag.src} />
+                                                </span>
+                               
+                                            </button>
+                                        }
+                                            
+                                        </li>
                                 </ul>
                             </div>
                         </div>

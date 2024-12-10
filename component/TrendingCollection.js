@@ -9,7 +9,7 @@ import Link from 'next/link';
 import heart from '@/public/assets/image/wish_icon.png'
 import bag from '@/public/assets/image/bag_icon.png'
 
-const TrendingCollection = ({content}) => {
+const TrendingCollection = ({content, sendDataToParent}) => {
     var settings = {
         dots: true,
         infinite: true,
@@ -45,7 +45,9 @@ const TrendingCollection = ({content}) => {
           ]
       };
 
- 
+      function AddCartHandle(item){
+        sendDataToParent(item) 
+    }
 
 
   return (
@@ -73,14 +75,21 @@ const TrendingCollection = ({content}) => {
                                         </button>
                                     </li>
                                     <li>
-                                        <button>
-                                        <label>Add to cart</label>
-                                            <span>
-                                                <img src={bag.src} />
-                                            </span>
-                           
-                                        </button>
-                                    </li>
+                                            {item?.is_cart == 1 ? 
+                                            
+                                            <sub>Item added</sub>
+                                            :
+
+                                            <button onClick={()=>AddCartHandle(item)}>
+                                            <label>Add to cart</label>
+                                                <span>
+                                                    <img src={bag.src} />
+                                                </span>
+                               
+                                            </button>
+                                        }
+                                            
+                                        </li>
                                 </ul>
                             </div>
                         </div>

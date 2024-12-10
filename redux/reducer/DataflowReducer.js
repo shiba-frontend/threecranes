@@ -6,6 +6,7 @@ const initialState = {
     uid:null,
     sitedata:{},
     token:null,
+    cartItem:[]
   };
 
   export const DataflowReducer = createSlice({
@@ -21,13 +22,19 @@ const initialState = {
       AuthTokenAction(state, action) {
         state.token = action.payload;
       },
+
+      GetcartAction(state, action) {
+        state.cartItem = action.payload;
+      },
+
     },
   });
   
   export const {
     UserIdAction,
     SitedataAction,
-    AuthTokenAction
+    AuthTokenAction,
+    GetcartAction
   } = DataflowReducer.actions;
   
   export default DataflowReducer.reducer;

@@ -19,8 +19,11 @@ import plus_icon from '@/public/assets/image/plus_icon.png'
 import minus_icon from '@/public/assets/image/minus_icon.png'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
-import { GetProductDetails } from '@/utils/Apirequest'
+import { AddCart, GetCart, GetProductDetails } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
+import { GetcartAction } from '@/redux/reducer/DataflowReducer'
+import { toast } from 'react-toastify'
+import { useDispatch } from 'react-redux'
 
 
 export default function Page(){
@@ -28,7 +31,10 @@ export default function Page(){
     const [loading, setloading] = useState(false)
     const [featureproduct, setfeatureproduct] = useState([])
     const [productinfo, setproductinfo] = useState('')
+    const [qty, setqty] = useState(0)
     const { id} = useParams()
+
+    let dispatch = useDispatch()
 
     // const settings = {
     //     dots: true,
@@ -45,27 +51,65 @@ export default function Page(){
 
     useEffect(()=>{
 
-        const GetApiRequest = async () =>{
-            setloading(true)
-            let payload = {
-                "product_id": id
-            }
-         
-            let responsedata =  await GetProductDetails(payload)
-            setloading(false)
-            if(responsedata?.response_code == 200){
-                setfeatureproduct(responsedata?.data?.featured_product_list)
-                setproductinfo(responsedata?.data?.product_info)
-              console.log(responsedata?.data)
       
-      
-            }
-           
-          }
       
           GetApiRequest()
        
     },[])
+
+    const GetApiRequest = async () =>{
+        setloading(true)
+        let payload = {
+            "product_id": id
+        }
+     
+        let responsedata =  await GetProductDetails(payload)
+        setloading(false)
+        if(responsedata?.response_code == 200){
+            setfeatureproduct(responsedata?.data?.featured_product_list)
+            setproductinfo(responsedata?.data?.product_info)
+          console.log(responsedata?.data)
+  
+  
+        }
+       
+      }
+
+    async function AddCartHandle() {
+
+    
+
+        if(qty == 0){
+            toast("Please added the quantity first")
+        } else {
+
+    
+
+        let price = productinfo?.base_price.replace(',', '')
+    
+    
+        setloading(true)
+    
+        let body = {
+            "product_id": productinfo?.id,
+            "product_qty": qty,
+            "product_rate": price
+        }
+    
+        const response = await AddCart(body)
+        setloading(false)
+    
+        if(response?.status){
+          //  GetApiRequest()
+            let responsedata =  await GetCart()
+            dispatch(GetcartAction(responsedata?.data[0]?.cart_items))
+            GetApiRequest()
+            toast(response?.message)
+        } else {
+            toast(response?.message)
+        }
+    }
+    }
 
  
 
@@ -83,21 +127,9 @@ export default function Page(){
                 <li>
                 <img src={rightArrow.src} alt="icon" />
                 </li>
-                
+            
                 <li>
-                    <Link href="/product" >Categories  </Link>
-                </li>
-                <li>
-                <img src={rightArrow.src} alt="icon" />
-                </li>
-                <li>
-                    <Link href="/product/categories" >women </Link>
-                </li>
-                <li>
-                    <img src={rightArrow.src} alt="icon" />
-                </li>
-                <li>
-                    <b>{id}</b>
+                    <b>{productinfo?.parent__category_name}</b>
                 </li>
             </ul>
         </div>
@@ -185,14 +217,27 @@ export default function Page(){
                 <ul className='quantity-add'>
                     <li>
                         <div className='quantity-box'>
-                        <button><img src={minus_icon.src} /></button>
-                            <input type='text' />
-                            <button><img src={plus_icon.src} /></button>
+                             <button onClick={()=>setqty(qty - 1)} disabled={qty == 0 ? true : false}><img src={minus_icon.src}  /></button>
+                            <input type='text' placeholder='QTY' value={qty} onChange={(e)=>setqty(e.target.value)} 
+                             onKeyPress={(event) => {
+                                if (!/[0-9]/.test(event.key)) {
+                                  event.preventDefault();
+                                }
+                              }}
+                            />
+                            <button onClick={()=>setqty(qty + 1)}><img src={plus_icon.src} /></button>
                         </div>
                     </li>
+                    {productinfo?.is_cart == 1 ?
+                     <li>
+                         <b>Item Added</b>
+                     </li>
+                    :
                     <li>
-                        <button className='addtocartBtn'><img src={buy_icon.src} /> Add to cart</button>
-                    </li>
+                    <button className='addtocartBtn' onClick={AddCartHandle}><img src={buy_icon.src}  /> Add to cart</button>
+                </li>
+                }
+                   
                     <li>
                         <Link href="#" className='buynowBtn'><img src={buy_icon.src} /> Buy Now</Link>
                      

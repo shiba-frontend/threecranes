@@ -10,8 +10,11 @@ import star_fill from '@/public/assets/image/start_fill.png'
 import heart from '@/public/assets/image/wish_icon.png'
 import bag from '@/public/assets/image/bag_icon.png'
 import grid_icon from '@/public/assets/image/grid_icon.png'
-import { GetParentCategoryWiseProduct } from '@/utils/Apirequest'
+import { AddCart, GetCart, GetParentCategoryWiseProduct } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
+import { toast } from 'react-toastify'
+import { GetcartAction } from '@/redux/reducer/DataflowReducer'
+import { useDispatch } from 'react-redux'
 
 export default function Page() {
     const {slug} = useParams()
@@ -19,45 +22,7 @@ export default function Page() {
     const [loading, setloading] = useState(false)
     const [subcategory, setsubcategory] = useState([])
     const [productList, setproductList] = useState([])
-
-    var data = [
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        },
-        {
-            title:'Tie Dye mini wrap',
-            mrp:'2,601',
-            discount:'3,000',
-            category:'Women'
-        }
-    ]
+    const [proinfo, setproinfo] = useState("")
 
     useEffect(()=>{
         const GetApiRequest = async () =>{
@@ -71,13 +36,41 @@ export default function Page() {
             if(responsedata?.response_code == 200){
                 setsubcategory(responsedata?.data?.filter_bar)
                 setproductList(responsedata?.data?.product_list)
-           
+                setproinfo(responsedata?.data?.parent_category_name)
             }
            
           }
       
           GetApiRequest()
     }, [])
+
+    let dispatch = useDispatch()
+
+
+    async function AddCartHandle(item) {
+
+        let price = item?.base_price.replace(',', '')
+
+
+        setloading(true)
+
+        let body = {
+            "product_id": item?.id,
+            "product_qty": 1,
+            "product_rate": price
+        }
+
+        const response = await AddCart(body)
+        setloading(false)
+
+        if(response?.status){
+            let responsedata =  await GetCart()
+            dispatch(GetcartAction(responsedata?.data[0]?.cart_items))
+            toast(response?.message)
+        } else {
+            toast(response?.message)
+        }
+    }
 
   return (
     <div className='inner-sec py-3'>
@@ -92,14 +85,14 @@ export default function Page() {
                     <img src={rightArrow.src} alt="icon" />
                     </li>
                     
-                    <li>
+                    {/* <li>
                         <Link href="/product" >Product  </Link>
-                    </li>
+                    </li> */}
                     <li>
                     <img src={rightArrow.src} alt="icon" />
                     </li>
                     <li>
-                        <b>{slug}</b>
+                        <b>{proinfo}</b>
                     </li>
                 </ul>
             </div>
@@ -171,13 +164,20 @@ export default function Page() {
                                             </button>
                                         </li>
                                         <li>
-                                            <button>
+                                            {item?.is_cart == 1 ? 
+                                            
+                                            <sub>Item added</sub>
+                                            :
+
+                                            <button onClick={()=>AddCartHandle(item)}>
                                             <label>Add to cart</label>
                                                 <span>
                                                     <img src={bag.src} />
                                                 </span>
                                
                                             </button>
+                                        }
+                                            
                                         </li>
                                     </ul>
                                 </div>

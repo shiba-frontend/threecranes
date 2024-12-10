@@ -1290,6 +1290,17 @@ button.clodeBtn {
   vertical-align: top;
   height: 71px;
 }
+button.remove {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+.imag-cart sub {
+  color: #ff0404;
+  /* background: #e11c1c; */
+  /* display: inline-block; */
+}
+
 
 
 @media only screen and (max-width: 767px) {

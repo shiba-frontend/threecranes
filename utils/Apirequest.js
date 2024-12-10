@@ -52,3 +52,43 @@ export const GetProductDetails = async (body) =>{
 
     } catch(error){}
 }
+
+export const GetCart = async () =>{
+    try{
+
+        let response = await axios.get(`${_URL}get-cart`, {headers})
+   
+        return response?.data
+
+    } catch(error){ return error?.response?.data}
+}
+
+export const AddCart = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}add-cart`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+export const RemoveCart = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}cart-item-remove`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+export const UpdateCart = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}update-cart-item`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}

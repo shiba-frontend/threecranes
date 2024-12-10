@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import TitleStyle from './common/TitleStyle'
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -8,8 +8,16 @@ import { IMAGE } from '@/utils/Theme';
 import Link from 'next/link';
 import bag from '@/public/assets/image/bag_icon.png'
 import heart from '@/public/assets/image/wish_icon.png'
+import { AddCart, GetCart, GetHome } from '@/utils/Apirequest';
+import { GetcartAction } from '@/redux/reducer/DataflowReducer';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import Loader from '@/utils/Loader';
 
-const ArrivalProduct = ({content}) => {
+const ArrivalProduct = ({content, sendDataToParent}) => {
+
+    const [loading, setloading] = useState(false)
+    const [productList, setproductList] = useState(content)
 
     var settings = {
         dots: true,
@@ -46,11 +54,27 @@ const ArrivalProduct = ({content}) => {
           ]
       };
 
+    //   const GetApiRequest = async () =>{
+  
+    //     let responsedata =  await GetHome()
+      
+    //     if(responsedata?.response_code == 200){
+    //         setproductList(responsedata?.data?.section3)
+  
+    //     }
+       
+    //   }
+
+    function AddCartHandle(item){
+        sendDataToParent(item) 
+    }
  
+  
 
 
   return (
     <div className='product-sec'> 
+        {loading && <Loader/>}
         <div className='container'>
             <TitleStyle title={content?.sec3_title} sub={content?.sec3_description} />
 
@@ -74,13 +98,20 @@ const ArrivalProduct = ({content}) => {
                                             </button>
                                         </li>
                                         <li>
-                                            <button>
+                                            {item?.is_cart == 1 ? 
+                                            
+                                            <sub>Item added</sub>
+                                            :
+
+                                            <button onClick={()=>AddCartHandle(item)}>
                                             <label>Add to cart</label>
                                                 <span>
                                                     <img src={bag.src} />
                                                 </span>
                                
                                             </button>
+                                        }
+                                            
                                         </li>
                                     </ul>
                                 </div>

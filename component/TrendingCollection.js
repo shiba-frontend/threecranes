@@ -8,6 +8,8 @@ import { IMAGE } from '@/utils/Theme';
 import Link from 'next/link';
 import heart from '@/public/assets/image/wish_icon.png'
 import bag from '@/public/assets/image/bag_icon.png'
+import cart_icon from '@/public/assets/image/cart_icon.png'
+
 
 const TrendingCollection = ({content, sendDataToParent}) => {
     var settings = {
@@ -76,8 +78,9 @@ const TrendingCollection = ({content, sendDataToParent}) => {
                                     </li>
                                     <li>
                                             {item?.is_cart == 1 ? 
-                                            
-                                            <sub>Item added</sub>
+                                            <span>
+                                            <Link href={`/cart`}><img src={cart_icon.src} alt='logo' /></Link>
+                                           </span>
                                             :
 
                                             <button onClick={()=>AddCartHandle(item)}>

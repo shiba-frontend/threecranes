@@ -13,6 +13,8 @@ import { GetcartAction } from '@/redux/reducer/DataflowReducer';
 import { toast } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 import Loader from '@/utils/Loader';
+import cart_icon from '@/public/assets/image/cart_icon.png'
+
 
 const ArrivalProduct = ({content, sendDataToParent}) => {
 
@@ -100,7 +102,9 @@ const ArrivalProduct = ({content, sendDataToParent}) => {
                                         <li>
                                             {item?.is_cart == 1 ? 
                                             
-                                            <sub>Item added</sub>
+                                            <span>
+                                             <Link href={`/cart`}><img src={cart_icon.src} alt='logo' /></Link>
+                                            </span>
                                             :
 
                                             <button onClick={()=>AddCartHandle(item)}>

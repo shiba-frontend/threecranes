@@ -10,11 +10,14 @@ import star_fill from '@/public/assets/image/start_fill.png'
 import heart from '@/public/assets/image/wish_icon.png'
 import bag from '@/public/assets/image/bag_icon.png'
 import grid_icon from '@/public/assets/image/grid_icon.png'
-import { AddCart, GetCart, GetParentCategoryWiseProduct } from '@/utils/Apirequest'
+import { AddCart, FilterProduct, GetCart, GetParentCategoryWiseProduct } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
 import { toast } from 'react-toastify'
 import { GetcartAction } from '@/redux/reducer/DataflowReducer'
 import { useDispatch } from 'react-redux'
+import cart_icon from '@/public/assets/image/cart_icon.png'
+import MultiRangeSlider from "multi-range-slider-react";
+
 
 export default function Page() {
     const {slug} = useParams()
@@ -23,26 +26,44 @@ export default function Page() {
     const [subcategory, setsubcategory] = useState([])
     const [productList, setproductList] = useState([])
     const [proinfo, setproinfo] = useState("")
+    const [minrange, setminrange] = useState(null)
+    const [maxrange, setmaxrange] = useState(null)
+    const [selectArr, setselectArr] = useState([])
+  
 
     useEffect(()=>{
-        const GetApiRequest = async () =>{
-            let payload = {
-                "parent_id": slug
-            }
-
-            setloading(true)
-            let responsedata =  await GetParentCategoryWiseProduct(payload)
-            setloading(false)
-            if(responsedata?.response_code == 200){
-                setsubcategory(responsedata?.data?.filter_bar)
-                setproductList(responsedata?.data?.product_list)
-                setproinfo(responsedata?.data?.parent_category_name)
-            }
-           
-          }
+      
       
           GetApiRequest()
     }, [])
+
+    const GetApiRequest = async () =>{
+        let payload = {
+            "parent_id": slug
+        }
+
+        setloading(true)
+        let responsedata =  await GetParentCategoryWiseProduct(payload)
+        setloading(false)
+        if(responsedata?.response_code == 200){
+
+            var TempArr = []
+
+            responsedata?.data?.filter_bar?.forEach(element => {
+                TempArr.push({
+                   ...element,
+                   istoggle:false 
+                })
+            });
+
+            setsubcategory(TempArr)
+            setproductList(responsedata?.data?.product_list)
+            setproinfo(responsedata?.data?.parent_category_name)
+            setminrange(responsedata?.data?.min_price)
+            setmaxrange(responsedata?.data?.max_price)
+        }
+       
+      }
 
     let dispatch = useDispatch()
 
@@ -72,6 +93,83 @@ export default function Page() {
         }
     }
 
+    function CheckBoxHandle(row){
+
+        const updatedData = subcategory.map(item => {
+        
+            if (row.child_category_id !== item.child_category_id) {
+              return item
+            }
+      
+            return {
+              ...item,
+              istoggle: !item.istoggle
+            };
+          });
+          setsubcategory(updatedData)
+          var TempArr = []
+          updatedData.forEach(element =>{
+              if(element?.istoggle){
+                  TempArr.push(element?.child_category_id);
+              }
+          })
+          if(!row.istoggle){
+            setselectArr(TempArr)
+            FilterApi(TempArr)
+          } 
+    }
+
+
+    async function FilterApi(arr) {
+
+        let body = {
+            "parent_id": slug,
+            "min_range": minrange,
+            "max_range": maxrange,
+            "subcat_id": arr
+        }
+
+        setloading(true)
+        const response = await FilterProduct(body)
+        setloading(false)
+        if(response?.status){
+          
+            setproductList(response?.data)
+        }
+
+
+    }
+
+    const handleInput = (e) => {
+        setminrange(e.minValue);
+        setmaxrange(e.maxValue);
+
+       
+    };
+
+    const handleOnchange = async (e)=>{
+
+        console.log("sBDU")
+
+        return
+
+        let body = {
+            "parent_id": slug,
+            "min_range": e.minValue,
+            "max_range": e.maxValue,
+            "subcat_id": selectArr
+        }
+        const response = await FilterProduct(body)
+        setproductList(response?.data)
+    }
+
+    
+
+    function ClearFilter(){
+        GetApiRequest()
+    }
+   
+
   return (
     <div className='inner-sec py-3'>
         {loading && <Loader/>}
@@ -88,9 +186,7 @@ export default function Page() {
                     {/* <li>
                         <Link href="/product" >Product  </Link>
                     </li> */}
-                    <li>
-                    <img src={rightArrow.src} alt="icon" />
-                    </li>
+                   
                     <li>
                         <b>{proinfo}</b>
                     </li>
@@ -99,14 +195,18 @@ export default function Page() {
             <div className='row'>
                 <div className='col-lg-3'>
                     <div className='left-sidebar'>
-                    <h3><img src={grid_icon.src} alt="icon" /> All Sub Categories</h3>
+                    <h3><img src={grid_icon.src} alt="icon" /> All Sub Categories <button onClick={ClearFilter}>Clear</button></h3>
                         <Accordion defaultActiveKey="0">
 
                         <ul>
                             {subcategory?.map((item, i)=>{
                                 return (
                                     <li key={i}>
-                                        <button>{item?.child_category_name}</button>
+                                        <button className={item?.istoggle ? 'active': null} onClick={()=>CheckBoxHandle(item)}>
+                                            {item?.child_category_name}
+
+                                            <span></span>
+                                        </button>
                                     </li>
                                 )
                             })}
@@ -140,10 +240,30 @@ export default function Page() {
                         </Accordion.Body>
                     </Accordion.Item> */}
                     </Accordion>
-                       
+                 
                     </div>
+                    <div className='mt-3'>
+             
+                    {/* <MultiRangeSlider
+					min={0}
+					max={5000}
+					step={500}
+					minValue={minrange}
+					maxValue={maxrange}
+                    onInput={(e) => {
+                        handleInput(e);
+                    }}
+					
+                    onChange={(e)=>handleOnchange(e)}
+				></MultiRangeSlider> */}
+                {/* <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+					<div style={{ margin: '10px' }}>{minrange}</div>
+					<div style={{ margin: '10px' }}>{maxrange}</div>
+				</div> */}
+    </div>
                 </div>
                 <div className='col-lg-9'>
+                    {productList?.length > 0 ? 
                     <div className='row'>
                     {productList?.map((item, index)=>{
                     return (
@@ -165,8 +285,10 @@ export default function Page() {
                                         </li>
                                         <li>
                                             {item?.is_cart == 1 ? 
-                                            
-                                            <sub>Item added</sub>
+                                            <span>
+                                                  <Link href={`/cart`}><img src={cart_icon.src} alt='logo' /></Link>
+                                            </span>
+                                          
                                             :
 
                                             <button onClick={()=>AddCartHandle(item)}>
@@ -211,7 +333,9 @@ export default function Page() {
                     )
                 })}
                     </div>
-              
+                    :
+                    <h4>No Product Found</h4>
+}
                 </div>
             </div>
         </div>

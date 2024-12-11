@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import productIMg from '@/public/assets/image/banner_img.png'
 import Link from 'next/link'
-import { GetCart, RemoveCart, UpdateCart } from '@/utils/Apirequest'
+import { ApplyCoupon, GetCart, RemoveCart, UpdateCart } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
 import Modal from 'react-bootstrap/Modal';
 import { toast } from 'react-toastify'
@@ -15,7 +15,8 @@ const Page = () => {
    const [show, setShow] = useState(false);
    const [cartId, setcartId] = useState(null);
    const [cartinfo, setcartinfo] = useState('');
-   
+   const [couponCode, setcouponCode] = useState('');
+   const [couponInfo, setcouponInfo] = useState('');
 
    let dispatch = useDispatch()
 
@@ -99,6 +100,27 @@ function QtyInputHandle(value, key, index ) {
 
 }
 
+async function CouponHandle() {
+   if(couponCode == ''){
+      toast("Coupon code is must")
+   } else {
+      setloading(true)
+      let body = {
+         "coupon_code": couponCode
+     }
+      const response = await ApplyCoupon(body)
+      setloading(false)
+      if(response?.status){
+         setcouponInfo(response?.data)
+         toast(response?.message)
+      } else {
+        toast(response?.message)
+      }
+   }
+}
+
+console.log(couponInfo)
+
    
   return (
     <section className="cart-details-list section-padding">
@@ -127,9 +149,9 @@ function QtyInputHandle(value, key, index ) {
                               <tr className="cart_item" key={i}>
                               <td className="product-thumbnail">
 
-                              <Link href={`/product/${item?.product_id}`}><img src={item?.product_cover_image} width="50" alt=""/></Link>
-                                 <div className="product-name">
-                                 <Link href={`/product/${item?.product_id}`}>{item?.product_name}</Link>
+                              <Link href={`/product/${item?.product_id}`}><img src={item?.product_cover_image} width="50" height="50" alt=""/></Link>
+                                 <div className="product-name ms-2">
+                                    <Link href={`/product/${item?.product_id}`}>{item?.product_name}</Link>
                                  </div>
                               </td>
                               <td className="product-price">
@@ -172,8 +194,12 @@ function QtyInputHandle(value, key, index ) {
                                <div className="bottom-cart">
                                   <div className="coupon">
                                      <input type="text" name="coupon_code" className="input-text" id="coupon_code"
-                                        value="" placeholder="Coupon code"/> <button type="submit" className="button"
-                                        name="apply_coupon" value="Apply coupon">Apply coupon</button>
+                                        value={couponCode} placeholder="Coupon code"
+                                        onChange={(e)=>setcouponCode(e.target.value)}
+                                        /> 
+                                        
+                                        <button  className="button"
+                                        name="apply_coupon" onClick={CouponHandle}>Apply coupon</button>
                                   </div>
                                   {/* <h2><a href="#">Continue
                                         Shopping</a>

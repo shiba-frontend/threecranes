@@ -11,7 +11,7 @@ import heart from '@/public/assets/image/wish_icon.png'
 import bag from '@/public/assets/image/bag_icon.png'
 import star_fill from '@/public/assets/image/start_fill.png'
 import star_default from '@/public/assets/image/star_default.png'
-
+import cart_icon from '@/public/assets/image/cart_icon.png'
 const FeatureProducts = ({content, sendDataToParent}) => {
     var settings = {
         dots: true,
@@ -80,7 +80,9 @@ const FeatureProducts = ({content, sendDataToParent}) => {
                                     <li>
                                             {item?.is_cart == 1 ? 
                                             
-                                            <sub>Item added</sub>
+                                            <span>
+                                             <Link href={`/cart`}><img src={cart_icon.src} alt='logo' /></Link>
+                                            </span>
                                             :
 
                                             <button onClick={()=>AddCartHandle(item)}>

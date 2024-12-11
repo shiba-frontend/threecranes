@@ -92,3 +92,24 @@ export const UpdateCart = async (body) =>{
 
     } catch(error){return error?.response?.data}
 }
+
+
+export const FilterProduct = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}product-filter`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+export const ApplyCoupon = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}apply-coupon`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}

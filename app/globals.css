@@ -594,6 +594,14 @@ ul.social-footer {
   font-size: 15px;
   font-weight: 600;
   padding: 10px 15px;
+  position: relative;
+}
+.left-sidebar h3 button {
+  background: transparent;
+  border: none;
+  position: absolute;
+  right: 7px;
+  color: red;
 }
 .accordion-body {
   padding: 0;
@@ -615,7 +623,7 @@ ul.social-footer {
   background: transparent;
   display: block;
 }
-.accordion ul li button{
+.accordion ul li button {
   padding: 10px 15px;
   border-radius: 0 !important;
   color: #030712;
@@ -624,6 +632,9 @@ ul.social-footer {
   background: transparent;
   display: block;
   border: none;
+  width: 100%;
+  text-align: left;
+  position: relative;
 }
 .product-details h2 {
   color: #030712;
@@ -1300,7 +1311,42 @@ button.remove {
   /* background: #e11c1c; */
   /* display: inline-block; */
 }
+.imag-cart li span {
+  background: #F3F3F3;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
 
+.accordion ul li button span {
+  width: 18px;
+  height: 18px;
+  display: block;
+  border: 1px solid #222;
+  border-radius: 4px;
+  position: absolute;
+  top: 12px;
+  right: 15px;
+}
+
+.accordion ul li button span::before {
+  height: 11px;
+  width: 6px;
+  border-bottom: 3px solid green;
+  border-right: 3px solid green;
+  transform: rotate(45deg);
+  content: "";
+  position: absolute;
+  right: 5px;
+  top: 1px;
+  display: none;
+}
+.accordion ul li button.active span::before{
+  display: block;
+}
 
 
 @media only screen and (max-width: 767px) {

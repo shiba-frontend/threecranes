@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import productIMg from '@/public/assets/image/banner_img.png'
 import Link from 'next/link'
-import { ApplyCoupon, GetCart, RemoveCart, UpdateCart } from '@/utils/Apirequest'
+import { ApplyCoupon, GetCart, RemoveCart, RemoveCoupon, UpdateCart } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
 import Modal from 'react-bootstrap/Modal';
 import { toast } from 'react-toastify'
@@ -17,6 +17,10 @@ const Page = () => {
    const [cartinfo, setcartinfo] = useState('');
    const [couponCode, setcouponCode] = useState('');
    const [couponInfo, setcouponInfo] = useState('');
+
+   var token = localStorage.getItem('threecranes_access_token')
+
+
 
    let dispatch = useDispatch()
 
@@ -112,6 +116,7 @@ async function CouponHandle() {
       setloading(false)
       if(response?.status){
          setcouponInfo(response?.data)
+         GetcartApiRequest()
          toast(response?.message)
       } else {
         toast(response?.message)
@@ -119,7 +124,20 @@ async function CouponHandle() {
    }
 }
 
-console.log(couponInfo)
+async function RemoveCouponHandle() {
+   setloading(true)
+      const response = await RemoveCoupon()
+      setloading(false)
+      if(response?.status){
+         GetcartApiRequest()
+         toast(response?.message)
+      } else {
+        toast(response?.message)
+      }
+   }
+
+
+
 
    
   return (
@@ -192,7 +210,14 @@ console.log(couponInfo)
                          <tr>
                             <td colSpan="6" className="actions">
                                <div className="bottom-cart">
-                                  <div className="coupon">
+                                 {cartinfo[0]?.coupon_code != '' ? 
+                                  
+                                    <div className='coupon-info'>
+                                       <label>{cartinfo[0]?.coupon_code}</label>
+                                       <button className='btn btn-sm btn-outline-warning' onClick={RemoveCouponHandle}>Remove Coupon</button>
+                                    </div>
+                                    :
+                                    <div className="coupon">
                                      <input type="text" name="coupon_code" className="input-text" id="coupon_code"
                                         value={couponCode} placeholder="Coupon code"
                                         onChange={(e)=>setcouponCode(e.target.value)}
@@ -201,6 +226,9 @@ console.log(couponInfo)
                                         <button  className="button"
                                         name="apply_coupon" onClick={CouponHandle}>Apply coupon</button>
                                   </div>
+
+
+}
                                   {/* <h2><a href="#">Continue
                                         Shopping</a>
                                   </h2> */}
@@ -222,13 +250,13 @@ console.log(couponInfo)
                       <div cellSpacing="0" className="shop_table shop_table_responsive">
                          <div className="cart-subtotal mb-2">
                             <div className="title">Subtotal</div>
-                            <div data-title="Subtotal"><span className="amount"><bdi><span
+                            <div data-title="Subtotal" className='text-end'><span className="amount"><bdi><span
                                         className="Price-currencySymbol">$ </span>{cartinfo[0]?.tot_subtotal_amt}</bdi></span>
                             </div>
                          </div>
                          <div className="cart-subtotal mb-2">
                             <div className="title">Shipping</div>
-                            <div data-title="Subtotal"><span className="amount"><bdi><span
+                            <div data-title="Subtotal" className='text-end'><span className="amount"><bdi><span
                                         className="Price-currencySymbol">$ </span>{cartinfo[0]?.tot_shipping_amt}</bdi></span>
                             </div>
                          </div>
@@ -249,19 +277,37 @@ console.log(couponInfo)
                          </div> */}
                          <div className="cart-subtotal">
                             <div className="title">Tax</div>
-                            <div data-title="Subtotal"><span className="amount"><bdi><span
+                            <div data-title="Subtotal" className='text-end'><span className="amount"><bdi><span
                                         className="Price-currencySymbol">$ </span>{cartinfo[0]?.tot_tax_amt}</bdi></span>
                             </div>
                          </div>
+                         {cartinfo[0]?.coupon_code != '' &&
+                         <div className="cart-subtotal">
+                            <div className="title">Discount</div>
+                            <div data-title="Subtotal" className='text-end'><span className="amount text-danger"><bdi><span
+                                        className="Price-currencySymbol">- $ </span>{cartinfo[0]?.tot_disc_amt}</bdi></span>
+                            </div>
+                         </div>
+}
                          <div className="order-total mt-4">
                             <div className="title">Total</div>
-                            <div data-title="Total"><strong><span className="amount"><bdi><span
+                            <div data-title="Total" className='text-end'><strong><span className="amount"><bdi><span
                                            className="Price-currencySymbol">$</span>{cartinfo[0]?.tot_net_amt}</bdi></span></strong>
                             </div>
                          </div>
                       </div>
                       <div className="checkout-btn">
-                        <Link href="/checkout">Proceed to checkout</Link>
+                        {
+                           token != null ?
+
+                           <Link href="/checkout">Proceed to checkout</Link>
+
+                           :
+
+                     <Link href="/login">Proceed to checkout</Link>
+                        }
+
+                       
                         
                       </div>
                    </div>

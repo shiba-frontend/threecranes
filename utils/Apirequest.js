@@ -113,3 +113,23 @@ export const ApplyCoupon = async (body) =>{
 
     } catch(error){return error?.response?.data}
 }
+
+
+export const RemoveCoupon = async () =>{
+    try{
+
+        let response = await axios.get(`${_URL}remove-coupon`, {headers})
+   
+        return response?.data
+
+    } catch(error){ return error?.response?.data}
+}
+export const GetCheckout = async () =>{
+    try{
+
+        let response = await axios.get(`${_URL}checkout`, {headers})
+   
+        return response?.data
+
+    } catch(error){ return error?.response?.data}
+}

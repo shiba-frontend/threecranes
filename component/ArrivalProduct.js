@@ -83,6 +83,7 @@ const ArrivalProduct = ({content, sendDataToParent}) => {
             <Slider {...settings}>
 
                 {content?.products?.map((item, index)=>{
+                      var rate = Number(item?.rating)
                     return (
                         <div className='product-box' key={index}>
                             <div className='product-img'>
@@ -124,21 +125,11 @@ const ArrivalProduct = ({content, sendDataToParent}) => {
                             <div className='product-info-t'>
                                 <h5>{item?.sub_category_name}</h5>
                                 <ul>
-                                    <li>
-                                        <img src={IMAGE.star_fill} />
-                                    </li>
-                                    <li>
-                                        <img src={IMAGE.star_fill} />
-                                    </li>
-                                    <li>
-                                        <img src={IMAGE.star_fill} />
-                                    </li>
-                                    <li>
-                                        <img src={IMAGE.star_fill} />
-                                    </li>
-                                    <li>
-                                        <img src={IMAGE.star_default} />
-                                    </li>
+                                {Array(5).fill().map((_, i) => {
+                                    const ratingValue = i + 1;
+                                return  <li key={i}><img src={ratingValue <= rate ? IMAGE.star_fill : IMAGE.star_default} /></li>
+                                })}
+
                                 </ul>
                             </div>
                                     <Link href={`/product/${item?.id}`}> {item?.name}</Link>

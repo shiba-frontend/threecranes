@@ -1,8 +1,49 @@
-import React from 'react'
+"use client"
+import React, { useEffect, useState } from 'react'
 import productIMg from '@/public/assets/image/banner_img.png'
+import { GetCheckout } from '@/utils/Apirequest'
+import Loader from '@/utils/Loader'
+
+
+
+
+
 const Page = () => {
+   const [loading, setloading] = useState(false)
+
+
+   useEffect(()=>{
+  
+
+      GetcartApiRequest()
+  },[])
+  
+  const GetcartApiRequest = async () =>{
+  
+     setloading(true)
+        
+     let responsedata =  await GetCheckout()
+  
+     setloading(false)
+   
+     if(responsedata?.response_code == 200){
+      
+     }
+    
+   }
+
+
+
+
+
+
+
+
+
+
   return (
     <section className="register-form-section login-form shipping-form-section section-padding">
+          {loading && <Loader/>}
     <div className=" container-xxl container-xl container-lg container-md container-sm container">
        <div className="row justify-content-center">
           <div className="col-12 col-lg-8 col-xl-8 col-md-12 col-sm-12">

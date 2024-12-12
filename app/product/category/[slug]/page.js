@@ -7,6 +7,7 @@ import Accordion from 'react-bootstrap/Accordion';
 import { Button, Card } from 'react-bootstrap'
 import rightArrow from '@/public/assets/image/right_arrow.png'
 import star_fill from '@/public/assets/image/start_fill.png'
+import star_default from '@/public/assets/image/star_default.png'
 import heart from '@/public/assets/image/wish_icon.png'
 import bag from '@/public/assets/image/bag_icon.png'
 import grid_icon from '@/public/assets/image/grid_icon.png'
@@ -78,7 +79,8 @@ export default function Page() {
         let body = {
             "product_id": item?.id,
             "product_qty": 1,
-            "product_rate": price
+            "product_rate": price,
+            "variations": []
         }
 
         const response = await AddCart(body)
@@ -266,6 +268,7 @@ export default function Page() {
                     {productList?.length > 0 ? 
                     <div className='row'>
                     {productList?.map((item, index)=>{
+                            var rate = Number(item?.rating)
                     return (
                         <div className='col-lg-4' key={index}>
                         <div className='product-box' key={index}>
@@ -308,21 +311,13 @@ export default function Page() {
                             <div className='product-info-t'>
                                 <h5>{item?.sub_category_name}</h5>
                                 <ul>
-                                    <li>
-                                    <img src={star_fill.src} />
-                                    </li>
-                                    <li>
-                                    <img src={star_fill.src} />
-                                    </li>
-                                    <li>
-                                    <img src={star_fill.src} />
-                                    </li>
-                                    <li>
-                                    <img src={star_fill.src} />
-                                    </li>
-                                    <li>
-                                    <img src={star_fill.src} />
-                                    </li>
+
+                                {Array(5).fill().map((_, i) => {
+                                    const ratingValue = i + 1;
+                                return  <li key={i}><img src={ratingValue <= rate ? star_fill.src : star_default.src} /></li>
+                                })}
+
+                                   
                                 </ul>
                             </div>
                                     <Link href={`/product/${item?.id}`}> {item?.name}</Link>

@@ -58,6 +58,7 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
     },[])
 
     
+   var tokenn = localStorage.getItem('threecranes_access_token')
 
 
   return (
@@ -86,14 +87,12 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
                 <div className='col-lg-4'>
                     <ul>
                       <li>
-                      {datareducer !== null ?
-                          <Link href="/login"> <img src={user_icon.src} alt='logo' /> <label> Dashboard</label>
+                      {tokenn != null ?
+                          <Link href="/account/dashboard"> <img src={user_icon.src} alt='logo' /> <label> Dashboard</label>
                           
                            </Link>
                         :
-                        <Link href="/login"> <img src={user_icon.src} alt='logo' /> <label> Login</label>
-                          
-                        </Link>
+                        <Link href="/login"> <img src={user_icon.src} alt='logo' /> <label> Login</label></Link>
                       }
                       </li>
                       <li>

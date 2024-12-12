@@ -49,7 +49,8 @@ export default function Home() {
     let body = {
         "product_id": item?.id,
         "product_qty": 1,
-        "product_rate": price
+        "product_rate": price,
+        "variations": []
     }
 
     const response = await AddCart(body)

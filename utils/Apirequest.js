@@ -8,7 +8,7 @@ const _URL = "https://threecranes.itiffyconsultants.com/api/"
 let headers= { 
     'Content-Type': 'application/json', 
     'Key':'13ae7b7d7ba75ac286656a7a274905ca',
-    'Authorization': 'Bearer '+storedToken,
+    'Authorization': storedToken,
     'source': 'ANDROID',
 }
 
@@ -132,4 +132,104 @@ export const GetCheckout = async () =>{
         return response?.data
 
     } catch(error){ return error?.response?.data}
+}
+
+export const GetOrderList = async () =>{
+    try{
+
+        let response = await axios.get(`${_URL}order-list`, {headers})
+   
+        return response?.data
+
+    } catch(error){ return error?.response?.data}
+}
+
+export const GetProfile = async () =>{
+    try{
+
+        let response = await axios.get(`${_URL}get-profile`, {headers})
+   
+        return response?.data
+
+    } catch(error){ return error?.response?.data}
+}
+
+export const UpdateProfile = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}update-profile`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+export const ChangePassword = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}change-password`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+export const GetAddress = async () =>{
+    try{
+
+        let response = await axios.get(`${_URL}get-address`, {headers})
+   
+        return response?.data
+
+    } catch(error){ return error?.response?.data}
+}
+
+export const AddAddress = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}add-address`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+export const DeleteAddress = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}delete-address`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+export const GetReviews = async () =>{
+    try{
+
+        let response = await axios.get(`${_URL}get-reviews`, {headers})
+   
+        return response?.data
+
+    } catch(error){ return error?.response?.data}
+}
+
+export const GetWishlist = async () =>{
+    try{
+
+        let response = await axios.get(`${_URL}get-wishlist`, {headers})
+   
+        return response?.data
+
+    } catch(error){ return error?.response?.data}
+}
+
+export const DeleteWishlist = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}delete-wishlist`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
 }

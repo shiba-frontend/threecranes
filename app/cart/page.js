@@ -6,7 +6,7 @@ import { ApplyCoupon, GetCart, RemoveCart, RemoveCoupon, UpdateCart } from '@/ut
 import Loader from '@/utils/Loader'
 import Modal from 'react-bootstrap/Modal';
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { GetcartAction } from '@/redux/reducer/DataflowReducer'
 
 const Page = () => {
@@ -18,7 +18,7 @@ const Page = () => {
    const [couponCode, setcouponCode] = useState('');
    const [couponInfo, setcouponInfo] = useState('');
 
-   var token = localStorage.getItem('threecranes_access_token')
+   const datareducer = useSelector((state) => state.Dataflowreducer.token)
 
 
 
@@ -298,7 +298,7 @@ async function RemoveCouponHandle() {
                       </div>
                       <div className="checkout-btn">
                         {
-                           token != null ?
+                           datareducer != null ?
 
                            <Link href="/checkout">Proceed to checkout</Link>
 

@@ -45,9 +45,6 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
           
             if(responsedata?.response_code == 200){
               dispatch(GetcartAction(responsedata?.data[0]?.cart_items))
-              console.log(responsedata?.data)
-      
-      
             }
            
           }
@@ -58,7 +55,6 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
     },[])
 
     
-   var tokenn = localStorage.getItem('threecranes_access_token')
 
 
   return (
@@ -87,7 +83,7 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
                 <div className='col-lg-4'>
                     <ul>
                       <li>
-                      {tokenn != null ?
+                      {datareducer != null ?
                           <Link href="/account/dashboard"> <img src={user_icon.src} alt='logo' /> <label> Dashboard</label>
                           
                            </Link>
@@ -96,7 +92,7 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
                       }
                       </li>
                       <li>
-                          <Link href="/"> <img src={heart_icon.src} alt='logo' /> <label>Wishlist</label> <span>0</span></Link>
+                          <Link href="/wishlist"> <img src={heart_icon.src} alt='logo' /> <label>Wishlist</label> <span>0</span></Link>
                       </li>
                       <li>
                           <Link href="/cart"> <img src={cart_icon.src} alt='logo' /> <label>Your Cart</label><span>{cartreducer

@@ -1,15 +1,48 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Sidebar from '../Sidebar'
 import Table from 'react-bootstrap/Table';
 import productIMg from '@/public/assets/image/banner_img.png'
 import Link from 'next/link';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { GetReviews } from '@/utils/Apirequest';
+import Loader from '@/utils/Loader';
+import moment from 'moment';
 
-const page = () => {
+const Page = () => {
+   const [loading, setloading] = useState(false)
+   const [ReviewsList, setReviewsList] = useState([])
+
+   useEffect(()=>{
+    
+  
+    GetReviewApiRequest()
+    },[])
+    
+    const GetReviewApiRequest = async () =>{
+    
+       setloading(true)
+          
+       let responsedata =  await GetReviews()
+    
+       setloading(false)
+     
+       if(responsedata?.status){
+
+        setReviewsList(responsedata?.data)
+     
+       }
+      
+     }
+
+
+  
+
+
     return (
       <section className="product-category-listing my-order-list section-padding">
+             {loading && <Loader/>}
       <div className="container-xxl container-xl container-lg container-md container-sm container">
          <div className="row ">
               <div className="col-xl-3 col-lg-3 col-md-5 col-sm-12 ">
@@ -31,44 +64,44 @@ const page = () => {
                     
                       </thead>
                       <tbody>
-          <tr>
-            <td>
-              <div className='d-flex align-items-center'>
-                <img src={productIMg.src} width="30" /> 
-                Kurtas
-              </div>
-            </td>
-            <td>Steven Parker
-                <br></br>
-                steven@yopmail.com
-            </td>
-            <td>3</td>
-            <td>Test Title</td>
-            <td>Lorem Ipsum ljsd sbid ihas</td>
-            <td>22-09-24</td>
-            <td>
-                <span className='btn btn-sm btn-success'>Approved</span>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div className='d-flex align-items-center'>
-                <img src={productIMg.src} width="30" /> 
-                Kurtas
-              </div>
-            </td>
-            <td>Steven Parker
-                <br></br>
-                steven@yopmail.com
-            </td>
-            <td>3</td>
-            <td>Test Title</td>
-            <td>Lorem Ipsum ljsd sbid ihas</td>
-            <td>22-09-24</td>
-            <td>
-                <span className='btn btn-sm btn-danger'>Rejected</span>
-            </td>
-          </tr>
+                        {ReviewsList?.length > 0 ?
+
+                          ReviewsList?.map((item, i)=>{
+                            return (
+                              <tr key={i}>
+                              <td>
+                                <div className='d-flex align-items-center'>
+                               
+                                  {item?.product_name}
+                                </div>
+                              </td>
+                              <td>  {item?.name}
+                                  <br></br>
+                                  {item?.email}
+                              </td>
+                              <td>{item?.rating}</td>
+                              <td>{item?.title}</td>
+                              <td>{item?.comment}</td>
+                              <td>{moment(item?.approve_reject_timestamp).format('DD-MM-YYYY')}</td>
+                              <td>
+                                {item?.status == 'APPROVED' ? 
+                                   <span className='btn btn-sm btn-success'>Approved</span>
+                                   :
+                                   <span className='btn btn-sm btn-danger'>Reject</span>
+                              }
+                                 
+                              </td>
+                            </tr>
+                            )
+                          })
+                           
+                          :
+                          <tr>
+                            <td colSpan="6">No review list</td>
+                          </tr>
+                      }
+        
+        
           </tbody>
                       </Table>
                 </div>
@@ -79,4 +112,4 @@ const page = () => {
     )
   }
 
-  export default page
+  export default Page

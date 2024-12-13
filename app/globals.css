@@ -1358,6 +1358,24 @@ button.remove {
   border-radius: 5px;
 }
 
+.form-style1 .form-control {
+  border: 1px solid #000;
+  color: #000;
+  font-size: 15px;
+  height: auto;
+  padding: 10px 15px;
+}
+.form-style1 .form-group {
+  margin-bottom: 16px;
+}
+.modal-backdrop {
+  z-index: 9;
+
+}
+.address-modal{
+  z-index: 9;
+}
+
 @media only screen and (max-width: 767px) {
   .slick-next {
    display: none !important;

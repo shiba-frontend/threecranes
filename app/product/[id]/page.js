@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import rightArrow from '@/public/assets/image/right_arrow.png'
 import Slider from "react-slick";
@@ -19,11 +19,11 @@ import plus_icon from '@/public/assets/image/plus_icon.png'
 import minus_icon from '@/public/assets/image/minus_icon.png'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
-import { AddCart, GetCart, GetProductDetails } from '@/utils/Apirequest'
+import { AddCart, AddWishlist, GetCart, GetProductDetails, GetProfile, GetWishlist } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
-import { GetcartAction } from '@/redux/reducer/DataflowReducer'
+import { GetcartAction, GetWishlistAction } from '@/redux/reducer/DataflowReducer'
 import { toast } from 'react-toastify'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 
 export default function Page(){
@@ -32,7 +32,14 @@ export default function Page(){
     const [featureproduct, setfeatureproduct] = useState([])
     const [productinfo, setproductinfo] = useState('')
     const [qty, setqty] = useState(0)
+    const [variation, setvariation] = useState([])
+       const [fname, setfname] = useState('')
+       const [lname, setlname] = useState('')
+       const [email, setemail] = useState('')
     const { id} = useParams()
+    const datareducer = useSelector((state) => state.Dataflowreducer.token)
+
+    const router = useRouter();
 
     let dispatch = useDispatch()
 
@@ -51,9 +58,10 @@ export default function Page(){
 
     useEffect(()=>{
 
-      
-      
           GetApiRequest()
+
+          datareducer != '' &&
+          GetprofilApiRequest()
        
     },[])
 
@@ -67,25 +75,62 @@ export default function Page(){
         setloading(false)
         if(responsedata?.response_code == 200){
             setfeatureproduct(responsedata?.data?.featured_product_list)
+
+            let TempArr = []
+
+            
+
+            responsedata?.data?.product_info?.variation?.forEach(element => {
+                TempArr.push({
+                    ...element,
+                    value:''
+                })
+            });
+            setvariation(TempArr)
+
             setproductinfo(responsedata?.data?.product_info)
-          console.log(responsedata?.data)
+         
   
   
         }
        
       }
 
+        const GetprofilApiRequest = async () =>{
+        
+           setloading(true)
+              
+           let responsedata =  await GetProfile()
+        
+           setloading(false)
+         
+           if(responsedata?.status){
+      
+              console.log(responsedata?.data)
+              setfname(responsedata?.data?.first_name)
+              setlname(responsedata?.data?.last_name)
+              setemail(responsedata?.data?.email)
+           }
+          
+         }
+
     async function AddCartHandle() {
 
     
 
         if(qty == 0){
-            toast("Please added the quantity first")
+            toast.error("Please added the quantity first")
         } else {
 
     
 
         let price = productinfo?.base_price.replace(',', '')
+
+        var TemA = []
+
+        variation?.forEach(element =>{
+            TemA.push(element.value)
+        })
     
     
         setloading(true)
@@ -93,7 +138,8 @@ export default function Page(){
         let body = {
             "product_id": productinfo?.id,
             "product_qty": qty,
-            "product_rate": price
+            "product_rate": price,
+            "variations": TemA
         }
     
         const response = await AddCart(body)
@@ -111,6 +157,34 @@ export default function Page(){
     }
     }
 
+
+    async function VarietionHandle(value, i, items, key) {
+        var arr = [...variation]
+        arr[i][key] = value
+
+        setvariation(arr)
+
+    }
+
+     async function AddWishlistHandle(item) {
+          setloading(true)
+  
+          let body = {
+              "product_id": item?.id,
+          }
+  
+          const response = await AddWishlist(body)
+          setloading(false)
+  
+          if(response?.status){
+              let responsedata =  await GetWishlist()
+              dispatch(GetWishlistAction(responsedata?.data))
+              GetApiRequest()
+              toast(response?.message)
+          } else {
+              toast(response?.message)
+          }
+      }
  
 
 
@@ -156,21 +230,13 @@ export default function Page(){
                     <h2>{productinfo?.name}</h2>
                     <ul  className='rating-list'>
                         <li>
-                        <ul>
-                        <li><img src={star_fill.src} />
-                                    </li>
-                                    <li>
-                                    <img src={star_fill.src} />
-                                    </li>
-                                    <li>
-                                    <img src={star_fill.src} />
-                                    </li>
-                                    <li>
-                                    <img src={star_fill.src} />
-                                    </li>
-                                    <li>
-                                        <img src={star_default.src} />
-                                    </li>
+                            <ul>
+                             {Array(5).fill().map((_, i) => {
+                                const ratingValue = i + 1;
+                            return  <li key={i}><img src={ratingValue <= productinfo?.rating ? star_fill.src : star_default.src} /></li>
+                            })}
+
+                       
                                 </ul>
                         </li>
                         <li>
@@ -188,30 +254,26 @@ export default function Page(){
                         <h5>₹ {productinfo?.base_price} <span>₹ {productinfo?.markup_price}</span></h5>
 
                 <ul className='product-varient'>
-                        <li>
-                            <label>Select Size</label>
-                            <select className='form-control'>
-                                <option>--Select--</option>
-                                <option>S</option>
-                                <option>M</option>
-                            </select>
-                        </li>
-                        <li>
-                            <label>Select Color</label>
-                            <select className='form-control'>
-                                <option>--Select--</option>
-                                <option>S</option>
-                                <option>M</option>
-                            </select>
-                        </li>
-                        <li>
-                            <label>Select Range</label>
-                            <select className='form-control'>
-                                <option>--Select--</option>
-                                <option>S</option>
-                                <option>M</option>
-                            </select>
-                        </li>
+                    {variation?.length > 0 &&
+                        variation?.map((item, index)=>{
+                            return (
+                                <li key={index}>
+                                <label>{item?.attr_name}</label>
+                                <select className='form-control' value={item?.value}
+                                    onChange={(e)=>VarietionHandle(e.target.value, index, item, 'value')}
+                                >
+                                    <option>--Select--</option>
+                                    {item?.attr_vals?.map((vari, i)=>{
+                                        return <option key={i} value={vari?.attr_val_id} >{vari?.attr_val_name}</option>
+                                    })}
+                                  
+                                </select>
+                         </li>
+                            )
+                        })
+                    }
+                        
+                        
                         
                 </ul>
                 <ul className='quantity-add'>
@@ -246,11 +308,22 @@ export default function Page(){
                 </ul>
                 <ul className='wishlist-sec'>
                         <li>
-                            <button><img src={wishlist_icon.src} />  Add to wishlist</button>
+                            <button onClick={()=>{
+                                                datareducer != null ?
+                                                AddWishlistHandle(productinfo)
+                                                :
+                                             
+                                                router.push('/login')
+                                                }}><img src={wishlist_icon.src} />  Add to wishlist</button>
                         </li>
+                        {datareducer != null && 
                         <li>
-                            <Link href="#"><img src={share_icon.src} /> Share this Product</Link>
+                            <button>Give Review</button>
                         </li>
+}
+                        {/* <li>
+                            <Link href="#"><img src={share_icon.src} /> Share this Product</Link>
+                        </li> */}
                 </ul>
                 </div>
 
@@ -270,6 +343,29 @@ export default function Page(){
       </Tab>
       <Tab eventKey="review" title={`Reviews (${productinfo?.review_list?.length})`}>
       Reviews
+      {productinfo?.review_list?.map((reviews, i)=>{
+        return (
+            <div className='reviewList' key={i}>
+                <div className='user-i'>
+                    <b>{reviews?.name}</b>
+                    <span>{reviews?.email}</span>
+
+                </div>
+                <div className='user-r'>
+                    <h5>{reviews?.title}</h5>
+                    <p>{reviews?.comment}</p>
+                </div>
+                <ul>
+                {Array(5).fill().map((_, i) => {
+                const ratingValue = i + 1;
+            return  <li key={i}><img src={ratingValue <= reviews?.rating ? star_fill.src : star_default.src} /></li>
+            })}
+
+        
+                </ul>
+            </div>
+        )
+      })}
       </Tab>
     </Tabs>
     </div>

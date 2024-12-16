@@ -17,9 +17,7 @@ const Page = () => {
      const [ReviewsList, setReviewsList] = useState([])
   
      useEffect(()=>{
-      
-    
-      GetWishlistApiRequest()
+        GetWishlistApiRequest()
       },[])
       
       const GetWishlistApiRequest = async () =>{
@@ -85,7 +83,7 @@ const Page = () => {
 
                           ReviewsList?.map((item, i)=>{
                             return (
-                              <tr>
+                              <tr key={i}>
                                   <td>
                                     <div className='d-flex align-items-center'>
                                     

@@ -11,15 +11,18 @@ import heart from '@/public/assets/image/wish_icon.png'
 import { AddCart, GetCart, GetHome } from '@/utils/Apirequest';
 import { GetcartAction } from '@/redux/reducer/DataflowReducer';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Loader from '@/utils/Loader';
 import cart_icon from '@/public/assets/image/cart_icon.png'
+import { useRouter } from 'next/navigation';
 
 
-const ArrivalProduct = ({content, sendDataToParent}) => {
+const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) => {
 
     const [loading, setloading] = useState(false)
-    const [productList, setproductList] = useState(content)
+
+    const datareducer = useSelector((state) => state.Dataflowreducer.token)
+    const router = useRouter();
 
     var settings = {
         dots: true,
@@ -70,6 +73,10 @@ const ArrivalProduct = ({content, sendDataToParent}) => {
     function AddCartHandle(item){
         sendDataToParent(item) 
     }
+
+    function AddWishlistHandle(item){
+        sendDataToParentWishlist(item) 
+    }
  
   
 
@@ -92,7 +99,13 @@ const ArrivalProduct = ({content, sendDataToParent}) => {
                                 <div className='imag-cart'>
                                     <ul>
                                         <li>
-                                            <button>
+                                            <button onClick={()=>{
+                                                datareducer != null ?
+                                                AddWishlistHandle(item)
+                                                :
+                                             
+                                                router.push('/login')
+                                                }}>
                                             <label>Add to wishlist</label>
                                                 <span>
                                                     <img src={heart.src} />

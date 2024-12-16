@@ -1375,6 +1375,37 @@ button.remove {
 .address-modal{
   z-index: 9;
 }
+span.varietion {
+  display: block;
+  font-size: 11px;
+}
+.reviewList {
+  display: flex;
+  gap: 25px;
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+.user-i {
+  width: 15%;
+}
+.user-i span {
+  display: block;
+  font-size: 13px;
+  color: #666;
+}
+.user-r {
+  width: 75%;
+}
+.user-r p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+.reviewList ul {
+  width: 10%;
+  display: flex;
+  justify-content: flex-end;
+}
 
 @media only screen and (max-width: 767px) {
   .slick-next {

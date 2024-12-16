@@ -233,3 +233,14 @@ export const DeleteWishlist = async (body) =>{
 
     } catch(error){return error?.response?.data}
 }
+
+
+export const AddWishlist = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}add-wishlist`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}

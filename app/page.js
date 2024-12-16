@@ -8,10 +8,10 @@ import FeatureProducts from "@/component/FeatureProducts";
 import Testimonial from "@/component/home/Testimonial";
 import NewsLetter from "@/component/home/NewsLetter";
 import { useEffect, useState } from "react";
-import { AddCart, GetCart, GetHome } from "@/utils/Apirequest";
+import { AddCart, AddWishlist, GetCart, GetHome, GetWishlist } from "@/utils/Apirequest";
 import Loader from "@/utils/Loader";
 import { useDispatch } from "react-redux";
-import { GetcartAction } from "@/redux/reducer/DataflowReducer";
+import { GetcartAction, GetWishlistAction } from "@/redux/reducer/DataflowReducer";
 import { toast } from "react-toastify";
 
 export default function Home() {
@@ -68,15 +68,35 @@ export default function Home() {
 }
 
 
+async function AddWishList(item) {
+   setloading(true)
+  
+          let body = {
+              "product_id": item?.id,
+          }
+  
+          const response = await AddWishlist(body)
+          setloading(false)
+  
+          if(response?.status){
+              let responsedata =  await GetWishlist()
+              dispatch(GetWishlistAction(responsedata?.data))
+              GetApiRequest()
+              toast(response?.message)
+          } else {
+              toast(response?.message)
+          }
+}
+
 
   return (
     <div className="home">
         {loading && <Loader/>}
         <Banner content={homedata?.section1} />
         <BannerInfo content={homedata?.section2} />
-        <ArrivalProduct content={homedata?.section3} sendDataToParent={AddCartHandle} />
-        <TrendingCollection content={homedata?.section4} sendDataToParent={AddCartHandle} />
-        <FeatureProducts content={homedata?.section5} sendDataToParent={AddCartHandle} />
+        <ArrivalProduct content={homedata?.section3} sendDataToParent={AddCartHandle} sendDataToParentWishlist={AddWishList}  />
+        <TrendingCollection content={homedata?.section4} sendDataToParent={AddCartHandle} sendDataToParentWishlist={AddWishList} />
+        <FeatureProducts content={homedata?.section5} sendDataToParent={AddCartHandle} sendDataToParentWishlist={AddWishList} />
         <Testimonial content={homedata?.section6}  />
         <NewsLetter content={homedata?.section7}/>
     </div>

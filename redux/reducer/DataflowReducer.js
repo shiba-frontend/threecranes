@@ -6,7 +6,8 @@ const initialState = {
     uid:null,
     sitedata:{},
     token:null,
-    cartItem:[]
+    cartItem:[],
+    wishlistItem:[]
   };
 
   export const DataflowReducer = createSlice({
@@ -27,10 +28,15 @@ const initialState = {
         state.cartItem = action.payload;
       },
 
+      GetWishlistAction(state, action) {
+        state.wishlistItem = action.payload;
+      },
+
     },
   });
   
   export const {
+    GetWishlistAction,
     UserIdAction,
     SitedataAction,
     AuthTokenAction,

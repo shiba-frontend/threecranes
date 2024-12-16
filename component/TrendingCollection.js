@@ -9,9 +9,16 @@ import Link from 'next/link';
 import heart from '@/public/assets/image/wish_icon.png'
 import bag from '@/public/assets/image/bag_icon.png'
 import cart_icon from '@/public/assets/image/cart_icon.png'
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 
 
-const TrendingCollection = ({content, sendDataToParent}) => {
+const TrendingCollection = ({content, sendDataToParent, sendDataToParentWishlist}) => {
+
+    const datareducer = useSelector((state) => state.Dataflowreducer.token)
+    const router = useRouter();
+
+
     var settings = {
         dots: true,
         infinite: true,
@@ -51,6 +58,10 @@ const TrendingCollection = ({content, sendDataToParent}) => {
         sendDataToParent(item) 
     }
 
+    function AddWishlistHandle(item){
+        sendDataToParentWishlist(item) 
+    }
+
 
   return (
     <div className='product-sec'> 
@@ -71,7 +82,13 @@ var rate = Number(item?.rating)
                             <div className='imag-cart'>
                                 <ul>
                                     <li>
-                                        <button>
+                                        <button onClick={()=>{
+                                                datareducer != null ?
+                                                AddWishlistHandle(item)
+                                                :
+                                             
+                                                router.push('/login')
+                                                }}>
                                         <label>Add to wishlist</label>
                                             <span>
                                                 <img src={heart.src} />

@@ -12,7 +12,15 @@ import bag from '@/public/assets/image/bag_icon.png'
 import star_fill from '@/public/assets/image/start_fill.png'
 import star_default from '@/public/assets/image/star_default.png'
 import cart_icon from '@/public/assets/image/cart_icon.png'
-const FeatureProducts = ({content, sendDataToParent}) => {
+import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
+const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) => {
+
+  const datareducer = useSelector((state) => state.Dataflowreducer.token)
+  const router = useRouter();
+
+
+
     var settings = {
         dots: true,
         infinite: true,
@@ -52,6 +60,9 @@ const FeatureProducts = ({content, sendDataToParent}) => {
         sendDataToParent(item) 
     }
 
+    function AddWishlistHandle(item){
+      sendDataToParentWishlist(item) 
+  }
 
   return (
     <div className='product-sec'> 
@@ -70,7 +81,13 @@ const FeatureProducts = ({content, sendDataToParent}) => {
                             <div className='imag-cart'>
                                 <ul>
                                     <li>
-                                        <button>
+                                        <button onClick={()=>{
+                                                datareducer != null ?
+                                                AddWishlistHandle(item)
+                                                :
+                                             
+                                                router.push('/login')
+                                                }}>
                                         <label>Add to wishlist</label>
                                             <span>
                                                 <img src={heart.src} />

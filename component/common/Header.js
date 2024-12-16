@@ -9,8 +9,8 @@ import heart_icon from '@/public/assets/image/heart_icon.png'
 import cart_icon from '@/public/assets/image/cart_icon.png'
 import { getToken } from '@/utils/getToken';
 import { useDispatch, useSelector } from 'react-redux'
-import { AuthTokenAction, GetcartAction } from '@/redux/reducer/DataflowReducer'
-import { GetCart, GetParentCategory } from '@/utils/Apirequest'
+import { AuthTokenAction, GetcartAction, GetWishlistAction } from '@/redux/reducer/DataflowReducer'
+import { GetCart, GetParentCategory, GetWishlist } from '@/utils/Apirequest'
 
 const Header = () => {
 
@@ -48,13 +48,31 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
             }
            
           }
+
+           const GetWishlistApiRequest = async () =>{
+                
+                      
+                   let responsedata =  await GetWishlist()
+               
+                 
+                   if(responsedata?.status){
+
+                    dispatch(GetWishlistAction(responsedata?.data))
+
+                    
+                 
+                   }
+                  
+                 }
       
           GetApiRequest()
           GetcartApiRequest()
+          datareducer != '' &&
+          GetWishlistApiRequest()
        
     },[])
 
-    
+   
 
 
   return (
@@ -91,9 +109,11 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
                         <Link href="/login"> <img src={user_icon.src} alt='logo' /> <label> Login</label></Link>
                       }
                       </li>
+                      {datareducer != null &&
                       <li>
-                          <Link href="/wishlist"> <img src={heart_icon.src} alt='logo' /> <label>Wishlist</label> <span>0</span></Link>
+                          <Link href="/account/wishlist"> <img src={heart_icon.src} alt='logo' /> <label>Wishlist</label> <span>{cartreducer?.wishlistItem?.length}</span></Link>
                       </li>
+}
                       <li>
                           <Link href="/cart"> <img src={cart_icon.src} alt='logo' /> <label>Your Cart</label><span>{cartreducer
 ?.cartItem?.length}</span></Link>

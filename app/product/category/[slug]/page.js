@@ -1,5 +1,5 @@
 "use client"
-import { useParams } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { IMAGE } from '@/utils/Theme'
@@ -11,11 +11,11 @@ import star_default from '@/public/assets/image/star_default.png'
 import heart from '@/public/assets/image/wish_icon.png'
 import bag from '@/public/assets/image/bag_icon.png'
 import grid_icon from '@/public/assets/image/grid_icon.png'
-import { AddCart, FilterProduct, GetCart, GetParentCategoryWiseProduct } from '@/utils/Apirequest'
+import { AddCart, AddWishlist, FilterProduct, GetCart, GetParentCategoryWiseProduct, GetWishlist } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
 import { toast } from 'react-toastify'
-import { GetcartAction } from '@/redux/reducer/DataflowReducer'
-import { useDispatch } from 'react-redux'
+import { GetcartAction, GetWishlistAction } from '@/redux/reducer/DataflowReducer'
+import { useDispatch, useSelector } from 'react-redux'
 import cart_icon from '@/public/assets/image/cart_icon.png'
 import MultiRangeSlider from "multi-range-slider-react";
 
@@ -30,7 +30,8 @@ export default function Page() {
     const [minrange, setminrange] = useState(null)
     const [maxrange, setmaxrange] = useState(null)
     const [selectArr, setselectArr] = useState([])
-  
+    const datareducer = useSelector((state) => state.Dataflowreducer.token)
+    const router = useRouter();
 
     useEffect(()=>{
       
@@ -90,10 +91,33 @@ export default function Page() {
             let responsedata =  await GetCart()
             dispatch(GetcartAction(responsedata?.data[0]?.cart_items))
             toast(response?.message)
+            GetApiRequest()
         } else {
             toast(response?.message)
         }
     }
+
+    async function AddWishlistHandle(item) {
+        setloading(true)
+
+        let body = {
+            "product_id": item?.id,
+        }
+
+        const response = await AddWishlist(body)
+        setloading(false)
+
+        if(response?.status){
+            let responsedata =  await GetWishlist()
+            dispatch(GetWishlistAction(responsedata?.data))
+            GetApiRequest()
+            toast(response?.message)
+        } else {
+            toast(response?.message)
+        }
+    }
+
+    
 
     function CheckBoxHandle(row){
 
@@ -278,7 +302,13 @@ export default function Page() {
                                 <div className='imag-cart'>
                                     <ul>
                                         <li>
-                                            <button>
+                                            <button onClick={()=>{
+                                                datareducer != null ?
+                                                AddWishlistHandle(item)
+                                                :
+                                             
+                                                router.push('/login')
+                                                }}>
                                             <label>Add to wishlist</label>
                                                 <span>
                                                     <img src={heart.src} />

@@ -134,15 +134,7 @@ export const GetCheckout = async () =>{
     } catch(error){ return error?.response?.data}
 }
 
-export const GetOrderList = async () =>{
-    try{
 
-        let response = await axios.get(`${_URL}order-list`, {headers})
-   
-        return response?.data
-
-    } catch(error){ return error?.response?.data}
-}
 
 export const GetProfile = async () =>{
     try{
@@ -244,3 +236,36 @@ export const AddWishlist = async (body) =>{
 
     } catch(error){return error?.response?.data}
 }
+
+
+export const SaveReview = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}add-review`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+
+export const GetOrderList = async () =>{
+    try{
+
+        let response = await axios.get(`${_URL}order-list`, {headers})
+   
+        return response?.data
+
+    } catch(error){ return error?.response?.data}
+}
+
+export const OrderDetails = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}order-details`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+

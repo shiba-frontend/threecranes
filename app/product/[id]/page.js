@@ -19,12 +19,13 @@ import plus_icon from '@/public/assets/image/plus_icon.png'
 import minus_icon from '@/public/assets/image/minus_icon.png'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
-import { AddCart, AddWishlist, GetCart, GetProductDetails, GetProfile, GetWishlist } from '@/utils/Apirequest'
+import { AddCart, AddWishlist, GetCart, GetProductDetails, GetProfile, GetWishlist, SaveReview } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
 import { GetcartAction, GetWishlistAction } from '@/redux/reducer/DataflowReducer'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-
+import Modal from 'react-bootstrap/Modal';
+import { Rating } from 'react-simple-star-rating'
 
 export default function Page(){
 
@@ -33,9 +34,13 @@ export default function Page(){
     const [productinfo, setproductinfo] = useState('')
     const [qty, setqty] = useState(0)
     const [variation, setvariation] = useState([])
-       const [fname, setfname] = useState('')
-       const [lname, setlname] = useState('')
-       const [email, setemail] = useState('')
+    const [fname, setfname] = useState('')
+    const [lname, setlname] = useState('')
+    const [email, setemail] = useState('')
+    const [show, setShow] = useState(false);
+    const [rating, setRating] = useState(0)
+    const [comment, setcomment] = useState("")
+    const [title, settitle] = useState("")
     const { id} = useParams()
     const datareducer = useSelector((state) => state.Dataflowreducer.token)
 
@@ -55,6 +60,12 @@ export default function Page(){
     //       </div>
     //     )
     //   };
+    const handleClose = () => setShow(false);
+
+    const handleShow = () => {
+      setShow(true)
+
+    };
 
     useEffect(()=>{
 
@@ -105,8 +116,7 @@ export default function Page(){
            setloading(false)
          
            if(responsedata?.status){
-      
-              console.log(responsedata?.data)
+
               setfname(responsedata?.data?.first_name)
               setlname(responsedata?.data?.last_name)
               setemail(responsedata?.data?.email)
@@ -185,7 +195,37 @@ export default function Page(){
               toast(response?.message)
           }
       }
+
+      const handleRating = (rate) => {
+        setRating(rate)
+    
+      }
  
+
+      async function SubmitReview() {
+        
+        setloading(true)
+
+        let body = {
+            "product_id": id,
+            "name": fname + ' ' + lname,
+            "email": email,
+            "rating": rating,
+            "title": title,
+            "comment": comment
+        }
+
+        let response = await SaveReview(body)
+        setloading(false)
+        if(response?.status){
+            setShow(false)
+            toast(response?.message)
+        } else {
+            toast(response?.message)
+        }
+
+        
+      }
 
 
   return (
@@ -318,7 +358,7 @@ export default function Page(){
                         </li>
                         {datareducer != null && 
                         <li>
-                            <button>Give Review</button>
+                            <button onClick={()=>setShow(true)}>Give Review</button>
                         </li>
 }
                         {/* <li>
@@ -371,6 +411,33 @@ export default function Page(){
     </div>
     <FeatureProducts content={featureproduct} />
     </div>
+    <Modal show={show} onHide={handleClose}  size="md">
+        <Modal.Header >
+          <Modal.Title>Give Review</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <div className="form-group mb-3"> 
+        <Rating
+        onClick={handleRating}
+      />
+        </div>
+        <div className="form-group mb-3"> 
+          <input type='text' className='form-control' placeholder='Enter Title' value={title} onChange={(e)=>settitle(e.target.value)} />
+      </div>
+      <div className="form-group"> 
+          <textarea className="form-control" placeholder="Comment Here" value={comment} onChange={(e)=>setcomment(e.target.value)}> </textarea>
+      </div>
+          
+        </Modal.Body>
+        <Modal.Footer>
+          <button className='btn btn-warning' onClick={handleClose}>
+            Close
+          </button>
+          <button className='btn btn-primary' onClick={SubmitReview}>
+           Submit Review
+          </button>
+        </Modal.Footer>
+      </Modal>
 </div>
 
  

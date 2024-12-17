@@ -1407,6 +1407,10 @@ span.varietion {
   justify-content: flex-end;
 }
 
+
+
+
+
 @media only screen and (max-width: 767px) {
   .slick-next {
    display: none !important;

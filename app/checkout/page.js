@@ -1,16 +1,37 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import productIMg from '@/public/assets/image/banner_img.png'
-import { GetCheckout } from '@/utils/Apirequest'
+import { AddAddress, GetCheckout, OrderPlace } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
-
-
-
+import { StandaloneSearchBox, LoadScript, Autocomplete, useJsApiLoader } from '@react-google-maps/api';
+import { toast } from 'react-toastify'
+import Modal from 'react-bootstrap/Modal';
+import axios from 'axios';
 
 
 const Page = () => {
    const [loading, setloading] = useState(false)
+   const [data, setdata] = useState('')
+   const [shippingselectAdd, setshippingselectAdd] = useState('')
+   const [billingselectAdd, setbillingselectAdd] = useState('')
+   const [show, setShow] = useState(false);
+   const [addrestype, setaddrestype] = useState('SHIPPING')
+   const [name, setname] = useState('')
+   const [phone, setphone] = useState('')
+   const [email, setemail] = useState('')
+   const [zipcode, setzipcode] = useState('')
+   const [country, setcountry] = useState('')
+   const [state, setstate] = useState('')
+   const [city, setcity] = useState('')
+   const [address, setaddress] = useState('')
+   const [streetno, setstreetno] = useState('')
+   const [locality, setlocality] = useState('')
+   const [lat, setlat] = useState('')
+   const [lng, setlng] = useState('')
+   const [addtitle, setaddtitle] = useState('Home')
 
+   
+          const inputRef = useRef()
 
    useEffect(()=>{
   
@@ -26,13 +47,201 @@ const Page = () => {
   
      setloading(false)
    
-     if(responsedata?.response_code == 200){
-      
+     if(responsedata?.status){
+         console.log(responsedata?.data)
      }
+     setdata(responsedata?.data[0])
+     console.log(responsedata?.data)
     
    }
 
 
+   const handleClose = () => setShow(false);
+
+
+
+   const handleplacesChanged = () =>{
+
+    const [place] = inputRef.current.getPlaces();
+
+    if(place){
+      
+       var _address = place.formatted_address;
+       var _lat = place.geometry.location.lat()
+       var _lng = place.geometry.location.lng()
+       getFullAddress(_lat, _lng)
+
+    }
+
+  }
+
+
+
+  const getFullAddress = async (_lat, _lng) => {
+ 
+   
+    await axios
+      .get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${_lat},${_lng}&key=${'AIzaSyBrRtkwvBcSh3_uISG8CVAX2IqykHdQEP4'}`,
+      )
+      .then(async responseJson => {
+        let locArr = responseJson?.data?.results?.[0]?.address_components;
+        let locc = responseJson?.data?.results?.[0]?.formatted_address;
+        var _country = "";
+        var _state = "";
+        var _city = "";
+        var _locality = "";
+        var _streetno = "";
+        var _zipcode = "";
+        console.log(locArr)
+ 
+
+        for (const component of locArr){
+          const addressType = component.types[0]
+
+             if(addressType.includes('countr')) {
+                _country = component.long_name
+           
+                 }
+             if(addressType == "administrative_area_level_1"){
+                _state = component.long_name
+              
+            } 
+
+                 if(addressType.includes('administrative_area_level_1')) {
+                    _city = component.long_name
+               
+                     }
+                     if(addressType.includes('locality')) {
+                        _locality = component.long_name
+                   
+                         }
+         
+         
+                    if(addressType == "premise"){
+                        _streetno = component.long_name
+                    }
+                    if(addressType == "postal_code"){
+                        _zipcode = component.long_name
+                    }
+        
+        }
+
+        setaddress(locc)
+        setcountry(_country)
+        setstate(_state)
+        setcity(_city)
+        setlocality(_locality)
+        setstreetno(_streetno)
+        setzipcode(_zipcode)
+        setlat(_lat)
+        setlng(_lng)
+
+  
+      })
+      .catch(err => console.log('cordsss err', err));
+  };
+
+  async function AddAddressHandle() {
+
+     if(addtitle == ''){
+            toast.error('Address type is mandatory')
+        } else if(address == ''){
+            toast.error('Address is mandatory')
+        } else if(name == ''){
+            toast.error('Name is mandatory')
+        } else if(phone == ''){
+            toast.error('Phone is mandatory')
+        } else if(zipcode == ''){
+            toast.error('Zipcode is mandatory')
+        }
+         else {
+    
+
+        setloading(true)
+        let obj = {
+            "type": addrestype,
+            "title": addtitle,
+            "name": name,
+            "email": email,
+            "phone": phone,
+            "address": address,
+            "country": country,
+            "state": state,
+            "city": city,
+            "locality": locality,
+            "street_no": streetno,
+            "zipcode": zipcode,
+            "lat": lat,
+            "lng": lng
+        }
+    
+        const response = await AddAddress(obj)
+        setloading(false)
+     
+        if(response.status){
+            setShow(false)
+            GetcartApiRequest()
+            toast(response?.message)
+        } else {
+            toast.error(response?.message)
+        }
+        }
+    
+  }
+
+  async function PlaceOrderHandle() {
+
+   if(shippingselectAdd == ''){
+      toast.error("Please choose the shipping address")
+   } else if(billingselectAdd == ''){
+      toast.error("Please choose the billing address")
+   } else {
+
+      let body = {
+         "payment_method": "COD",
+         "checkout_type": "GUEST",
+         "b_fname": "test",
+         "b_lname": "test",
+         "b_phone": "7777777777",
+         "b_email": "test@test.com",
+         "b_company": "test",
+         "b_country": "US",
+         "b_street": "test",
+         "b_suburb": "test",
+         "b_state": "test",
+         "b_postcode": "14141",
+         "s_fname": "test",
+         "s_lname": "test",
+         "s_phone": "7777777777",
+         "s_email": "test@test.com",
+         "s_company": "test",
+         "s_country": "US",
+         "s_street": "test",
+         "s_suburb": "test",
+         "s_state": "test",
+         "s_postcode": "test",
+         "subtotal": data?.tot_subtotal_amt,
+         "disc_amount": "0.00",
+         "amount_after_disc": "1300.00",
+         "shipping_amt": data?.tot_shipping_amt,
+         "tax_amt": data?.tot_tax_amt,
+         "net_amt": data?.tot_net_amt
+     }
+
+     let response = await OrderPlace(body)
+
+     if(response?.status){
+
+     }
+
+
+
+   }
+
+
+
+  }
 
 
 
@@ -42,181 +251,134 @@ const Page = () => {
 
 
   return (
+    <LoadScript googleMapsApiKey="AIzaSyBrRtkwvBcSh3_uISG8CVAX2IqykHdQEP4"
+           libraries={["places"]}>
     <section className="register-form-section login-form shipping-form-section section-padding">
           {loading && <Loader/>}
     <div className=" container-xxl container-xl container-lg container-md container-sm container">
        <div className="row justify-content-center">
           <div className="col-12 col-lg-8 col-xl-8 col-md-12 col-sm-12">
-             <div className="register-form-field">
-                <div className='register-form'>
-                   <div className="row justify-content-center">
-                      <div className="col-6 col-lg-6 col-xl-6 col-md-6 col-sm-12">
-                         <div className="form-outline mb-3">
-                            <label className="form-label" for="form3Example3cg">First name*</label>
-                            <input type="email" id="form3Example3cg" placeholder="John"
-                               className="form-control form-control-lg" />
-                         </div>
-                      </div>
-                      <div className="col-6 col-lg-6 col-xl-6 col-md-6 col-sm-12">
-                         <div className="form-outline mb-3">
-                            <label className="form-label" for="form3Example3cg">Last name*</label>
-                            <input type="email" id="form3Example3cg" placeholder="Smith"
-                               className="form-control form-control-lg" />
-                         </div>
-                      </div>
-                   </div>
-                   <div className="form-outline mb-3">
-                      <label className="form-label" for="form3Example3cg">Company name(optional)</label>
-                      <input type="email" id="form3Example3cg" className="form-control form-control-lg" />
-                   </div>
-                   <div className="form-outline mb-3">
-                      <label className="form-label" for="form3Example3cg">Country / Region*</label>
-                      <select className="form-control form-control-lg" name="countries" id="countries">
-                         <option value='ad' data-title="Andorra">Andorra</option>
-                         <option value='ae' data-title="United Arab Emirates">United Arab Emirates</option>
-                         <option value='af' data-title="Afghanistan">Afghanistan</option>
-                         <option value='ag' data-title="Antigua and Barbuda">Antigua and Barbuda</option>
-                         <option value='ai' data-title="Anguilla">Anguilla</option>
-                         <option value='al' data-title="Albania">Albania</option>
-                         <option value='am' data-title="Armenia">Armenia</option>
-                         <option value='an' data-title="Netherlands Antilles">Netherlands Antilles</option>
-                      </select>
-                   </div>
-                   <div className="form-outline mb-3">
-                      <label className="form-label" for="form3Example4cg">Street address*</label>
-                      <input type="email" id="form3Example3cg" placeholder="House number and street name"
-                         className="form-control form-control-lg mb-2" />
-                      <input type="email" id="form3Example3cg" placeholder="Apartment,suite,unit,etc. (optional)"
-                         className="form-control form-control-lg" />
-                   </div>
-                   <div className="form-outline mb-3">
-                      <label className="form-label" for="form3Example4cg">Suburb*</label>
-                      <input type="email" id="form3Example3cg" className="form-control form-control-lg " />
-                   </div>
-                   <div className="form-outline mb-3">
-                      <label className="form-label" for="form3Example3cg">State*</label>
-                      <select className="form-control form-control-lg" name="countries" id="countries">
-                         <option value="AP">Andhra Pradesh</option>
-                         <option value="AR">Arunachal Pradesh</option>
-                         <option value="AS">Assam</option>
-                         <option value="BR">Bihar</option>
-                         <option value="CT">Chhattisgarh</option>
-                         <option value="GA">Gujarat</option>
-                         <option value="HR">Haryana</option>
-                         <option value="HP">Himachal Pradesh</option>
-                         <option value="JK">Jammu and Kashmir</option>
-                         <option value="GA">Goa</option>
-                         <option value="JH">Jharkhand</option>
-                         <option value="KA">Karnataka</option>
-                         <option value="KL">Kerala</option>
-                      </select>
-                   </div>
-                   <div className="form-outline mb-3">
-                      <label className="form-label" for="form3Example4cg">Postcode*</label>
-                      <input type="email" id="form3Example3cg" className="form-control form-control-lg " />
-                   </div>
-                   <div className="form-outline mb-3">
-                      <label className="form-label" for="form3Example4cg">Phone(optional) </label>
-                      <input type="email" id="form3Example3cg" className="form-control form-control-lg " />
-                   </div>
-                   <div className="form-outline mb-3">
-                      <label className="form-label" for="form3Example4cg">Email(optional) </label>
-                      <input type="email" id="form3Example3cg" className="form-control form-control-lg " />
-                   </div>
-                   <div className="log-btn-reme d-flex align-items-center mt-4">
-                      <button type="button" className="btn common-btn">Save Address</button>
-                   </div>
-                </div>
-             </div>
+            <div className='text-end mb-3'> <button className='btn btn-lg btn-outline-warning' onClick={()=>setShow(true)}>Add New Address</button> </div>
+            <div className='add-d-flex'>
+            <div className='checkout-add'>
+                  <h5>Shipping Address</h5>
+                  {data?.shippings?.length > 0 ? 
+                  data?.shippings?.map((add, i)=>{
+                     return (
+                        <div className='card mb-3' key={i}>
+                           <div className='card-header'>
+                              <div className='addres-head'>
+                                  {add?.title}
+                                  <button className={shippingselectAdd == add?.address_id ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-outline-secondary'   }  onClick={()=>setshippingselectAdd(add?.address_id)}>Select Address</button>
+                              </div>
+                               
+                           </div>
+                        <div className='card-body'>
+                           {add?.address}
+                        </div>
+                  </div>
+                     )
+                  })
+                  
+                  :
+                  <div className='card mb-3'>
+                 
+               <div className='card-body'>
+                 No shipping address
+               </div>
+         </div>
+}
+               </div>
+               <div className='checkout-add'>
+                  <h5>Billing Address</h5>
+                  {data?.billings?.length > 0 ? 
+                  data?.billings?.map((add, i)=>{
+                     return (
+                        <div className='card mb-3' key={i}>
+                           <div className='card-header'>
+                           <div className='addres-head'>
+                                  {add?.title}
+                                  <button className={billingselectAdd == add?.address_id ? 'btn btn-sm btn-secondary' : 'btn btn-sm btn-outline-secondary'   }  onClick={()=>setbillingselectAdd(add?.address_id)}>Select Address</button>
+                              </div>
+                           </div>
+                        <div className='card-body'>
+                           {add?.address}
+                        </div>
+                  </div>
+                     )
+                  })
+                  
+                  :
+                  <div className='card mb-3'>
+                 
+               <div className='card-body'>
+               No billing address
+               </div>
+         </div>
+                 
+}
+               </div>
+            </div>
+             
           </div>
           <div className="col-xl-4 col-lg-5 col-md-12 col-12">
              <div className="checkout-review-order-table-wrapper">
                 <div className="title-product-name">Product</div>
                 <div className="shop_table ">
-                   <div className="cart_item-ccheck">
-                      <div className="info-product">
-                         <div className="product-thumble">
-                            <img width="50"  src={productIMg.src} className="imd-fluid" alt="" />
-                         </div>
-                         <div className="product-name">
-                            Bold Hoops&nbsp; <strong className="product-quantity">QTY : 1</strong>
-                         </div>
-                      </div>
-                      <div className="product-total">
-                         <span className=" amount"><bdi><span className="Price-currencySymbol">$</span>120.00</bdi></span>
-                      </div>
-                   </div>
+                {data?.cart_items?.map((item, i)=>{
+                  return (
+                     <div className="cart_item-ccheck" key={i}>
+                     <div className="info-product">
+                        <div className="product-thumble">
+                           <img width="50"  src={item?.product_cover_image} className="imd-fluid" alt="" />
+                        </div>
+                        <div className="product-name">
+                           {item?.product_name}<br></br> <strong className="product-quantity">QTY : {item?.qty}</strong>
+                           <br></br>
+                           <span>{item?.variation_name}</span>
+                        </div>
+                     </div>
+                     <div className="product-total">
+                        <span className="amount"><bdi><span className="Price-currencySymbol">$ </span>{item?.amount_after_disc}</bdi>
+                       
+                        </span>
+                        <sub>$ {item?.product_markup_price}</sub>
+                     </div>
+                  </div>
+                  )
+                })
+}
+                 
                    <div className="cart-subtotal-list">
                       <h2>Subtotal</h2>
                       <div className="subtotal-price"><span className="Price-amount amount"><bdi><span
-                                  className="Price-currencySymbol">$</span>120.00</bdi></span>
+                                  className="Price-currencySymbol">$ </span>{data?.tot_subtotal_amt}</bdi></span>
                       </div>
                    </div>
-                   <div className="cart-subtotal-list shipping-totals">
+                   <div className="cart-subtotal-list">
                       <h2>Shipping</h2>
-                      <div data-title="Shipping">
-                         <ul id="shipping_method" className="shipping-methods">
-                            <li>
-                               <input type="radio" name="shipping_method[0]" data-index="0"
-                                  id="shipping_method_0_free_shipping1" value="free_shipping:1"
-                                  className="shipping_method" checked="checked" /><label
-                                  for="shipping_method_0_free_shipping1">Free shipping</label>
-                            </li>
-                            <li>
-                               <input type="radio" name="shipping_method[0]" data-index="0"
-                                  id="shipping_method_0_flat_rate2" value="flat_rate:2" className="shipping_method" /><label
-                                  for="shipping_method_0_flat_rate2">Flat
-                                  rate</label>
-                            </li>
-                         </ul>
+                      <div className="subtotal-price"><span className="Price-amount amount"><bdi><span
+                                  className="Price-currencySymbol">$ </span>{data?.tot_shipping_amt}</bdi></span>
                       </div>
                    </div>
+                   <div className="cart-subtotal-list">
+                      <h2>Tax</h2>
+                      <div className="subtotal-price"><span className="Price-amount amount"><bdi><span
+                                  className="Price-currencySymbol">$ </span>{data?.tot_tax_amt}</bdi></span>
+                      </div>
+                   </div>
+                  
                    <div className="cart-subtotal-list order-total">
                       <h2>Total</h2>
                       <div className="total-price"><strong><span className="amount"><bdi><span
-                                     className="Price-currency">$</span>120.00</bdi></span></strong>
+                                     className="Price-currency">$ </span>{data?.tot_net_amt}</bdi></span></strong>
                       </div>
                    </div>
                 </div>
                 <div id="payment" className="checkout-payment">
-                   <ul className=" payment_methods methods">
-                      <li className=" payment_method_bacs">
-                         <input id="payment_method_bacs" type="radio" className="input-radio" name="payment_method"
-                            value="bacs" checked="checked" data-order_button_text="" />
-                         <label for="payment_method_bacs">
-                            Direct bank transfer </label>
-                         <div className="payment_box payment_method_bacs">
-                            <p>Make your payment directly into our bank account. Please use your Order ID as
-                               the
-                               payment reference. Your order will not be shipped until the funds have
-                               cleared in
-                               our account.
-                            </p>
-                         </div>
-                      </li>
-                      <li className=" payment_method_cheque">
-                         <input id="payment_method_cheque" type="radio" className="input-radio" name="payment_method"
-                            value="cheque" data-order_button_text="" />
-                         <label for="payment_method_cheque">
-                            Check payments </label>
-                      </li>
-                      <li className="payment_method_cod&quot;">
-                         <input id="payment_method_cod" type="radio" className="input-radio" name="payment_method"
-                            value="cod" data-order_button_text="" />
-                         <label for="payment_method_cod">
-                            Cash on delivery </label>
-                      </li>
-                      <li className=" payment_method_paypal">
-                         <input id="payment_method_paypal" type="radio" className="input-radio" name="payment_method"
-                            value="paypal" data-order_button_text="Proceed to PayPal" />
-                         <label for="payment_method_paypal">
-                            PayPal <img src="images/payment.png" alt="PayPal acceptance mark"/><a href="#"
-                               className="about_paypal"></a>
-                         </label>
-                      </li>
-                   </ul>
+                 
                    <div className="form-row place-order">
-                      <button type="submit" className="button btn-place-order common-btn">Place order</button>
+                      <button type="submit" className="button btn-place-order common-btn" onClick={PlaceOrderHandle}>Pay & Place order</button>
                    </div>
                 </div>
              </div>
@@ -224,6 +386,124 @@ const Page = () => {
        </div>
     </div>
  </section>
+ <Modal show={show} onHide={handleClose} className='address-modal'  size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Add Address</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+
+        <div className='row form-style1'>
+        <div className='col-lg-6'>
+                <div className='form-group'>
+                    <label>Address Type</label>
+                    <br></br>
+                    <input type='radio' name="type" value="Home" onChange={(e)=>setaddtitle(e.target.value)} checked={addtitle == 'Home'} /> Home &nbsp;
+                    <input type='radio' name="type" value="Work"  onChange={(e)=>setaddtitle(e.target.value)} checked={addtitle == 'Work'} /> Work
+                </div>
+            </div>
+            <div className='col-lg-6'>
+                <div className='form-group'>
+                    <label>Address For</label>
+                    <br></br>
+                    <input type='radio' name="for" value="SHIPPING" onChange={(e)=>setaddrestype(e.target.value)} checked={addrestype == 'SHIPPING'} /> Shipping &nbsp;
+                    <input type='radio' name="for" value="BILLING"  onChange={(e)=>setaddrestype(e.target.value)}  checked={addrestype == 'BILLING'}/> Billing
+                </div>
+            </div>  
+            <div className='col-lg-4'>
+                <div className='form-group'>
+                    <label>Name *</label>
+                    <input type='text' className='form-control' placeholder='Enter Full Name'
+                    value={name} onChange={(e)=>setname(e.target.value)}
+                    />
+                </div>
+            </div>
+            <div className='col-lg-4'>
+                <div className='form-group'>
+                    <label>Phone *</label>
+                    <input type='text' className='form-control' placeholder='Phone'
+                    value={phone} onChange={(e)=>setphone(e.target.value)}
+                    onKeyPress={(event) => {
+                        if (!/[0-9]/.test(event.key)) {
+                            event.preventDefault();
+                        }
+                        }}
+                    />
+                </div>
+            </div>
+            <div className='col-lg-4'>
+                <div className='form-group'>
+                    <label>Email *</label>
+                    <input type='email' className='form-control' placeholder='Email'
+                    value={email} onChange={(e)=>setemail(e.target.value)}
+                    
+                    />
+                </div>
+            </div>
+            
+            <div className='col-lg-12'>
+                <div className='form-group'>
+                    <label>Address</label>
+                    <StandaloneSearchBox
+                        onLoad={ref =>(inputRef.current = ref)}
+                        onPlacesChanged={handleplacesChanged}
+                        className="address-auto"
+                        >
+                             <input
+                            type="text"
+                            placeholder="Enter Address"
+                        className="form-control"
+                        />
+                        </StandaloneSearchBox>
+                </div>
+            </div>
+            <div className='col-lg-6'>
+                <div className='form-group'>
+                    <label>Country</label>
+                    <input type='text' className='form-control' placeholder='Country'
+                    value={country} onChange={(e)=>setcountry(e.target.value)}
+                    
+                    />
+                </div>
+            </div>
+            <div className='col-lg-6'>
+                <div className='form-group'>
+                    <label>State</label>
+                    <input type='text' className='form-control' placeholder='State'
+                    value={state} onChange={(e)=>setstate(e.target.value)}
+                    
+                    />
+                </div>
+            </div>
+            <div className='col-lg-6'>
+                <div className='form-group'>
+                    <label>City</label>
+                    <input type='text' className='form-control' placeholder='City'
+                    value={city} onChange={(e)=>setcity(e.target.value)}
+                    
+                    />
+                </div>
+            </div>
+            <div className='col-lg-6'>
+                <div className='form-group'>
+                    <label>Zipcode *</label>
+                    <input type='text' className='form-control' placeholder='Zipcode'
+                    value={zipcode} onChange={(e)=>setzipcode(e.target.value)}
+                    
+                    />
+                </div>
+            </div>
+        </div>
+
+      
+        <button className='btn btn-outline-danger' onClick={handleClose}>Cancel</button>
+        <button className='btn btn-primary ms-2' onClick={AddAddressHandle}>Add Address</button>
+
+        </Modal.Body>
+     
+            
+     
+      </Modal>
+ </LoadScript>
   )
 }
 

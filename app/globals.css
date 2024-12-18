@@ -1118,8 +1118,11 @@ button.control-arrow.control-prev {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  /* border-top: 1px solid #dedede; */
+  padding: 4px 0;
+}
+.cart-subtotal-list.order-total {
   border-top: 1px solid #dedede;
-  padding: 11px 0;
 }
 .cart-subtotal-list h2 {
   font-size: 15px;
@@ -1407,9 +1410,24 @@ span.varietion {
   justify-content: flex-end;
 }
 
-
-
-
+.cart_item-ccheck sub {
+  color: #f9b922;
+  text-decoration: line-through;
+  display: block;
+  text-align: right;
+}
+.add-d-flex {
+  display: flex;
+  gap: 20px;
+}
+.checkout-add {
+  flex: 1;
+}
+.addres-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
 @media only screen and (max-width: 767px) {
   .slick-next {

@@ -269,3 +269,15 @@ export const OrderDetails = async (body) =>{
     } catch(error){return error?.response?.data}
 }
 
+export const OrderPlace = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}place-order`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+
+

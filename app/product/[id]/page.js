@@ -396,6 +396,10 @@ export default function Page(){
                         
                         
                 </ul>
+                
+                      {productinfo?.product_qty <= 0 ?
+                    <h5>Out of stock</h5>
+                :
                 <ul className='quantity-add'>
                     <li>
                         <div className='quantity-box'>
@@ -426,6 +430,7 @@ export default function Page(){
                     </li> */}
                
                 </ul>
+                    }
                 <ul className='wishlist-sec'>
                         <li>
                             <button onClick={()=>{

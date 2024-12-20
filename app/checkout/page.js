@@ -7,7 +7,9 @@ import { StandaloneSearchBox, LoadScript, Autocomplete, useJsApiLoader } from '@
 import { toast } from 'react-toastify'
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
-
+import { useRouter } from 'next/navigation'
+import Cards from 'react-credit-cards-2';
+import 'react-credit-cards-2/dist/es/styles-compiled.css';
 
 const Page = () => {
    const [loading, setloading] = useState(false)
@@ -15,6 +17,7 @@ const Page = () => {
    const [shippingselectAdd, setshippingselectAdd] = useState('')
    const [billingselectAdd, setbillingselectAdd] = useState('')
    const [show, setShow] = useState(false);
+   const [show1, setShow1] = useState(false);
    const [addrestype, setaddrestype] = useState('SHIPPING')
    const [name, setname] = useState('')
    const [phone, setphone] = useState('')
@@ -29,9 +32,18 @@ const Page = () => {
    const [lat, setlat] = useState('')
    const [lng, setlng] = useState('')
    const [addtitle, setaddtitle] = useState('Home')
+   const [cards, setcards] = useState({
+      number: '',
+      expiry: '',
+      cvc: '',
+      name: '',
+      focus: '',
+    });
 
    
           const inputRef = useRef()
+
+          const router = useRouter()
 
    useEffect(()=>{
   
@@ -42,6 +54,7 @@ const Page = () => {
   const GetcartApiRequest = async () =>{
   
      setloading(true)
+     
         
      let responsedata =  await GetCheckout()
   
@@ -49,16 +62,19 @@ const Page = () => {
    
      if(responsedata?.status){
         setdata(responsedata?.data[0])
+     } 
+      if(responsedata?.status == 401){
+      router.push('/login')
      }
    
-   
+  
     
    }
 
 
    const handleClose = () => setShow(false);
 
-
+   const handleClose1 = () => setShow1(false);
 
    const handleplacesChanged = () =>{
 
@@ -198,6 +214,10 @@ const Page = () => {
       toast.error("Please choose the billing address")
    } else {
 
+setShow1(true)
+
+return
+
       let body = {
          "payment_method": "COD",
          "checkout_type": "GUEST",
@@ -243,7 +263,15 @@ const Page = () => {
 
   }
 
+  const handleInputChange = (evt) => {
+   const { name, value } = evt.target;
+   
+   setcards((prev) => ({ ...prev, [name]: value }));
+ }
 
+ const handleInputFocus = (evt) => {
+   setcards((prev) => ({ ...prev, focus: evt.target.name }));
+ }
 
 
 
@@ -497,6 +525,108 @@ const Page = () => {
       
         <button className='btn btn-outline-danger' onClick={handleClose}>Cancel</button>
         <button className='btn btn-primary ms-2' onClick={AddAddressHandle}>Add Address</button>
+
+        </Modal.Body>
+     
+            
+     
+      </Modal>
+      <Modal show={show1} onHide={handleClose1} className='address-modal'  size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Card Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+         <div className='row'>
+            <div className='col-lg-6'>
+            <Cards
+        number={cards.number}
+        expiry={cards.expiry}
+        cvc={cards.cvc}
+        name={cards.name}
+        focused={cards.focus}
+      />
+            </div>
+            <div className='col-lg-6'>
+           
+
+<div className='row'>
+   <div className='col-lg-12'>
+         <div className='form-group mb-3'>
+         <input
+            type="number"
+            name="number"
+            placeholder="Card Number"
+            value={cards.number}
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+            className='form-control'
+         />
+         </div>
+   </div>
+   <div className='col-lg-12'>
+         <div className='form-group mb-3'>
+         <input
+            type="text"
+            name="name"
+            placeholder="Card Name"
+            value={cards.name}
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+            className='form-control'
+         />
+         </div>
+   </div>
+   <div className='col-lg-6'>
+         <div className='form-group mb-3'>
+         <input
+            type="text"
+            name="expiry"
+            placeholder="Expiry"
+            value={cards.expiry}
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+            maxLength="4"
+            className='form-control'
+            onKeyPress={(event) => {
+               if (!/[0-9]/.test(event.key)) {
+                   event.preventDefault();
+               }
+               }}
+         />
+         </div>
+   </div>
+   <div className='col-lg-6'>
+         <div className='form-group mb-3'>
+         <input
+            type="text"
+            name="cvc"
+            placeholder="CVC"
+            value={cards.cvc}
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+            className='form-control'
+            maxLength="3"
+            onKeyPress={(event) => {
+               if (!/[0-9]/.test(event.key)) {
+                   event.preventDefault();
+               }
+               }}
+         />
+         </div>
+   </div>
+   <div className='col-lg-12 text-end'>
+   <button className='btn btn-outline-danger' onClick={handleClose1}>Cancel</button>
+   <button className='btn btn-primary ms-2' onClick={AddAddressHandle}>Pay Now</button>
+      </div>
+</div>
+
+ 
+            </div>
+         </div>
+      
+  
+      
+   
 
         </Modal.Body>
      

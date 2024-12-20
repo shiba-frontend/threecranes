@@ -9,7 +9,7 @@ import heart_icon from '@/public/assets/image/heart_icon.png'
 import cart_icon from '@/public/assets/image/cart_icon.png'
 import { getToken } from '@/utils/getToken';
 import { useDispatch, useSelector } from 'react-redux'
-import { AuthTokenAction, GetcartAction, GetWishlistAction } from '@/redux/reducer/DataflowReducer'
+import { AuthTokenAction, GetcartAction, GetMenuAction, GetWishlistAction } from '@/redux/reducer/DataflowReducer'
 import { GetCart, GetParentCategory, GetWishlist } from '@/utils/Apirequest'
 
 const Header = () => {
@@ -22,11 +22,14 @@ const datareducer = useSelector((state) => state.Dataflowreducer.token)
 const cartreducer = useSelector((state) => state.Dataflowreducer)
 
 
+
     const storedToken = getToken();
 
     useEffect(()=>{
 
         dispatch(AuthTokenAction(storedToken))
+
+        
 
         const GetApiRequest = async () =>{
          
@@ -34,6 +37,7 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
           
             if(responsedata?.response_code == 200){
                 setcategory(responsedata?.data)
+                dispatch(GetMenuAction(responsedata?.data))
       
             }
            
@@ -67,7 +71,7 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
       
           GetApiRequest()
           GetcartApiRequest()
-          datareducer != '' &&
+          storedToken != null &&
           GetWishlistApiRequest()
        
     },[])

@@ -12,7 +12,7 @@ import twitter_icon from '@/public/assets/image/twitter_icon.png'
 import card from '@/public/assets/image/card.png'
 import Loader from '@/utils/Loader'
 import ApiConnection from '@/utils/ApiConnection'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { SitedataAction } from '@/redux/reducer/DataflowReducer'
 
 
@@ -20,6 +20,7 @@ import { SitedataAction } from '@/redux/reducer/DataflowReducer'
 
 const Footer = () => {
     const [loading, setloading] = useState(false)
+    const cartreducer = useSelector((state) => state.Dataflowreducer)
     const [sitedata, setsitedata] = useState('')
 
     let dispatch = useDispatch()
@@ -58,7 +59,7 @@ useEffect(()=>{
                             </span>
                             <div className='footer-contact-right'>
                                 <label>Monday-Friday: 08am-9pm</label>
-                                <b>{sitedata?.site_phone}</b>
+                                <b><a href={`tel:${sitedata?.site_phone}`}>{sitedata?.site_phone}</a></b>
                             </div>
                     </div>
                     <div className='footer-contact'>
@@ -67,7 +68,8 @@ useEffect(()=>{
                             </span>
                             <div className='footer-contact-right'>
                                 <label>Need help with your order?</label>
-                                <b>{sitedata?.site_mail}</b>
+                                <b><a href={`mailTo:${sitedata?.site_mail}`}>{sitedata?.site_mail}</a></b>
+                              
                             </div>
                     </div>
                     <h5>Follow us on social media</h5>
@@ -94,15 +96,13 @@ useEffect(()=>{
                             <div className='footer-widget'>
                                 <h3>Store</h3>
                                 <ul>
-                                    <li>
-                                        <Link href="/">Men Fashion</Link>
-                                    </li>
-                                    <li>
-                                        <Link href="/">Women Fashion</Link>
-                                    </li>
-                                    <li>
-                                        <Link href="/">Others</Link>
-                                    </li>
+                                {cartreducer?.CategoryMenu?.map((item, i)=>{
+                        return (
+                            <li key={i}>
+                                <Link href={`/product/category/${item?.parent_category_id}`}>{item?.parent_category_name}</Link>
+                        </li>
+                        )
+                    })}
                                 </ul>
                             </div>
                         </div>
@@ -111,17 +111,15 @@ useEffect(()=>{
                                 <h3>Help</h3>
                                 <ul>
                                     <li>
-                                        <Link href="/">Privacy Policy</Link>
+                                        <Link href="/cms/privacy-policy">Privacy Policy</Link>
                                     </li>
                                     <li>
                                         <Link href="/cms/shipping-information">Shipping & Delivery</Link>
                                     </li>
                                     <li>
-                                        <Link href="/">Refund Policy</Link>
+                                        <Link href="/cms/refund-policy">Refund Policy</Link>
                                     </li>
-                                    <li>
-                                        <Link href="/">Payments</Link>
-                                    </li>
+                                   
                                    
                                 </ul>
                             </div>
@@ -130,9 +128,7 @@ useEffect(()=>{
                             <div className='footer-widget'>
                                 <h3>Support</h3>
                                 <ul>
-                                    <li>
-                                        <Link href="/">Feedback</Link>
-                                    </li>
+                                  
                                     <li>
                                         <Link href="/contact-us">Contact us</Link>
                                     </li>
@@ -140,11 +136,9 @@ useEffect(()=>{
                                         <Link href="/cms/about-us">About us</Link>
                                     </li>
                                     <li>
-                                        <Link href="/">Terms & condition</Link>
+                                        <Link href="/cms/order-terms">Terms & condition</Link>
                                     </li>
-                                    <li>
-                                        <Link href="/">Help Center</Link>
-                                    </li>
+                                    
                                 </ul>
                             </div>
                         </div>
@@ -153,7 +147,7 @@ useEffect(()=>{
               </div>
           
             <div className='copyright'>
-                <p>Copyright 2024 © ThreeCranesGallery. </p>
+                <p>Copyright 2025 © ThreeCranesGallery. </p>
                 <img src={card.src} alt="card" />
             </div>
         </div>

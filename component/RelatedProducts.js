@@ -91,6 +91,11 @@ const RelatedProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                             <img src={item?.cover_image} />
                             </Link>
                             <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
+                            {item.product_qty <= 0 ?
+                                <div className='outofstock'>
+                                Out of stock
+                                </div>
+                                :
                             <div className='imag-cart'>
                                 <ul>
                                     <li>
@@ -128,6 +133,7 @@ const RelatedProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                                         </li>
                                 </ul>
                             </div>
+            }
                         </div>
                         <div className='product-info'>
                         <div className='product-info-t'>
@@ -139,7 +145,7 @@ const RelatedProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                                 })}
                             </ul>
                         </div>
-                                <Link href={`/product/${item?.id}`}> {truncateText(item?.name, 7)}</Link>
+                                <Link href={`/product/${item?.id}`}> {truncateText(item?.name, 5)}</Link>
                                 <h5>₹ ${item?.base_price} <span>₹ {item?.markup_price}</span></h5>
                         </div>
                     </div>

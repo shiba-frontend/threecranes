@@ -1,7 +1,10 @@
 import axios from "axios";
 import { getToken } from '@/utils/getToken';
+import Cookies from 'js-cookie';
 
 const storedToken = getToken();
+
+
 
 const _URL = "https://threecranes.itiffyconsultants.com/api/"
 
@@ -11,6 +14,7 @@ let headers= {
     'Authorization': storedToken,
     'source': 'ANDROID',
 }
+
 
 export const GetHome = async () =>{
     try{
@@ -125,13 +129,19 @@ export const RemoveCoupon = async () =>{
     } catch(error){ return error?.response?.data}
 }
 export const GetCheckout = async () =>{
+
+
     try{
 
-        let response = await axios.get(`${_URL}checkout`, {headers})
-   
+        let response = await axios.get(`${_URL}checkout`, { headers})
+        
+     
+
         return response?.data
 
-    } catch(error){ return error?.response?.data}
+    } catch(error){ 
+        
+        return error?.response}
 }
 
 
@@ -197,6 +207,9 @@ export const DeleteAddress = async (body) =>{
 }
 
 export const GetReviews = async () =>{
+
+    console.log("reviews", headers)
+
     try{
 
         let response = await axios.get(`${_URL}get-reviews`, {headers})

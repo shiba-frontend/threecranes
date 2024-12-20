@@ -90,24 +90,29 @@ const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                             <img src={item?.cover_image} />
                             </Link>
                             <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
-                            <div className='imag-cart'>
-                                <ul>
-                                    <li>
-                                        <button onClick={()=>{
+                            {item.product_qty <= 0 ?
+                                <div className='outofstock'>
+                                Out of stock
+                                </div>
+                                :
+                                <div className='imag-cart'>
+                                    <ul>
+                                        <li>
+                                            <button onClick={()=>{
                                                 datareducer != null ?
                                                 AddWishlistHandle(item)
                                                 :
                                              
                                                 router.push('/login')
                                                 }}>
-                                        <label>Add to wishlist</label>
-                                            <span>
-                                                <img src={heart.src} />
-                                            </span>
-                                          
-                                        </button>
-                                    </li>
-                                    <li>
+                                            <label>Add to wishlist</label>
+                                                <span>
+                                                    <img src={heart.src} />
+                                                </span>
+                                              
+                                            </button>
+                                        </li>
+                                        <li>
                                             {item?.is_cart == 1 ? 
                                             
                                             <span>
@@ -125,8 +130,11 @@ const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                                         }
                                             
                                         </li>
-                                </ul>
-                            </div>
+                                    </ul>
+                                </div>
+                                
+                                
+                                    }
                         </div>
                         <div className='product-info'>
                         <div className='product-info-t'>
@@ -138,7 +146,7 @@ const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                                 })}
                             </ul>
                         </div>
-                                <Link href={`/product/${item?.id}`}> {truncateText(item?.name, 7)}</Link>
+                                <Link href={`/product/${item?.id}`}> {truncateText(item?.name, 5)}</Link>
                                 <h5>₹ ${item?.base_price} <span>₹ {item?.markup_price}</span></h5>
                         </div>
                     </div>

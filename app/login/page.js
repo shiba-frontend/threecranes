@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation'
 import React,{useEffect, useRef, useState} from 'react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
+import Cookies from 'js-cookie';
+
 
 const Page = () => {
 
@@ -43,10 +45,12 @@ const Page = () => {
                if(response?.data?.status){
                   
                 toast.success(response?.data?.message)
+           
                 localStorage.setItem("threecranes_access_token", response?.data?.data?.app_access_token)
                 dispatch(AuthTokenAction(response?.data?.data?.app_access_token))
-                  router.push('/')
-
+                  //router.push('/')
+                  window.location.href = '/';
+                 
                }  else {
                    toast.error(response?.data?.message)
                  

@@ -78,7 +78,13 @@ const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) =
         sendDataToParentWishlist(item) 
     }
  
-  
+    function truncateText(text, wordCount) {
+        const words = text.split(" "); 
+        if (words.length > wordCount) {
+          return words.slice(0, wordCount).join(" ") + "..."; 
+        }
+        return text; 
+      }
 
 
   return (
@@ -94,7 +100,9 @@ const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) =
                     return (
                         <div className='product-box' key={index}>
                             <div className='product-img'>
-                                <img src={item?.cover_image} />
+                            <Link href={`/product/${item?.id}`}>
+                            <img src={item?.cover_image} />
+                            </Link>
                                 <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
                                 <div className='imag-cart'>
                                     <ul>
@@ -145,7 +153,7 @@ const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) =
 
                                 </ul>
                             </div>
-                                    <Link href={`/product/${item?.id}`}> {item?.name}</Link>
+                                    <Link href={`/product/${item?.id}`}>  {truncateText(item?.name, 7)  }</Link>
                                     <h5>₹ ${item?.base_price} <span>₹ {item?.markup_price}</span></h5>
                             </div>
                         </div>

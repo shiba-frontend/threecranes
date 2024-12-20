@@ -784,8 +784,8 @@ ul.control-dots {
   display: none;
 }
 .slider-wrapper.axis-horizontal {
-  border: 1px solid #ccc;
-  border-radius: 15px;
+  /* border: 1px solid #ccc;
+  border-radius: 15px; */
   padding: 20px;
 }
 .proImg img {
@@ -1303,6 +1303,9 @@ button.clodeBtn {
 .carousel .thumb img {
   vertical-align: top;
   height: 71px;
+  width: auto;
+  display: block;
+  margin: 0 auto;
 }
 button.remove {
   border: none;
@@ -1428,7 +1431,21 @@ span.varietion {
   align-items: center;
   justify-content: space-between;
 }
-
+.left-img {
+  position: relative;
+}
+button.zoomImage {
+  border: none;
+  padding: 0;
+  background: transparent;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 9;
+}
+.carousel .carousel-status {
+display: none;
+}
 @media only screen and (max-width: 767px) {
   .slick-next {
    display: none !important;

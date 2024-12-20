@@ -14,11 +14,13 @@ import star_default from '@/public/assets/image/star_default.png'
 import cart_icon from '@/public/assets/image/cart_icon.png'
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
-const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) => {
+
+const RelatedProducts = ({content, sendDataToParent, sendDataToParentWishlist}) => {
 
   const datareducer = useSelector((state) => state.Dataflowreducer.token)
   const router = useRouter();
 
+  console.log("content", content)
 
 
     var settings = {
@@ -76,12 +78,11 @@ const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
 
   return (
     <div className='product-sec'> 
-    <div className='container'>
-        <TitleStyle title={content?.sec5_title} sub={content?.sec5_description} />
+   
 
         <Slider {...settings}>
 
-            {content?.products?.map((item, index)=>{
+            {content?.map((item, index)=>{
                   var rate = Number(item?.rating)
                 return (
                     <div className='product-box' key={index}>
@@ -134,7 +135,7 @@ const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                             <ul>
                             {Array(5).fill().map((_, i) => {
                                     const ratingValue = i + 1;
-                                return  <li key={i}><img src={ratingValue <= rate ? IMAGE.star_fill : IMAGE.star_default} /></li>
+                                return  <li key={i}><img src={ratingValue <= rate ? star_fill.src : star_default.src} /></li>
                                 })}
                             </ul>
                         </div>
@@ -147,9 +148,8 @@ const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
 
         </Slider>
 
-    </div>
 </div>
   )
 }
 
-export default FeatureProducts
+export default RelatedProducts

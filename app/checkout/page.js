@@ -48,10 +48,10 @@ const Page = () => {
      setloading(false)
    
      if(responsedata?.status){
-         console.log(responsedata?.data)
+        setdata(responsedata?.data[0])
      }
-     setdata(responsedata?.data[0])
-     console.log(responsedata?.data)
+   
+   
     
    }
 

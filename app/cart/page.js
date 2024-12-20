@@ -213,7 +213,7 @@ async function RemoveCouponHandle() {
                          <tr>
                             <td colSpan="6" className="actions">
                                <div className="bottom-cart">
-                                 {cartinfo[0]?.coupon_code != '' ? 
+                                 {cartinfo[0]?.coupon_code != null ? 
                                   
                                     <div className='coupon-info'>
                                        <label>{cartinfo[0]?.coupon_code}</label>

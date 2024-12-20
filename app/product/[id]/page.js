@@ -17,6 +17,7 @@ import wishlist_icon from '@/public/assets/image/wishlist_icon.png'
 import share_icon from '@/public/assets/image/share_icon.png'
 import plus_icon from '@/public/assets/image/plus_icon.png'
 import minus_icon from '@/public/assets/image/minus_icon.png'
+import zoom from '@/public/assets/image/zoom-out.png'
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from 'react-responsive-carousel';
 import { AddCart, AddWishlist, GetCart, GetProductDetails, GetProfile, GetWishlist, SaveReview } from '@/utils/Apirequest'
@@ -26,6 +27,13 @@ import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import Modal from 'react-bootstrap/Modal';
 import { Rating } from 'react-simple-star-rating'
+import RelatedProducts from '@/component/RelatedProducts'
+import Lightbox from "yet-another-react-lightbox";
+import Thumbnails from "yet-another-react-lightbox/plugins/thumbnails";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
 
 export default function Page(){
 
@@ -41,8 +49,11 @@ export default function Page(){
     const [rating, setRating] = useState(0)
     const [comment, setcomment] = useState("")
     const [title, settitle] = useState("")
+    const [open, setOpen] = React.useState(false);
+    const [lightboxImage, setlightboxImage] = useState([])
     const { id} = useParams()
     const datareducer = useSelector((state) => state.Dataflowreducer.token)
+    
 
     const router = useRouter();
 
@@ -66,9 +77,10 @@ export default function Page(){
       setShow(true)
 
     };
+  
 
     useEffect(()=>{
-
+     
           GetApiRequest()
 
           datareducer != '' &&
@@ -85,6 +97,17 @@ export default function Page(){
         let responsedata =  await GetProductDetails(payload)
         setloading(false)
         if(responsedata?.response_code == 200){
+
+            var Arr = []
+
+            responsedata?.data?.product_info?.product_images.forEach(elem =>{
+                Arr.push({
+                    'src':elem
+                }) 
+            })
+
+            setlightboxImage(Arr)
+
             setfeatureproduct(responsedata?.data?.featured_product_list)
 
             let TempArr = []
@@ -228,11 +251,64 @@ export default function Page(){
       }
 
 
+      async function AddCartHandleFromchild(item) {
+
+        let price = item?.base_price.replace(',', '')
+    
+    
+        setloading(true)
+    
+        let body = {
+            "product_id": item?.id,
+            "product_qty": 1,
+            "product_rate": price,
+            "variations": []
+        }
+    
+        const response = await AddCart(body)
+        setloading(false)
+    
+        if(response?.status){
+          //  GetApiRequest()
+            let responsedata =  await GetCart()
+            dispatch(GetcartAction(responsedata?.data[0]?.cart_items))
+            GetApiRequest()
+            toast(response?.message)
+        } else {
+            toast(response?.message)
+        }
+    }
+    
+    
+    async function AddWishListFromChild(item) {
+       setloading(true)
+      
+              let body = {
+                  "product_id": item?.id,
+              }
+      
+              const response = await AddWishlist(body)
+              setloading(false)
+      
+              if(response?.status){
+                  let responsedata =  await GetWishlist()
+                  dispatch(GetWishlistAction(responsedata?.data))
+                  GetApiRequest()
+                  toast(response?.message)
+              } else {
+                  toast(response?.message)
+              }
+    }
+
+    
+
+
   return (
 
     <div className='inner-sec py-3'>
           {loading && <Loader/>}
     <div className='container'>
+       
         <div className='breadcrames'>
             <ul>
                 <li>
@@ -248,9 +324,11 @@ export default function Page(){
             </ul>
         </div>
         <div className='row'>
-            <div className='col-lg-5'>
+            <div className='col-lg-6'>
                 <div className='left-img'>
+                <button onClick={() => setOpen(true)} className='zoomImage'><img src={zoom.src} /></button>
             <Carousel>
+     
             {productinfo?.product_images?.map((item, i)=>{
                 return (
                     <div className='proImg' key={i}>
@@ -259,12 +337,13 @@ export default function Page(){
                 )
             })}
                
-              
+          
             </Carousel>
+           
             </div>
         
             </div>
-            <div className='col-lg-7'>
+            <div className='col-lg-6'>
 
                 <div className='product-details'>
                     <h2>{productinfo?.name}</h2>
@@ -290,7 +369,8 @@ export default function Page(){
                             <b>{productinfo?.product_sku}</b>
                         </li>
                     </ul>
-                    <p>{productinfo?.short_description}</p>
+                    <div dangerouslySetInnerHTML={{__html: productinfo?.short_description}} />
+                    {/* <p>{productinfo?.short_description}</p> */}
                         <h5>₹ {productinfo?.base_price} <span>₹ {productinfo?.markup_price}</span></h5>
 
                 <ul className='product-varient'>
@@ -340,10 +420,10 @@ export default function Page(){
                 </li>
                 }
                    
-                    <li>
+                    {/* <li>
                         <Link href="#" className='buynowBtn'><img src={buy_icon.src} /> Buy Now</Link>
                      
-                    </li>
+                    </li> */}
                
                 </ul>
                 <ul className='wishlist-sec'>
@@ -383,7 +463,10 @@ export default function Page(){
       </Tab>
       <Tab eventKey="review" title={`Reviews (${productinfo?.review_list?.length})`}>
       Reviews
-      {productinfo?.review_list?.map((reviews, i)=>{
+
+{productinfo?.review_list?.length > 0 ? 
+                            
+      productinfo?.review_list?.map((reviews, i)=>{
         return (
             <div className='reviewList' key={i}>
                 <div className='user-i'>
@@ -405,11 +488,15 @@ export default function Page(){
                 </ul>
             </div>
         )
-      })}
+      })
+
+      :
+      <h5>No Reviews</h5>
+    }
       </Tab>
     </Tabs>
     </div>
-    <FeatureProducts content={featureproduct} />
+    <RelatedProducts content={featureproduct} sendDataToParent={AddCartHandleFromchild} sendDataToParentWishlist={AddWishListFromChild}  />
     </div>
     <Modal show={show} onHide={handleClose}  size="md">
         <Modal.Header >
@@ -438,6 +525,14 @@ export default function Page(){
           </button>
         </Modal.Footer>
       </Modal>
+      <Lightbox
+        open={open}
+        carousel={{ finite: lightboxImage.length <= 1 }}
+        close={() => setOpen(false)}
+        slides={lightboxImage}
+        plugins={[Thumbnails, Fullscreen, Zoom]}
+      />
+  
 </div>
 
  

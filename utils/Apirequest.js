@@ -282,6 +282,27 @@ export const OrderDetails = async (body) =>{
     } catch(error){return error?.response?.data}
 }
 
+export const CancelOrder = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}cancel-order`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+export const PrintInvoice = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}print-invoice`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+
 export const OrderPlace = async (body) =>{
     try{
 
@@ -291,6 +312,53 @@ export const OrderPlace = async (body) =>{
 
     } catch(error){return error?.response?.data}
 }
+
+
+export const PaymentProcess = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}payment-process`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+
+export const AllProducts = async () =>{
+    try{
+
+        let response = await axios.get(`${_URL}get-all-product-list`, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+
+export const AllProductsFilter = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}product-filter`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+export const SearchSuggestion = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}search-suggestion`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+
+
+
 
 
 

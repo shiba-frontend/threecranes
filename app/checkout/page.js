@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
 import productIMg from '@/public/assets/image/banner_img.png'
-import { AddAddress, GetCheckout, OrderPlace } from '@/utils/Apirequest'
+import { AddAddress, GetCheckout, OrderPlace, PaymentProcess } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
 import { StandaloneSearchBox, LoadScript, Autocomplete, useJsApiLoader } from '@react-google-maps/api';
 import { toast } from 'react-toastify'
@@ -39,6 +39,7 @@ const Page = () => {
       name: '',
       focus: '',
     });
+    const [orderresponse, setorderresponse] = useState('')
 
    
           const inputRef = useRef()
@@ -214,48 +215,28 @@ const Page = () => {
       toast.error("Please choose the billing address")
    } else {
 
-setShow1(true)
+setloading(true)
 
-return
+let obj = {
+   "payment_method": "CARD",
+   "checkout_type": "EXISTING",
+   "billing": billingselectAdd,
+   "shipping": shippingselectAdd,
+   "subtotal": data?.tot_subtotal_amt,
+   "disc_amount": data?.tot_disc_amt,
+   "amount_after_disc": data?.tot_amt_after_disc,
+   "shipping_amt": data?.tot_shipping_amt,
+   "tax_amt": data?.tot_tax_amt,
+   "net_amt": data?.tot_net_amt
+}
 
-      let body = {
-         "payment_method": "COD",
-         "checkout_type": "GUEST",
-         "b_fname": "test",
-         "b_lname": "test",
-         "b_phone": "7777777777",
-         "b_email": "test@test.com",
-         "b_company": "test",
-         "b_country": "US",
-         "b_street": "test",
-         "b_suburb": "test",
-         "b_state": "test",
-         "b_postcode": "14141",
-         "s_fname": "test",
-         "s_lname": "test",
-         "s_phone": "7777777777",
-         "s_email": "test@test.com",
-         "s_company": "test",
-         "s_country": "US",
-         "s_street": "test",
-         "s_suburb": "test",
-         "s_state": "test",
-         "s_postcode": "test",
-         "subtotal": data?.tot_subtotal_amt,
-         "disc_amount": "0.00",
-         "amount_after_disc": "1300.00",
-         "shipping_amt": data?.tot_shipping_amt,
-         "tax_amt": data?.tot_tax_amt,
-         "net_amt": data?.tot_net_amt
-     }
-
-     let response = await OrderPlace(body)
-
+     let response = await OrderPlace(obj)
+     setloading(false)
      if(response?.status){
-
+      setShow1(true)
+      setorderresponse(response?.data)
+      console.log(response?.data)
      }
-
-
 
    }
 
@@ -273,6 +254,28 @@ return
    setcards((prev) => ({ ...prev, focus: evt.target.name }));
  }
 
+ async function PaymantHandle() {
+   setloading(true)
+   let obj = {
+      "card_number": cards?.number,
+      "expiry_date": cards?.expiry,
+      "card_code": cards.cvc,
+      "order_id": orderresponse[0]?.order_id
+  }
+
+  let response = await PaymentProcess(obj)
+  setloading(false)
+  if(response?.status){
+   setShow1(false)
+   toast(response?.message)
+  } else {
+   toast.error(response?.message)
+  }
+
+
+
+   
+ }
 
 
 
@@ -553,13 +556,19 @@ return
    <div className='col-lg-12'>
          <div className='form-group mb-3'>
          <input
-            type="number"
+            type="text"
             name="number"
             placeholder="Card Number"
             value={cards.number}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
             className='form-control'
+            maxLength="16"
+            onKeyPress={(event) => {
+               if (!/[0-9]/.test(event.key)) {
+                   event.preventDefault();
+               }
+               }}
          />
          </div>
    </div>
@@ -616,7 +625,7 @@ return
    </div>
    <div className='col-lg-12 text-end'>
    <button className='btn btn-outline-danger' onClick={handleClose1}>Cancel</button>
-   <button className='btn btn-primary ms-2' onClick={AddAddressHandle}>Pay Now</button>
+   <button className='btn btn-primary ms-2' onClick={PaymantHandle}>Pay Now</button>
       </div>
 </div>
 

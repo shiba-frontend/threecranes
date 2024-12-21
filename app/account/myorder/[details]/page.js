@@ -1,40 +1,124 @@
+
 "use client"
-import { useParams } from 'next/navigation'
-import React from 'react'
-import Sidebar from '../../Sidebar'
-import { Table } from 'react-bootstrap'
+import React, { useEffect, useState } from 'react'
+
+import Table from 'react-bootstrap/Table';
 import productIMg from '@/public/assets/image/banner_img.png'
+import Link from 'next/link';
+import { CancelOrder, GetOrderList, OrderDetails, PrintInvoice } from '@/utils/Apirequest';
+import Loader from '@/utils/Loader';
+import Sidebar from '../../Sidebar';
+import { useParams, useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+
+
+
+
 const Page = () => {
 
-    const { details} = useParams()
+    const {details} = useParams()
+
+       const [loading, setloading] = useState(false)
+       const [detailsdata, setdetailsdata] = useState('')
+
+       let router = useRouter()
+
+       useEffect(()=>{
+
+     
+
+        getDetails()
+
+       },[])
+
+       async function getDetails() {
+
+        let obj = {
+           "order_id": details
+        }
+
+         setloading(true)
+                       
+          let responsedata =  await OrderDetails(obj)
+        
+          setloading(false)
+        
+          if(responsedata?.status){
+            setdetailsdata(responsedata?.data)
+          }
+      }
+
+    
+       async function CancelOrderHandle() {
+
+        let obj = {
+          "order_id": details
+       }
+
+        setloading(true)
+                      
+         let responsedata =  await CancelOrder(obj)
+       
+         setloading(false)
+       
+         if(responsedata?.status){
+         toast(responsedata?.message)
+         router.push('/account/myorder')
+       
+         }
+       }
+
+       async function InvoiceHandle() {
+        let obj = {
+          "order_id": details
+       }
+
+        setloading(true)
+                      
+         let responsedata =  await PrintInvoice(obj)
+       
+         setloading(false)
+       
+         if(responsedata?.status){
+
+          console.log(responsedata)
+
+          const link = document.getElementById("Download");
+          link.setAttribute("href", responsedata?.data);
+          link.click();
+         }
+
+
+       }
 
 
   return (
     <section className="product-category-listing my-order-list section-padding">
+            {loading && <Loader/>}
       <div className="container-xxl container-xl container-lg container-md container-sm container">
          <div className="row ">
               <div className="col-xl-3 col-lg-3 col-md-5 col-sm-12 ">
                   <Sidebar />
               </div>
+             
               <div className="col-xl-9 col-lg-9 col-md-7 col-sm-12 ">
               <div className="order-details-main">
                  <div className='card bg-light mb-3'>
                     <div className='card-body'>
                         <div className='row'>
                           <div className='col-lg-6'>
-                            <h4>Steven Perker</h4>
-                            <p>In publishing and graphic design, Lorem ipsum is a 
-                              placeholder text commonly 
-                              used to demonstrate the visual</p>
+                            <h4>{detailsdata?.customer_name}</h4>
+                            <p>{detailsdata?.s_street}</p>
                           </div>
                           <div className='col-lg-6'>
                             <div className='bg-white p-3 text-end'>
-                              <b>INVOICE#123</b>
-                              <h6>Order Date: Jan 25, 2024</h6>
+                              <b>INVOICE#{detailsdata?.order_no}</b>
+                              <h6>Order Date: {detailsdata?.order_date}</h6>
                             </div>
+                            <a id="Download" download></a>
                             <div className='d-flex justify-content-end mt-2'>
-                                <button className='btn btn-sm btn-warning'>Print Invoice</button>
-                                <button className='btn btn-sm btn-danger ms-2'>Cancel Order</button>
+                                <button className='btn btn-sm btn-warning' onClick={InvoiceHandle}>Print Invoice</button>
+                                <button className='btn btn-sm btn-danger ms-2' onClick={CancelOrderHandle}>Cancel Order</button>
                             </div>
                           </div>
                         </div>
@@ -45,15 +129,15 @@ const Page = () => {
                         <div className='row'>
                           <div className='col-lg-8'>
                             <h6>Invoice To</h6>
-                            <b>Steven Perker</b>
-                            <p>In publishing and graphic design, Lorem ipsum is a 
-                              placeholder text commonly 
-                              used to demonstrate the visual</p>
+                            <b>
+                              {detailsdata?.b_name}
+                            </b>
+                            <p> {detailsdata?.b_street}</p>
                           </div>
                           <div className='col-lg-4'>
                               <h6>Payment Details</h6>
-                              <b>Amount: $100.00</b>
-                              <h6>Status: <span className='text-success'>Success</span></h6>
+                              <b>Amount: $ {detailsdata?.tot_net_amt}</b>
+                              <h6>Status: <span className='text-success'>{detailsdata?.payment_status}</span></h6>
                            
                           </div>
                         </div>
@@ -74,17 +158,23 @@ const Page = () => {
                     
                       </thead>
                       <tbody>
-          <tr>
-            <td>
-              <div className='d-flex align-items-center'>
-                <img src={productIMg.src} width="30" /> 
-                Kurtas
-              </div>
-            </td>
-            <td>$100</td>
-            <td>1</td>
-            <td>$200</td>
-          </tr>
+                        {detailsdata?.cart_items?.map((item, i)=>{
+                          return (
+                            <tr key={i}>
+                              <td>
+                                <div className='d-flex align-items-center'>
+                                  <img src={item?.product_cover_image} width="30" /> 
+                                  {item?.product_name}
+                                </div>
+                              </td>
+                              <td>$ {item?.rate}</td>
+                              <td>{item?.qty}</td>
+                              <td>$ {item?.total}</td>
+                            </tr>
+                          )
+                        })
+}
+          
             <tr>
               <td colSpan="2">
 
@@ -93,7 +183,7 @@ const Page = () => {
                   <b>Sub Total</b>
               </td>
               <td>
-                $ 200.00
+                $ {detailsdata?.tot_subtotal_amt}
               </td>
             </tr>
             <tr>
@@ -104,7 +194,7 @@ const Page = () => {
                   <b>Discount</b>
               </td>
               <td>
-              -  $ 100.00
+              -  $ {detailsdata?.tot_disc_amt}
               </td>
             </tr>
             <tr>
@@ -115,7 +205,7 @@ const Page = () => {
                   <b>Shipping Charge</b>
               </td>
               <td>
-                $ 200.00
+                $ {detailsdata?.tot_shipping_amt}
               </td>
             </tr>
             <tr>
@@ -126,7 +216,7 @@ const Page = () => {
                   <b>Tax</b>
               </td>
               <td>
-                $ 200.00
+                $ {detailsdata?.tot_tax_amt}
               </td>
             </tr>
             <tr>
@@ -137,7 +227,7 @@ const Page = () => {
                   <b>Net Total</b>
               </td>
               <td>
-                $ 200.00
+                $ {detailsdata?.tot_net_amt}
               </td>
             </tr>
           </tbody>

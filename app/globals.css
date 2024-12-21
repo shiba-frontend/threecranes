@@ -160,7 +160,7 @@ ul, li{
   gap: 15px;
   justify-content: flex-end;
 }
-.mid-header ul li {
+.mid-header ul > li {
   display: flex;
   align-items: center;
   gap: 5px;
@@ -1466,6 +1466,49 @@ display: none;
 }
 .rccs__card {
   width: 100% !important;
+}
+.autosuggestion {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  right: 0;
+  background: #f3f4f6;
+}
+.autosuggestion ul {
+  display: block;
+}
+.autosuggestion ul li {
+  display: block;
+}
+.autosuggestion ul li button {
+  display: flex;
+  align-items: center;
+  padding: 5px 15px;
+  border: none;
+  background: transparent;
+  border-bottom: 1px solid #ccc;
+  gap: 10px;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 99999;
+}
+.autosuggestion ul li img {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+.autosuggestion ul li span {
+  position: static;
+  width: auto;
+  height: auto;
+  background: transparent;
+  border-radius: 0;
+  color: #222;
+  text-align: left;
+  display: block;
+  font-size: 15px;
 }
 
 @media only screen and (max-width: 767px) {

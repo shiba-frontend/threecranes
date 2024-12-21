@@ -10,18 +10,24 @@ import cart_icon from '@/public/assets/image/cart_icon.png'
 import { getToken } from '@/utils/getToken';
 import { useDispatch, useSelector } from 'react-redux'
 import { AuthTokenAction, GetcartAction, GetMenuAction, GetWishlistAction } from '@/redux/reducer/DataflowReducer'
-import { GetCart, GetParentCategory, GetWishlist } from '@/utils/Apirequest'
+import { GetCart, GetParentCategory, GetWishlist, SearchSuggestion } from '@/utils/Apirequest'
+import { useRouter } from 'next/navigation'
+
 
 const Header = () => {
 
 const [token, settoken] = useState(null)
 const [category, setcategory] = useState([])
-
+const [inputValue, setInputValue] = useState('');
+const [wordCount, setWordCount] = useState(0);
+const [searchresult, setsearchresult] = useState([])
+const [istoggle, setistoggle] = useState(false)
+const [isloading, setisloading] = useState(false)
 let dispatch = useDispatch()
 const datareducer = useSelector((state) => state.Dataflowreducer.token)
 const cartreducer = useSelector((state) => state.Dataflowreducer)
 
-
+let router = useRouter()
 
     const storedToken = getToken();
 
@@ -76,7 +82,62 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
        
     },[])
 
+    const handleChange = (e) => {
+      const value = e.target.value;
+      setInputValue(value);
+      const letters = value.match(/[a-zA-Z]/g); // Match only letters
+      setWordCount(letters ? letters.length : 0); // Count letters or set to 0
+  };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+        if (wordCount === 3) {
+            makeAPICall(inputValue);
+            setistoggle(true)
+        }
+    }, 300); 
+
+    if (wordCount < 3) {
+      setistoggle(false)
+    }
+
    
+
+    return () => clearTimeout(timer); // Cleanup on component unmount or re-render
+}, [wordCount, inputValue]);
+
+const makeAPICall = async (text) => {
+
+  setisloading(true)
+
+  let obj = {
+    "search_keyword": text
+}
+
+  const response = await SearchSuggestion(obj)
+  setisloading(false)
+  if(response?.status){
+    setsearchresult(response?.data)
+    console.log('API Response:', response);
+  }
+
+ 
+};
+
+function truncateText(text, wordCount) {
+  const words = text.split(" "); 
+  if (words.length > wordCount) {
+    return words.slice(0, wordCount).join(" ") + "..."; 
+  }
+  return text; 
+}
+
+function RedirectPage(Id){
+  setistoggle(false)
+  setInputValue('')
+  router.push(`/product/${Id}`)
+}
+
 
 
   return (
@@ -96,10 +157,40 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
                 </div>
                 <div className='col-lg-5'>
                     <div className='search-area'>
-                      <input type='text' className='form-control' placeholder='Search for products, categories or brands...' />
+                      <input type='text' className='form-control' placeholder='Search for products, categories or brands...'
+                       value={inputValue}
+                       onChange={handleChange}
+                      />
                       <button>
                           <img src={search_icon.src} alt='logo' />
                       </button>
+                      {istoggle &&
+                      <div className='autosuggestion'>
+                        {isloading ? 
+                        <b>Loading...</b>  
+                        :
+                        searchresult?.length > 0 ? 
+                          <ul>
+                            {searchresult?.map((item, i)=>{
+                              return (
+                                <li key={i}>
+                                  <button onClick={()=>RedirectPage(item?.id)}>
+                                      <img src={item?.cover_image} />
+                                      <span>{truncateText(item?.name, 7)}</span>
+                                  </button>
+                                  
+                                </li>
+                              )
+                            })}
+                            
+                          </ul>
+                          :
+                          <h6>No search result found!</h6>
+  }
+                        </div>
+                      
+                      }
+                       
                     </div>
                 </div>
                 <div className='col-lg-4'>
@@ -142,7 +233,9 @@ const cartreducer = useSelector((state) => state.Dataflowreducer)
                         </li>
                         )
                     })}
-                    
+                    <li>
+                          <Link href="/product">Products</Link>
+                      </li>
                       <li>
                           <Link href="/faq">Faq</Link>
                       </li>

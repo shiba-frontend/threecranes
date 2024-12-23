@@ -356,6 +356,27 @@ export const SearchSuggestion = async (body) =>{
     } catch(error){return error?.response?.data}
 }
 
+export const Getdashboard = async () =>{
+    try{
+
+        let response = await axios.get(`${_URL}dashboard`, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response}
+}
+
+export const SearchProduct = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}search-product`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
+
 
 
 

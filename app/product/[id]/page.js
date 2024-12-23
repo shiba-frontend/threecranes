@@ -463,8 +463,6 @@ export default function Page(){
     >
       <Tab eventKey="description" title="Description">
       <div dangerouslySetInnerHTML={{__html: productinfo?.long_description}} />
-      
-          
       </Tab>
       <Tab eventKey="review" title={`Reviews (${productinfo?.review_list?.length})`}>
       Reviews
@@ -499,7 +497,29 @@ export default function Page(){
       <h5>No Reviews</h5>
     }
       </Tab>
+      {productinfo?.product_attributes?.length > 0 &&
+       <Tab eventKey="attribute" title="Attributes">
+            {productinfo?.product_attributes?.map((item, i)=>{
+                return (
+                    <div className='productattr' key={i}>
+                          <h5>{item?.attribute_name}</h5>  
+                          <ol>
+                            {item?.attribute_vals?.map((attr, index)=>{
+                                return (
+                                    <li key={index}>{attr}</li>
+                                )
+                            })
+                            }
+                           
+                          </ol>
+                    </div>
+                )
+            })}
+       </Tab>
+      }
+     
     </Tabs>
+
     </div>
     <RelatedProducts content={featureproduct} sendDataToParent={AddCartHandleFromchild} sendDataToParentWishlist={AddWishListFromChild}  />
     </div>

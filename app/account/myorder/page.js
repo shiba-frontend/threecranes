@@ -50,10 +50,10 @@ const Page = () => {
               <Table striped bordered hover >
               <thead>
               <tr>
-                    <th>Product</th>
+              <th>Order No</th>
                     <th>Price</th>
                     <th>Order Date</th>
-                    <th>Order No</th>
+                 
                     <th></th>
                     </tr>
                   
@@ -64,15 +64,10 @@ const Page = () => {
                         OrderList?.new_orders?.map((item, i)=>{
                           return (
                             <tr key={i}>
-                            <td>
-                              <div className='d-flex align-items-center'>
-                                <img src={productIMg.src} width="30" /> 
-                                Kurtas
-                              </div>
-                            </td>
+                              <td>{item?.order_no}</td>
                             <td>$ {item?.net_amt}</td>
                             <td>{item?.order_date}</td>
-                            <td>{item?.order_no}</td>
+                          
                             <td>
                               <Link href={`/account/myorder/${item?.order_id}`}><u>Details</u></Link>
                             </td>

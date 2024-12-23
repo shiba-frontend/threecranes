@@ -34,8 +34,8 @@ let router = useRouter()
     useEffect(()=>{
 
         dispatch(AuthTokenAction(storedToken))
-
-        
+       
+        console.log("sdufufy")
 
         const GetApiRequest = async () =>{
          
@@ -138,6 +138,13 @@ function RedirectPage(Id){
   router.push(`/product/${Id}`)
 }
 
+const handleKeyPress = (event) => {
+  if (event.key === "Enter" && inputValue.trim()) {
+    setistoggle(false)
+    router.push(`/search/${inputValue}`)
+  }
+};
+
 
 
   return (
@@ -160,6 +167,7 @@ function RedirectPage(Id){
                       <input type='text' className='form-control' placeholder='Search for products, categories or brands...'
                        value={inputValue}
                        onChange={handleChange}
+                       onKeyDown={handleKeyPress}
                       />
                       <button>
                           <img src={search_icon.src} alt='logo' />

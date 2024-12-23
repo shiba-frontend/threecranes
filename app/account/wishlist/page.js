@@ -86,7 +86,7 @@ const Page = () => {
                               <tr key={i}>
                                   <td>
                                     <div className='d-flex align-items-center'>
-                                    
+                                      <img src={item?.product_cover_image} width="40" className='me-2' />
                                       {item?.product_name}
                                     </div>
                                   </td>

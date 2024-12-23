@@ -1473,6 +1473,7 @@ display: none;
   left: 0;
   right: 0;
   background: #f3f4f6;
+  z-index: 99;
 }
 .autosuggestion ul {
   display: block;
@@ -1509,6 +1510,12 @@ display: none;
   text-align: left;
   display: block;
   font-size: 15px;
+}
+.productattr ol {
+  padding: 0 0 0 14px;
+}
+.productattr ol li {
+  list-style-type: circle;
 }
 
 @media only screen and (max-width: 767px) {

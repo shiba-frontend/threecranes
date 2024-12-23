@@ -255,10 +255,21 @@ let obj = {
  }
 
  async function PaymantHandle() {
+
+
+   const numString = cards?.expiry.toString();
+   const year = numString.slice(2, 4); 
+   const month = numString.slice(0, 2); 
+
+   const formattedDate = `${year}-${month}`;
+
+  
+
+
    setloading(true)
    let obj = {
       "card_number": cards?.number,
-      "expiry_date": cards?.expiry,
+      "expiry_date": formattedDate,
       "card_code": cards.cvc,
       "order_id": orderresponse[0]?.order_id
   }
@@ -272,9 +283,7 @@ let obj = {
    toast.error(response?.message)
   }
 
-
-
-   
+  
  }
 
 

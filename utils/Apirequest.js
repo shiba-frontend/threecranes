@@ -376,6 +376,16 @@ export const SearchProduct = async (body) =>{
     } catch(error){return error?.response?.data}
 }
 
+export const ProfilePicture = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}upload-profile-image`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
 
 
 

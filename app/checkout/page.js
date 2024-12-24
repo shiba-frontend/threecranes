@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useRef, useState } from 'react'
 import productIMg from '@/public/assets/image/banner_img.png'
-import { AddAddress, GetCheckout, OrderPlace, PaymentProcess } from '@/utils/Apirequest'
+import { AddAddress, GetCart, GetCheckout, OrderPlace, PaymentProcess } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
 import { StandaloneSearchBox, LoadScript, Autocomplete, useJsApiLoader } from '@react-google-maps/api';
 import { toast } from 'react-toastify'
@@ -10,6 +10,8 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation'
 import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
+import { GetcartAction } from '@/redux/reducer/DataflowReducer'
+import { useDispatch } from 'react-redux'
 
 const Page = () => {
    const [loading, setloading] = useState(false)
@@ -45,6 +47,7 @@ const Page = () => {
           const inputRef = useRef()
 
           const router = useRouter()
+          const dispatch = useDispatch()
 
    useEffect(()=>{
   
@@ -279,6 +282,8 @@ let obj = {
   if(response?.status){
    setShow1(false)
    toast(response?.message)
+    let responsedata =  await GetCart()
+    dispatch(GetcartAction(responsedata?.data[0]?.cart_items))
   } else {
    toast.error(response?.message)
   }

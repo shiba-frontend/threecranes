@@ -84,7 +84,7 @@ const Page = () => {
                           ReviewsList?.map((item, i)=>{
                             return (
                               <tr key={i}>
-                                  <td>
+                                  <td style={{width:'60%'}}>
                                     <div className='d-flex align-items-center'>
                                       <img src={item?.product_cover_image} width="40" className='me-2' />
                                       {item?.product_name}

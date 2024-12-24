@@ -146,6 +146,7 @@ const Page = () => {
                  <div className='card bg-light mb-3'>
                     <div className='card-body'>
                     <h4>Order Summery</h4>
+                    
                     <div className='table-responsive custom-table'>
                 <Table striped bordered hover >
                 <thead>
@@ -161,9 +162,9 @@ const Page = () => {
                         {detailsdata?.cart_items?.map((item, i)=>{
                           return (
                             <tr key={i}>
-                              <td>
+                              <td style={{width:'60%'}}>
                                 <div className='d-flex align-items-center'>
-                                  <img src={item?.product_cover_image} width="30" /> 
+                                  <img src={item?.product_cover_image} width="30" className='me-2' /> 
                                   {item?.product_name}
                                 </div>
                               </td>

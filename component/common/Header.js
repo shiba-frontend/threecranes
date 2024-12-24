@@ -10,7 +10,7 @@ import cart_icon from '@/public/assets/image/cart_icon.png'
 import { getToken } from '@/utils/getToken';
 import { useDispatch, useSelector } from 'react-redux'
 import { AuthTokenAction, GetcartAction, GetMenuAction, GetWishlistAction } from '@/redux/reducer/DataflowReducer'
-import { GetCart, GetParentCategory, GetWishlist, SearchSuggestion } from '@/utils/Apirequest'
+import { GetCart, GetParentCategory, GetProfile, GetWishlist, SearchSuggestion } from '@/utils/Apirequest'
 import { useRouter } from 'next/navigation'
 
 
@@ -23,6 +23,7 @@ const [wordCount, setWordCount] = useState(0);
 const [searchresult, setsearchresult] = useState([])
 const [istoggle, setistoggle] = useState(false)
 const [isloading, setisloading] = useState(false)
+const [profile, setprofile] = useState('');
 let dispatch = useDispatch()
 const datareducer = useSelector((state) => state.Dataflowreducer.token)
 const cartreducer = useSelector((state) => state.Dataflowreducer)
@@ -74,11 +75,22 @@ let router = useRouter()
                    }
                   
                  }
+
+                  const GetprofilApiRequest = async () =>{
+  
+                      let responsedata =  await GetProfile()
+
+                      if(responsedata?.status){
+                        setprofile(responsedata?.data?.profile_image)
+                      }
+                     
+                    }
       
           GetApiRequest()
           GetcartApiRequest()
           storedToken != null &&
           GetWishlistApiRequest()
+          GetprofilApiRequest()
        
     },[])
 
@@ -205,7 +217,7 @@ const handleKeyPress = (event) => {
                     <ul>
                       <li>
                       {datareducer != null ?
-                          <Link href="/account/dashboard"> <img src={user_icon.src} alt='logo' /> <label> Dashboard</label>
+                          <Link href="/account/dashboard"> {profile !== null ? <img src={profile} alt='profile' className='pimage' /> : <img src={user_icon.src} alt='logo' /> }  <label> Dashboard</label>
                           
                            </Link>
                         :

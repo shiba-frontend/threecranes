@@ -119,7 +119,7 @@ async function CouponHandle() {
          GetcartApiRequest()
          toast(response?.message)
       } else {
-        toast(response?.message)
+        toast.error(response?.message)
       }
    }
 }

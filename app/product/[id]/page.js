@@ -40,7 +40,7 @@ export default function Page(){
     const [loading, setloading] = useState(false)
     const [featureproduct, setfeatureproduct] = useState([])
     const [productinfo, setproductinfo] = useState('')
-    const [qty, setqty] = useState(0)
+    const [qty, setqty] = useState(1)
     const [variation, setvariation] = useState([])
     const [fname, setfname] = useState('')
     const [lname, setlname] = useState('')
@@ -403,7 +403,7 @@ export default function Page(){
                 <ul className='quantity-add'>
                     <li>
                         <div className='quantity-box'>
-                             <button onClick={()=>setqty(qty - 1)} disabled={qty == 0 ? true : false}><img src={minus_icon.src}  /></button>
+                             <button onClick={()=>setqty(qty - 1)} disabled={qty == 1 ? true : false}><img src={minus_icon.src}  /></button>
                             <input type='text' placeholder='QTY' value={qty} onChange={(e)=>setqty(e.target.value)} 
                              onKeyPress={(event) => {
                                 if (!/[0-9]/.test(event.key)) {
@@ -498,7 +498,7 @@ export default function Page(){
     }
       </Tab>
       {productinfo?.product_attributes?.length > 0 &&
-       <Tab eventKey="attribute" title="Attributes">
+       <Tab eventKey="attribute" title="Specification">
             {productinfo?.product_attributes?.map((item, i)=>{
                 return (
                     <div className='productattr' key={i}>

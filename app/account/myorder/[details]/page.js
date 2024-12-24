@@ -10,6 +10,7 @@ import Loader from '@/utils/Loader';
 import Sidebar from '../../Sidebar';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import Modal from 'react-bootstrap/Modal';
 
 
 
@@ -20,13 +21,16 @@ const Page = () => {
 
        const [loading, setloading] = useState(false)
        const [detailsdata, setdetailsdata] = useState('')
+       const [reason, setreason] = useState('')
+       const [description, setdescription] = useState('')
+       const [show, setShow] = useState(false);
+    
+
+          const handleClose = () => setShow(false);
 
        let router = useRouter()
 
        useEffect(()=>{
-
-     
-
         getDetails()
 
        },[])
@@ -50,22 +54,32 @@ const Page = () => {
 
     
        async function CancelOrderHandle() {
-
         let obj = {
-          "order_id": details
+          "order_id": details,
+          "cancel_order_reason":reason,
+          "cancel_order_description":description
        }
 
-        setloading(true)
+
+        if(reason == ''){
+          toast.error("Reason is mandatory")
+        } else {
+          setloading(true)
                       
-         let responsedata =  await CancelOrder(obj)
+          let responsedata =  await CancelOrder(obj)
+        
+          setloading(false)
+        
+          if(responsedata?.status){
+          toast(responsedata?.message)
+          router.push('/account/myorder')
+        
+          }
+        }
+
        
-         setloading(false)
-       
-         if(responsedata?.status){
-         toast(responsedata?.message)
-         router.push('/account/myorder')
-       
-         }
+
+      
        }
 
        async function InvoiceHandle() {
@@ -118,7 +132,7 @@ const Page = () => {
                             <a id="Download" download></a>
                             <div className='d-flex justify-content-end mt-2'>
                                 <button className='btn btn-sm btn-warning' onClick={InvoiceHandle}>Print Invoice</button>
-                                <button className='btn btn-sm btn-danger ms-2' onClick={CancelOrderHandle}>Cancel Order</button>
+                                <button className='btn btn-sm btn-danger ms-2' onClick={()=>setShow(true)}>Cancel Order</button>
                             </div>
                           </div>
                         </div>
@@ -240,6 +254,29 @@ const Page = () => {
               </div>
             </div>
          </div>
+         <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Cansel Order</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        <div className='form-group mb-3'>
+          <input type='text' className='form-control' placeholder='Enter the reason'
+          value={reason}
+          onChange={(e)=>setreason(e.target.value)}
+          />
+        </div>
+        <div className='form-group mb-3'>
+          <textarea className='form-control' placeholder='Description'  value={description}
+          onChange={(e)=>setdescription(e.target.value)}></textarea>
+        </div>
+        <button className='btn btn-outline-danger' onClick={handleClose}>Cancel</button>
+        <button className='btn btn-primary ms-2' onClick={CancelOrderHandle}>Confirm</button>
+
+        </Modal.Body>
+     
+            
+     
+      </Modal>
        </section> 
   )
 }

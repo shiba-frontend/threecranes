@@ -108,8 +108,8 @@ const Page = () => {
               <th>Order No</th>
                     <th>Price</th>
                     <th>Order Date</th>
-                 
-                    <th></th>
+{/*                  
+                    <th></th> */}
                     </tr>
                   
                     </thead>
@@ -125,9 +125,9 @@ const Page = () => {
                             <td>$ {item?.net_amt}</td>
                             <td>{item?.order_date}</td>
                           
-                            <td>
+                            {/* <td>
                               <Link href={`/account/myorder/${item?.order_id}`}><u>Details</u></Link>
-                            </td>
+                            </td> */}
                           </tr>
                           )
                         })
@@ -157,8 +157,8 @@ const Page = () => {
               <th>Order No</th>
                     <th>Price</th>
                     <th>Order Date</th>
-                 
-                    <th></th>
+{/*                  
+                    <th></th> */}
                     </tr>
                   
                     </thead>
@@ -174,9 +174,9 @@ const Page = () => {
                             <td>$ {item?.net_amt}</td>
                             <td>{item?.order_date}</td>
                           
-                            <td>
+                            {/* <td>
                               <Link href={`/account/myorder/${item?.order_id}`}><u>Details</u></Link>
-                            </td>
+                            </td> */}
                           </tr>
                           )
                         })

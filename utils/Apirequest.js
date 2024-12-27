@@ -11,7 +11,7 @@ const _URL = "https://threecranes.itiffyconsultants.com/api/"
 let headers= { 
     'Content-Type': 'application/json', 
     'Key':'13ae7b7d7ba75ac286656a7a274905ca',
-    'Authorization': storedToken,
+    'Authorization': storedToken == null ? '' : storedToken,
     'source': 'ANDROID',
 }
 
@@ -315,6 +315,14 @@ export const OrderPlace = async (body) =>{
 
 
 export const PaymentProcess = async (body) =>{
+
+    // let headerss= { 
+    //     'Content-Type': 'multipart/form-data', 
+    //     'Key':'13ae7b7d7ba75ac286656a7a274905ca',
+    //     'Authorization': storedToken,
+    //     'source': 'ANDROID',
+    // }
+
     try{
 
         let response = await axios.post(`${_URL}payment-process`, body, {headers})

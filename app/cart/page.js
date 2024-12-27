@@ -167,7 +167,9 @@ async function RemoveCouponHandle() {
                               <tr className="cart_item" key={i}>
                               <td className="product-thumbnail">
 
-                              <Link href={`/product/${item?.product_id}`}><img src={item?.product_cover_image} width="50" height="50" alt=""/></Link>
+                              <Link href={`/product/${item?.product_id}`}>
+                              <img src={item?.product_cover_image} width="50" height="50" alt=""/>
+                              </Link>
                                  <div className="product-name ms-2">
                                     <Link href={`/product/${item?.product_id}`}>{item?.product_name}</Link>
                                     {item?.variation_name != null && 

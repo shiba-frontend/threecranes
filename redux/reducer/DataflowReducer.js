@@ -8,7 +8,8 @@ const initialState = {
     token:null,
     cartItem:[],
     wishlistItem:[],
-    CategoryMenu:[]
+    CategoryMenu:[],
+    TransactionDetails:''
   };
 
   export const DataflowReducer = createSlice({
@@ -37,6 +38,10 @@ const initialState = {
         state.CategoryMenu = action.payload;
       },
 
+      GetTransactionDetails(state, action) {
+        state.TransactionDetails = action.payload;
+      },
+
     },
   });
   
@@ -46,7 +51,8 @@ const initialState = {
     SitedataAction,
     AuthTokenAction,
     GetcartAction,
-    GetMenuAction
+    GetMenuAction,
+    GetTransactionDetails
   } = DataflowReducer.actions;
   
   export default DataflowReducer.reducer;

@@ -83,24 +83,9 @@ const Page = () => {
        }
 
        async function InvoiceHandle() {
-        let obj = {
-          "order_id": details
-       }
-
-        setloading(true)
-                      
-         let responsedata =  await PrintInvoice(obj)
-       
-         setloading(false)
-       
-         if(responsedata?.status){
-
-          console.log(responsedata)
-
-          const link = document.getElementById("Download");
-          link.setAttribute("href", responsedata?.data);
+        const link = document.getElementById("Download");
+          link.setAttribute("href", detailsdata?.invoice_pdf);
           link.click();
-         }
 
 
        }
@@ -129,9 +114,11 @@ const Page = () => {
                               <b>INVOICE#{detailsdata?.order_no}</b>
                               <h6>Order Date: {detailsdata?.order_date}</h6>
                             </div>
-                            <a id="Download" download></a>
+                           
                             <div className='d-flex justify-content-end mt-2'>
-                                <button className='btn btn-sm btn-warning' onClick={InvoiceHandle}>Print Invoice</button>
+                            <a id="Download" href={detailsdata?.invoice_pdf} download className='btn btn-sm btn-warning' target='_blank'>Download Invoice</a>
+
+                                {/* <button className='btn btn-sm btn-warning' onClick={InvoiceHandle}>Print Invoice</button> */}
                                 <button className='btn btn-sm btn-danger ms-2' onClick={()=>setShow(true)}>Cancel Order</button>
                             </div>
                           </div>

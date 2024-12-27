@@ -10,7 +10,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation'
 import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
-import { GetcartAction } from '@/redux/reducer/DataflowReducer'
+import { GetcartAction, GetTransactionDetails } from '@/redux/reducer/DataflowReducer'
 import { useDispatch } from 'react-redux'
 
 const Page = () => {
@@ -225,12 +225,12 @@ let obj = {
    "checkout_type": "EXISTING",
    "billing": billingselectAdd,
    "shipping": shippingselectAdd,
-   "subtotal": data?.tot_subtotal_amt,
-   "disc_amount": data?.tot_disc_amt,
-   "amount_after_disc": data?.tot_amt_after_disc,
-   "shipping_amt": data?.tot_shipping_amt,
-   "tax_amt": data?.tot_tax_amt,
-   "net_amt": data?.tot_net_amt
+   "subtotal": data?.tot_subtotal_amt.replace(',', ''),
+   "disc_amount": data?.tot_disc_amt.replace(',', ''),
+   "amount_after_disc": data?.tot_amt_after_disc.replace(',', ''),
+   "shipping_amt": data?.tot_shipping_amt.replace(',', ''),
+   "tax_amt": data?.tot_tax_amt.replace(',', ''),
+   "net_amt": data?.tot_net_amt.replace(',', '')
 }
 
      let response = await OrderPlace(obj)
@@ -266,24 +266,27 @@ let obj = {
 
    const formattedDate = `${year}-${month}`;
 
-  
-
 
    setloading(true)
-   let obj = {
-      "card_number": cards?.number,
-      "expiry_date": formattedDate,
-      "card_code": cards.cvc,
-      "order_id": orderresponse[0]?.order_id
-  }
 
-  let response = await PaymentProcess(obj)
+   var FormData = require('form-data');
+   var data = new FormData();
+   data.append('card_number', cards?.number);
+   data.append('expiry_date', formattedDate);
+   data.append('card_code', cards.cvc);
+   data.append('order_id', orderresponse[0]?.order_id);
+
+ 
+
+  let response = await PaymentProcess(data)
   setloading(false)
   if(response?.status){
    setShow1(false)
    toast(response?.message)
     let responsedata =  await GetCart()
     dispatch(GetcartAction(responsedata?.data[0]?.cart_items))
+    dispatch(GetTransactionDetails(response))
+    router.push('/checkout-success')
   } else {
    toast.error(response?.message)
   }

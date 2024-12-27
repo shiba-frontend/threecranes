@@ -1587,6 +1587,23 @@ img.pimage {
   /* height: 100%; */
   font-size: 41px;
 }
+.order-success {
+  width: 600px;
+  margin: 30px auto;
+  text-align: center;
+  box-shadow: 0 0 7px 3px rgba(0, 0, 0, 0.125);
+  border-radius: 10px;
+  padding: 20px;
+}
+.order-success svg {
+  font-size: 77px;
+  color: green;
+}
+.order-success h5 {
+  color: #000;
+  font-size: 20px;
+  margin: 15px 0;
+}
 @media only screen and (max-width: 767px) {
   .slick-next {
    display: none !important;

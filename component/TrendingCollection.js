@@ -11,6 +11,7 @@ import bag from '@/public/assets/image/bag_icon.png'
 import cart_icon from '@/public/assets/image/cart_icon.png'
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
+import heartsolid from '@/public/assets/image/heart.png'
 
 
 const TrendingCollection = ({content, sendDataToParent, sendDataToParentWishlist}) => {
@@ -97,6 +98,11 @@ var rate = Number(item?.rating)
                                 <div className='imag-cart'>
                                     <ul>
                                         <li>
+                                             {item?.is_wishlist == 1 ?
+                                                                                       <span>
+                                                                                         <img src={heartsolid.src} className='heartIcon' />
+                                                                                       </span> 
+                                                                                    :
                                             <button onClick={()=>{
                                                 datareducer != null ?
                                                 AddWishlistHandle(item)
@@ -110,6 +116,7 @@ var rate = Number(item?.rating)
                                                 </span>
                                               
                                             </button>
+            }
                                         </li>
                                         <li>
                                             {item?.is_cart == 1 ? 

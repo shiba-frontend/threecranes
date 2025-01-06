@@ -5,7 +5,7 @@ import { getToken } from '@/utils/getToken';
 const storedToken = getToken();
 
 console.log("localstorage", storedToken)
-const URL = "https://threecranes.itiffyconsultants.com/api/"
+const URL = "https://threecranes-dev.itiffyconsultants.com/api/"
 
 export default axios.create({
     baseURL:URL,

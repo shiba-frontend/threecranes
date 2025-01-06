@@ -34,6 +34,8 @@ import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import Fullscreen from "yet-another-react-lightbox/plugins/fullscreen";
+import heartsolid from '@/public/assets/image/heart.png'
+
 
 export default function Page(){
 
@@ -433,6 +435,11 @@ export default function Page(){
                     }
                 <ul className='wishlist-sec'>
                         <li>
+                             {productinfo?.is_wishlist == 1 ?
+                                                                            <span>
+                                                                              <img src={heartsolid.src} className='heartIcon' />
+                                                                            </span> 
+                                                                        :
                             <button onClick={()=>{
                                                 datareducer != null ?
                                                 AddWishlistHandle(productinfo)
@@ -440,6 +447,7 @@ export default function Page(){
                                              
                                                 router.push('/login')
                                                 }}><img src={wishlist_icon.src} />  Add to wishlist</button>
+                                            }
                         </li>
                         {datareducer != null && 
                         <li>

@@ -8,8 +8,7 @@ import { IMAGE } from '@/utils/Theme';
 import Link from 'next/link';
 import bag from '@/public/assets/image/bag_icon.png'
 import heart from '@/public/assets/image/wish_icon.png'
-import { AddCart, GetCart, GetHome } from '@/utils/Apirequest';
-import { GetcartAction } from '@/redux/reducer/DataflowReducer';
+import heartsolid from '@/public/assets/image/heart.png'
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '@/utils/Loader';
@@ -112,19 +111,26 @@ const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) =
                                 <div className='imag-cart'>
                                     <ul>
                                         <li>
-                                            <button onClick={()=>{
-                                                datareducer != null ?
-                                                AddWishlistHandle(item)
-                                                :
-                                             
-                                                router.push('/login')
-                                                }}>
-                                            <label>Add to wishlist</label>
-                                                <span>
-                                                    <img src={heart.src} />
-                                                </span>
-                                              
-                                            </button>
+                                            {item?.is_wishlist == 1 ?
+                                           <span>
+                                             <img src={heartsolid.src} className='heartIcon' />
+                                           </span> 
+                                        :
+                                        <button onClick={()=>{
+                                            datareducer != null ?
+                                            AddWishlistHandle(item)
+                                            :
+                                         
+                                            router.push('/login')
+                                            }}>
+                                        <label>Add to wishlist</label>
+                                            <span>
+                                                <img src={heart.src} />
+                                            </span>
+                                          
+                                        </button>
+                                        }
+                                           
                                         </li>
                                         <li>
                                             {item?.is_cart == 1 ? 

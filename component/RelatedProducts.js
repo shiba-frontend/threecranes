@@ -14,6 +14,7 @@ import star_default from '@/public/assets/image/star_default.png'
 import cart_icon from '@/public/assets/image/cart_icon.png'
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
+import heartsolid from '@/public/assets/image/heart.png'
 
 const RelatedProducts = ({content, sendDataToParent, sendDataToParentWishlist}) => {
 
@@ -99,6 +100,11 @@ const RelatedProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                             <div className='imag-cart'>
                                 <ul>
                                     <li>
+                                      {item?.is_wishlist == 1 ?
+                                                                                      <span>
+                                                                                          <img src={heartsolid.src} className='heartIcon' />
+                                                                                      </span> 
+                                                                                  :
                                         <button onClick={()=>{
                                                 datareducer != null ?
                                                 AddWishlistHandle(item)
@@ -112,6 +118,7 @@ const RelatedProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                                             </span>
                                           
                                         </button>
+            }
                                     </li>
                                     <li>
                                             {item?.is_cart == 1 ? 

@@ -18,7 +18,7 @@ import { GetcartAction, GetWishlistAction } from '@/redux/reducer/DataflowReduce
 import { useDispatch, useSelector } from 'react-redux'
 import cart_icon from '@/public/assets/image/cart_icon.png'
 import MultiRangeSlider from "multi-range-slider-react";
-
+import heartsolid from '@/public/assets/image/heart.png'
 
 export default function Page() {
     const {slug} = useParams()
@@ -316,6 +316,11 @@ Out of stock
                                 <div className='imag-cart'>
                                     <ul>
                                         <li>
+                                             {item?.is_wishlist == 1 ?
+                                                <span>
+                                                    <img src={heartsolid.src} className='heartIcon' />
+                                                </span> 
+                                            :
                                             <button onClick={()=>{
                                                 datareducer != null ?
                                                 AddWishlistHandle(item)
@@ -329,6 +334,7 @@ Out of stock
                                                 </span>
                                               
                                             </button>
+                    }
                                         </li>
                                         <li>
                                             {item?.is_cart == 1 ? 

@@ -9,8 +9,7 @@ import Link from 'next/link';
 import productIMg from '@/public/assets/image/banner_img.png'
 import heart from '@/public/assets/image/wish_icon.png'
 import bag from '@/public/assets/image/bag_icon.png'
-import star_fill from '@/public/assets/image/start_fill.png'
-import star_default from '@/public/assets/image/star_default.png'
+import heartsolid from '@/public/assets/image/heart.png'
 import cart_icon from '@/public/assets/image/cart_icon.png'
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
@@ -98,6 +97,11 @@ const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                                 <div className='imag-cart'>
                                     <ul>
                                         <li>
+                                           {item?.is_wishlist == 1 ?
+                                                <span>
+                                                  <img src={heartsolid.src} className='heartIcon' />
+                                                </span> 
+                                            :
                                             <button onClick={()=>{
                                                 datareducer != null ?
                                                 AddWishlistHandle(item)
@@ -111,6 +115,7 @@ const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                                                 </span>
                                               
                                             </button>
+            }
                                         </li>
                                         <li>
                                             {item?.is_cart == 1 ? 

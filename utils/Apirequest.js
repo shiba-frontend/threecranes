@@ -394,6 +394,16 @@ export const ProfilePicture = async (body) =>{
     } catch(error){return error?.response?.data}
 }
 
+export const Subscriber = async (body) =>{
+    try{
+
+        let response = await axios.post(`${_URL}submit-subscriber`, body, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response?.data}
+}
+
 
 
 

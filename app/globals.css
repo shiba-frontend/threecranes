@@ -1479,6 +1479,8 @@ display: none;
   right: 0;
   background: #f3f4f6;
   z-index: 99;
+  max-height: 300px;
+  overflow-y: scroll;
 }
 .autosuggestion ul {
   display: block;
@@ -1501,8 +1503,8 @@ display: none;
   z-index: 99999;
 }
 .autosuggestion ul li img {
-  width: 35px;
-  height: 35px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
 }
 .autosuggestion ul li span {

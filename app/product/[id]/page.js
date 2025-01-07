@@ -323,6 +323,13 @@ export default function Page(){
                 <li>
                     <b>{productinfo?.parent__category_name}</b>
                 </li>
+                <li>
+                <img src={rightArrow.src} alt="icon" />
+                </li>
+                <li>
+                    <b>{productinfo?.sub_category_name}</b>
+                </li>
+                
             </ul>
         </div>
         <div className='row'>
@@ -373,7 +380,7 @@ export default function Page(){
                     </ul>
                     <div dangerouslySetInnerHTML={{__html: productinfo?.short_description}} />
                     {/* <p>{productinfo?.short_description}</p> */}
-                        <h5>₹ {productinfo?.base_price} <span>₹ {productinfo?.markup_price}</span></h5>
+                        <h5>$ {productinfo?.base_price} <span>$ {productinfo?.markup_price}</span></h5>
 
                 <ul className='product-varient'>
                     {variation?.length > 0 &&

@@ -156,7 +156,7 @@ var rate = Number(item?.rating)
                             </ul>
                         </div>
                                 <Link href={`/product/${item?.id}`}> {truncateText(item?.name, 5)  }</Link>
-                                <h5>₹ ${item?.base_price} <span>₹ {item?.markup_price}</span></h5>
+                                <h5>${item?.base_price} <span>₹ {item?.markup_price}</span></h5>
                         </div>
                     </div>
                 )

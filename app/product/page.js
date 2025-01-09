@@ -16,7 +16,7 @@ import grid_icon from '@/public/assets/image/grid_icon.png'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '@/utils/Loader'
 import { AddCart, AddWishlist, AllProducts, AllProductsFilter, FilterProduct, GetCart, GetWishlist } from '@/utils/Apirequest'
-import { GetcartAction, GetWishlistAction } from '@/redux/reducer/DataflowReducer'
+import { GetcartAction, GetWishlistAction, HeaderDropdown } from '@/redux/reducer/DataflowReducer'
 import { toast } from 'react-toastify'
 import cart_icon from '@/public/assets/image/cart_icon.png'
 
@@ -29,13 +29,17 @@ export default function Page() {
     const [minrange, setminrange] = useState(null)
     const [maxrange, setmaxrange] = useState(null)
     const [selectArr, setselectArr] = useState([])
-    const datareducer = useSelector((state) => state.Dataflowreducer.token)
+    const datareducer = useSelector((state) => state.Dataflowreducer)
   
 
-
+    let dispatch = useDispatch()
    
   useEffect(()=>{ 
           GetApiRequest()
+
+            if(datareducer?.isToggle){
+                       dispatch(HeaderDropdown(false))
+                    }
     }, [])
 
     const GetApiRequest = async () =>{
@@ -75,7 +79,7 @@ export default function Page() {
        
       }
 
-      let dispatch = useDispatch()
+ 
 
 
       async function AddCartHandle(item) {
@@ -272,7 +276,9 @@ export default function Page() {
                             <Link href={`/product/${item?.id}`}>
                             <img src={item?.cover_image} />
                             </Link>
-                                <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
+                            {item?.price_percentage?.split('.')[0] > 0 && 
+                             <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
+                            }
                                 {item.product_qty <= 0 ?
 
 <div className='outofstock'>
@@ -283,7 +289,7 @@ Out of stock
                                     <ul>
                                         <li>
                                             <button onClick={()=>{
-                                                datareducer != null ?
+                                                datareducer?.token != null ?
                                                 AddWishlistHandle(item)
                                                 :
                                              

@@ -9,6 +9,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Getdashboard, GetOrderList, GetProfile } from '@/utils/Apirequest';
 import Loader from '@/utils/Loader';
 import { useRouter } from 'next/navigation';
+import { useDispatch, useSelector } from 'react-redux';
+import { HeaderDropdown } from '@/redux/reducer/DataflowReducer';
 
 const Page = () => {
      const [loading, setloading] = useState(false)
@@ -16,6 +18,9 @@ const Page = () => {
    const [profiledata, setprofiledata] = useState('')
      const [OrderList, setOrderList] = useState([])
      const router = useRouter()
+     const datar = useSelector((state) => state.Dataflowreducer)
+     let dispatch = useDispatch()
+
 
   const GetApiRequest = async () =>{
   
@@ -54,6 +59,9 @@ const Page = () => {
 
 useEffect(()=>{
   GetApiRequest()
+   if(datar?.isToggle){
+              dispatch(HeaderDropdown(false))
+          }
 },[])
 
 

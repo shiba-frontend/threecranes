@@ -70,14 +70,22 @@ const Page = () => {
                             return (
                               <tr key={i}>
                               <td>
-                                <div className='d-flex align-items-center'>
-                               
-                                  {item?.product_name}
+                                <Link href={`/product/${item?.product_id}`}>
+                                  <div className='d-flex align-items-center'>
+                                        <img src={item?.product_cover_image} width="40" className='me-2' />
+                                        {item?.product_name}
                                 </div>
+                                </Link>
+                             
+                                
                               </td>
-                              <td>  {item?.name}
+                              <td> 
+                              <div className='d-flex align-items-center'>
+                              <img src={item?.user_profile_image} width="40" className='me-2' />
+                                 {item?.name}
                                   <br></br>
                                   {item?.email}
+                                  </div>
                               </td>
                               <td>{item?.rating}</td>
                               <td>{item?.title}</td>
@@ -85,9 +93,9 @@ const Page = () => {
                               <td>{moment(item?.approve_reject_timestamp).format('DD-MM-YYYY')}</td>
                               <td>
                                 {item?.status == 'APPROVED' ? 
-                                   <span className='btn btn-sm btn-success'>Approved</span>
+                                   <span className='text-success'>Approved</span>
                                    :
-                                   <span className='btn btn-sm btn-danger'>Reject</span>
+                                   <span className='text-danger'>Reject</span>
                               }
                                  
                               </td>

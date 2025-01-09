@@ -10,19 +10,25 @@ import NewsLetter from "@/component/home/NewsLetter";
 import { useEffect, useState } from "react";
 import { AddCart, AddWishlist, GetCart, GetHome, GetWishlist } from "@/utils/Apirequest";
 import Loader from "@/utils/Loader";
-import { useDispatch } from "react-redux";
-import { GetcartAction, GetWishlistAction } from "@/redux/reducer/DataflowReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { GetcartAction, GetWishlistAction, HeaderDropdown } from "@/redux/reducer/DataflowReducer";
 import { toast } from "react-toastify";
 
 export default function Home() {
 
   const [homedata, sethomedata] = useState('')
   const [loading, setloading] = useState(false)
-
+  const datareducer = useSelector((state) => state.Dataflowreducer)
+  let dispatch = useDispatch()
 
   useEffect(()=>{
 
     GetApiRequest()
+
+     if(datareducer?.isToggle){
+                     dispatch(HeaderDropdown(false))
+      }
+
   },[])
 
   const GetApiRequest = async () =>{
@@ -37,7 +43,7 @@ export default function Home() {
   }
 
 
-  let dispatch = useDispatch()
+
 
   async function AddCartHandle(item) {
 

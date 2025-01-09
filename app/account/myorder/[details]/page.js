@@ -185,7 +185,7 @@ const Page = () => {
                   <b>Sub Total</b>
               </td>
               <td>
-                $ {detailsdata?.tot_subtotal_amt}
+                $ {detailsdata?.tot_amt_before_disc}
               </td>
             </tr>
             <tr>
@@ -243,7 +243,7 @@ const Page = () => {
          </div>
          <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Cansel Order</Modal.Title>
+          <Modal.Title>Cancel Order</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         <div className='form-group mb-3'>

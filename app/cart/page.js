@@ -7,7 +7,7 @@ import Loader from '@/utils/Loader'
 import Modal from 'react-bootstrap/Modal';
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
-import { GetcartAction } from '@/redux/reducer/DataflowReducer'
+import { GetcartAction, HeaderDropdown } from '@/redux/reducer/DataflowReducer'
 
 const Page = () => {
    const [cart, setcart] = useState([])
@@ -20,14 +20,19 @@ const Page = () => {
 
    const datareducer = useSelector((state) => state.Dataflowreducer.token)
 
-
+   const datar = useSelector((state) => state.Dataflowreducer)
 
    let dispatch = useDispatch()
+
 
 useEffect(()=>{
   
 
     GetcartApiRequest()
+
+     if(datar?.isToggle){
+                  dispatch(HeaderDropdown(false))
+              }
 },[])
 
 const GetcartApiRequest = async () =>{

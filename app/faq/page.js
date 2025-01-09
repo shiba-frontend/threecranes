@@ -10,10 +10,14 @@ import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import ApiConnection from '@/utils/ApiConnection'
 import Loader from '@/utils/Loader'
+import { useDispatch, useSelector } from 'react-redux'
+import { HeaderDropdown } from '@/redux/reducer/DataflowReducer'
 
 const Page = () => {
     const [loading, setloading] = useState(false)
 const [faq, setfaq] = useState([])
+const datareducer = useSelector((state) => state.Dataflowreducer)
+let dispatch = useDispatch()
 
     const getData = async () =>{
         try{
@@ -29,6 +33,11 @@ const [faq, setfaq] = useState([])
     
     useEffect(()=>{
         getData() 
+
+          if(datareducer?.isToggle){
+               dispatch(HeaderDropdown(false))
+         }
+
     },[])
 
 

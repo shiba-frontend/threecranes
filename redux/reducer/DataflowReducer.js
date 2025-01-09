@@ -9,7 +9,8 @@ const initialState = {
     cartItem:[],
     wishlistItem:[],
     CategoryMenu:[],
-    TransactionDetails:''
+    TransactionDetails:'',
+    isToggle: false,
   };
 
   export const DataflowReducer = createSlice({
@@ -42,6 +43,10 @@ const initialState = {
         state.TransactionDetails = action.payload;
       },
 
+      HeaderDropdown(state, action) {
+        state.isToggle = action.payload;
+      },
+
     },
   });
   
@@ -52,7 +57,8 @@ const initialState = {
     AuthTokenAction,
     GetcartAction,
     GetMenuAction,
-    GetTransactionDetails
+    GetTransactionDetails,
+    HeaderDropdown
   } = DataflowReducer.actions;
   
   export default DataflowReducer.reducer;

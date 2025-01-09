@@ -9,6 +9,8 @@ import React,{useEffect, useRef, useState} from 'react'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import Cookies from 'js-cookie';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 
 
 const Page = () => {
@@ -16,6 +18,9 @@ const Page = () => {
    const [email, setemail] = useState("")
    const [password, setpassword] = useState("")
    const [loading, setloading] = useState(false)
+   const [type, setType] = useState('password');
+   const [icon, setIcon] = useState( <FontAwesomeIcon icon={faEyeSlash} />);
+
 
    const router = useRouter()
    let dispatch = useDispatch()
@@ -68,6 +73,17 @@ const Page = () => {
        }
    }
 
+   const handleToggle = () => {
+      if (type==='password'){
+         setIcon(<FontAwesomeIcon icon={faEye} />);
+         setType('text')
+      } else {
+         setIcon(<FontAwesomeIcon icon={faEyeSlash} />)
+         setType('password')
+      }
+   }
+
+
   return (
     <section className="register-form-section login-form section-padding">
              {loading && <Loader/>}
@@ -87,20 +103,27 @@ const Page = () => {
                    </div>
                    <div className="form-outline mb-3">
                       <label className="form-label">Password*</label>
-                      <input type="password"  placeholder="Enter Password"
+                      <input type={type}  placeholder="Enter Password"
                          className="form-control form-control-lg" 
                          value={password}
                          onChange={(e)=>setpassword(e.target.value)}
                          />
+                           <span class="flex justify-around items-center" style={{    
+                    position: 'absolute',
+                        top: '43px',
+                        right: '18px'}} onClick={handleToggle}>
+                                       {icon}
+                                          
+                                       </span>
                    </div>
                    <div className="log-btn-reme d-flex align-items-center mt-4">
                       <button type="button" className="btn common-btn" onClick={LoginHandle}>Login</button>
-                      <div className="form-check d-flex justify-content-center">
+                      {/* <div className="form-check d-flex justify-content-center">
                          <input className="form-check-input me-2" type="checkbox" value="" />
                          <label className="form-check-label" htmlFor="form2Example3g">
                             Remember me
                          </label>
-                      </div>
+                      </div> */}
                    </div>
                    <div className="form-outline mb-3">
                      <Link href="/forgot-password" className="small  f-password">Forgot password?</Link>

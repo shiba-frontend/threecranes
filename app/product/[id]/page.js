@@ -22,7 +22,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from 'react-responsive-carousel';
 import { AddCart, AddWishlist, GetCart, GetProductDetails, GetProfile, GetWishlist, SaveReview } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
-import { GetcartAction, GetWishlistAction } from '@/redux/reducer/DataflowReducer'
+import { GetcartAction, GetWishlistAction, HeaderDropdown } from '@/redux/reducer/DataflowReducer'
 import { toast } from 'react-toastify'
 import { useDispatch, useSelector } from 'react-redux'
 import Modal from 'react-bootstrap/Modal';
@@ -54,7 +54,7 @@ export default function Page(){
     const [open, setOpen] = React.useState(false);
     const [lightboxImage, setlightboxImage] = useState([])
     const { id} = useParams()
-    const datareducer = useSelector((state) => state.Dataflowreducer.token)
+    const datareducer = useSelector((state) => state.Dataflowreducer)
     
 
     const router = useRouter();
@@ -85,7 +85,11 @@ export default function Page(){
      
           GetApiRequest()
 
-          datareducer != '' &&
+             if(datareducer?.isToggle){
+                 dispatch(HeaderDropdown(false))
+                              }
+
+          datareducer?.token != '' &&
           GetprofilApiRequest()
        
     },[])
@@ -333,10 +337,10 @@ export default function Page(){
             </ul>
         </div>
         <div className='row'>
-            <div className='col-lg-6'>
+            <div className='col-lg-7'>
                 <div className='left-img'>
                 <button onClick={() => setOpen(true)} className='zoomImage'><img src={zoom.src} /></button>
-            <Carousel>
+            <Carousel axis='vertical'>
      
             {productinfo?.product_images?.map((item, i)=>{
                 return (
@@ -352,7 +356,7 @@ export default function Page(){
             </div>
         
             </div>
-            <div className='col-lg-6'>
+            <div className='col-lg-5'>
 
                 <div className='product-details'>
                     <h2>{productinfo?.name}</h2>
@@ -448,7 +452,7 @@ export default function Page(){
                                                                             </span> 
                                                                         :
                             <button onClick={()=>{
-                                                datareducer != null ?
+                                                datareducer?.token != null ?
                                                 AddWishlistHandle(productinfo)
                                                 :
                                              
@@ -456,7 +460,7 @@ export default function Page(){
                                                 }}><img src={wishlist_icon.src} />  Add to wishlist</button>
                                             }
                         </li>
-                        {datareducer != null && 
+                        {datareducer?.token != null && 
                         <li>
                             <button onClick={()=>setShow(true)}>Give Review</button>
                         </li>

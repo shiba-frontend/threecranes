@@ -804,7 +804,7 @@ ul.control-dots {
   padding: 20px;
 }
 .proImg img {
-  height: 333px;
+  height: 500px;
   max-width: 100%;
   width: auto !important;
 }
@@ -1609,6 +1609,9 @@ img.pimage {
 img.heartIcon {
   width: 22px;
   height: auto;
+}
+.form-outline {
+  position: relative;
 }
 @media only screen and (max-width: 767px) {
   .slick-next {

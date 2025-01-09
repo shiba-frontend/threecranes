@@ -91,7 +91,9 @@ const RelatedProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                         <Link href={`/product/${item?.id}`}>
                             <img src={item?.cover_image} />
                             </Link>
-                            <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
+                            {item?.price_percentage?.split('.')[0] > 0 && 
+                             <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
+                            }
                             {item.product_qty <= 0 ?
                                 <div className='outofstock'>
                                 Out of stock
@@ -100,11 +102,7 @@ const RelatedProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                             <div className='imag-cart'>
                                 <ul>
                                     <li>
-                                      {item?.is_wishlist == 1 ?
-                                                                                      <span>
-                                                                                          <img src={heartsolid.src} className='heartIcon' />
-                                                                                      </span> 
-                                                                                  :
+                                 
                                         <button onClick={()=>{
                                                 datareducer != null ?
                                                 AddWishlistHandle(item)
@@ -114,11 +112,18 @@ const RelatedProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                                                 }}>
                                         <label>Add to wishlist</label>
                                             <span>
-                                                <img src={heart.src} />
+                                               <span>
+                                                                                             {item?.is_wishlist == 1 ?
+                                                                                               <img src={heartsolid.src} className='heartIcon' />
+                                                                                               :
+                                                                                               <img src={heart.src} />
+                                                                                           }
+                                                                                              
+                                                                                           </span>
                                             </span>
                                           
                                         </button>
-            }
+            
                                     </li>
                                     <li>
                                             {item?.is_cart == 1 ? 

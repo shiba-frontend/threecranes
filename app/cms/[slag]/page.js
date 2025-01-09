@@ -6,11 +6,16 @@ import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import rightArrow from '@/public/assets/image/right_arrow.png'
+import { useDispatch, useSelector } from 'react-redux'
+import { HeaderDropdown } from '@/redux/reducer/DataflowReducer'
 const Page = () => {
 
     const { slag} = useParams()
     const [loading, setloading] = useState(false)
     const [cms, setcms] = useState([])
+
+    const datar = useSelector((state) => state.Dataflowreducer)
+    let dispatch = useDispatch()
 
 
     const getData = async () =>{
@@ -32,6 +37,9 @@ const Page = () => {
     
     useEffect(()=>{
         getData() 
+          if(datar?.isToggle){
+            dispatch(HeaderDropdown(false))
+        }
     },[])
 
   return (

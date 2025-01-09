@@ -14,7 +14,7 @@ import grid_icon from '@/public/assets/image/grid_icon.png'
 import { AddCart, AddWishlist, FilterProduct, GetCart, GetParentCategoryWiseProduct, GetWishlist } from '@/utils/Apirequest'
 import Loader from '@/utils/Loader'
 import { toast } from 'react-toastify'
-import { GetcartAction, GetWishlistAction } from '@/redux/reducer/DataflowReducer'
+import { GetcartAction, GetWishlistAction, HeaderDropdown } from '@/redux/reducer/DataflowReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import cart_icon from '@/public/assets/image/cart_icon.png'
 import MultiRangeSlider from "multi-range-slider-react";
@@ -30,13 +30,21 @@ export default function Page() {
     const [minrange, setminrange] = useState(null)
     const [maxrange, setmaxrange] = useState(null)
     const [selectArr, setselectArr] = useState([])
-    const datareducer = useSelector((state) => state.Dataflowreducer.token)
+    const datareducer = useSelector((state) => state.Dataflowreducer)
+
     const router = useRouter();
+    let dispatch = useDispatch()
 
     useEffect(()=>{
       
       
           GetApiRequest()
+
+          if(datareducer?.isToggle){
+             dispatch(HeaderDropdown(false))
+          }
+
+
     }, [])
 
     const GetApiRequest = async () =>{
@@ -67,7 +75,7 @@ export default function Page() {
        
       }
 
-    let dispatch = useDispatch()
+
 
 
     async function AddCartHandle(item) {
@@ -306,7 +314,9 @@ export default function Page() {
                             <Link href={`/product/${item?.id}`}>
                             <img src={item?.cover_image} />
                             </Link>
-                                <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
+                            {item?.price_percentage?.split('.')[0] > 0 && 
+                             <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
+                            }
                                 {item.product_qty <= 0 ?
 
 <div className='outofstock'>
@@ -316,13 +326,9 @@ Out of stock
                                 <div className='imag-cart'>
                                     <ul>
                                         <li>
-                                             {item?.is_wishlist == 1 ?
-                                                <span>
-                                                    <img src={heartsolid.src} className='heartIcon' />
-                                                </span> 
-                                            :
+                                            
                                             <button onClick={()=>{
-                                                datareducer != null ?
+                                                datareducer?.token != null ?
                                                 AddWishlistHandle(item)
                                                 :
                                              
@@ -330,11 +336,18 @@ Out of stock
                                                 }}>
                                             <label>Add to wishlist</label>
                                                 <span>
+                                                
+                                                    {item?.is_wishlist == 1 ?
+                                                    <img src={heartsolid.src} className='heartIcon' />
+                                                    :
                                                     <img src={heart.src} />
+                                                }
+                                                                                                  
+                                                                                       
                                                 </span>
                                               
                                             </button>
-                    }
+                    
                                         </li>
                                         <li>
                                             {item?.is_cart == 1 ? 

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import Loader from '@/utils/Loader';
 import Modal from 'react-bootstrap/Modal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faRectangleXmark } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faRectangleXmark } from '@fortawesome/free-solid-svg-icons';
 import ApiConnection from '@/utils/ApiConnection';
 import { useRouter } from 'next/navigation'
 
@@ -28,6 +28,10 @@ const Register = () => {
     const [loading, setloading] = useState(false)
     const [counter, setCounter] = useState(59);
     const [userId, setuserId] = useState(null)
+    const [type1, setType1] = useState('password');
+    const [icon1, setIcon1] = useState( <FontAwesomeIcon icon={faEyeSlash} />);
+    const [type2, setType2] = useState('password');
+    const [icon2, setIcon2] = useState( <FontAwesomeIcon icon={faEyeSlash} />);
 
     const handleClose = () => setShow(false);
 
@@ -133,6 +137,28 @@ const Register = () => {
     }
 
 
+    
+   const handleToggle1 = () => {
+    if (type1==='password'){
+       setIcon1(<FontAwesomeIcon icon={faEye} />);
+       setType1('text')
+    } else {
+       setIcon1(<FontAwesomeIcon icon={faEyeSlash} />)
+       setType1('password')
+    }
+ }
+
+ const handleToggle2 = () => {
+    if (type2==='password'){
+       setIcon2(<FontAwesomeIcon icon={faEye} />);
+       setType2('text')
+    } else {
+       setIcon2(<FontAwesomeIcon icon={faEyeSlash} />)
+       setType2('password')
+    }
+ }
+
+
   return (
     <div className="register-form-field">
                 {loading && <Loader/>}
@@ -185,19 +211,33 @@ const Register = () => {
                 <div className='col-lg-6'>
                 <div className='form-outline mb-3'>
                 <label>Password</label>
-                <input  type="password" className="form-control" placeholder="XXXXX"
+                <input  type={type1} className="form-control" placeholder="XXXXX"
                 value={password}
                 onChange={(e)=>setpassword(e.target.value)}
                 />
+                  <span class="flex justify-around items-center" style={{    
+                    position: 'absolute',
+                        top: '43px',
+                        right: '18px'}} onClick={handleToggle1}>
+                                       {icon1}
+                                          
+                                       </span>
                     </div>
                 </div>
                 <div className='col-lg-6'>
                 <div className='form-outline mb-3'>
                 <label>Confirm Password</label>
-                <input type="password" className="form-control" placeholder="XXXXX"
+                <input type={type2} className="form-control" placeholder="XXXXX"
                 value={cpassword}
                 onChange={(e)=>setcpassword(e.target.value)}
                 />
+                  <span class="flex justify-around items-center" style={{    
+                    position: 'absolute',
+                        top: '43px',
+                        right: '18px'}} onClick={handleToggle2}>
+                                       {icon2}
+                                          
+                                       </span>
                     </div>
                 </div>
             </div>

@@ -9,7 +9,7 @@ import heart_icon from '@/public/assets/image/heart_icon.png'
 import cart_icon from '@/public/assets/image/cart_icon.png'
 import { getToken } from '@/utils/getToken';
 import { useDispatch, useSelector } from 'react-redux'
-import { AuthTokenAction, GetcartAction, GetMenuAction, GetWishlistAction } from '@/redux/reducer/DataflowReducer'
+import { AuthTokenAction, GetcartAction, GetMenuAction, GetWishlistAction, HeaderDropdown } from '@/redux/reducer/DataflowReducer'
 import { GetCart, GetParentCategory, GetProfile, GetWishlist, SearchSuggestion } from '@/utils/Apirequest'
 import { useRouter } from 'next/navigation'
 
@@ -105,11 +105,13 @@ let router = useRouter()
     const timer = setTimeout(() => {
         if (wordCount === 3) {
             makeAPICall(inputValue);
+            dispatch(HeaderDropdown(true))
             setistoggle(true)
         }
     }, 300); 
 
     if (wordCount < 3) {
+      dispatch(HeaderDropdown(false))
       setistoggle(false)
     }
 
@@ -145,6 +147,7 @@ function truncateText(text, wordCount) {
 }
 
 function RedirectPage(Id){
+  dispatch(HeaderDropdown(false))
   setistoggle(false)
   setInputValue('')
   router.push(`/product/${Id}`)
@@ -152,6 +155,7 @@ function RedirectPage(Id){
 
 const handleKeyPress = (event) => {
   if (event.key === "Enter" && inputValue.trim()) {
+    dispatch(HeaderDropdown(false))
     setistoggle(false)
     router.push(`/search/${inputValue}`)
   }
@@ -184,7 +188,7 @@ const handleKeyPress = (event) => {
                       <button>
                           <img src={search_icon.src} alt='logo' />
                       </button>
-                      {istoggle &&
+                      {cartreducer?.isToggle &&
                       <div className='autosuggestion'>
                         {isloading ? 
                         <b>Loading...</b>  
@@ -254,7 +258,7 @@ const handleKeyPress = (event) => {
                         )
                     })}
                     <li>
-                          <Link href="/product">Products</Link>
+                          <Link href="/product">All Products</Link>
                       </li>
                       <li>
                           <Link href="/faq">Faq</Link>

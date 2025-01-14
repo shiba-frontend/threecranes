@@ -33,7 +33,9 @@ const Page = () => {
                <li>
                <img src={rightArrow.src} alt="icon" />
                </li>
-             
+               <li>
+                    <b>Order Success</b>
+                </li>
            </ul>
        </div>
    

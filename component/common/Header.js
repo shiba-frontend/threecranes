@@ -167,7 +167,7 @@ const handleKeyPress = (event) => {
     <div className='header'>
         <div className='top-header'>
             <div className='container'>
-                <p>We deliver to you every day from <span>7:00 to 23:00</span></p>
+                <p>{cartreducer?.sitedata?.topbar_text}</p>
             </div>
         </div>
         <div className='mid-header'>
@@ -175,7 +175,7 @@ const handleKeyPress = (event) => {
               <div className='row align-items-center'>
                 <div className='col-lg-3'>
                   <Link href="/">
-                        <img src={logo.src} alt='logo' className='w-100' />
+                        <img src={cartreducer?.sitedata?.site_logo} alt='logo' className='logo' />
                   </Link>
                 </div>
                 <div className='col-lg-5'>

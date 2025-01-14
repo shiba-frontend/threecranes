@@ -44,6 +44,7 @@ export default function Page(){
     const [productinfo, setproductinfo] = useState('')
     const [qty, setqty] = useState(1)
     const [variation, setvariation] = useState([])
+    const [variationalue, setvariationalue] = useState("")
     const [fname, setfname] = useState('')
     const [lname, setlname] = useState('')
     const [email, setemail] = useState('')
@@ -53,6 +54,7 @@ export default function Page(){
     const [title, settitle] = useState("")
     const [open, setOpen] = React.useState(false);
     const [lightboxImage, setlightboxImage] = useState([])
+    const [defaulttab, setdefaulttab] = useState("description")
     const { id} = useParams()
     const datareducer = useSelector((state) => state.Dataflowreducer)
     
@@ -155,45 +157,86 @@ export default function Page(){
 
     async function AddCartHandle() {
 
-    
 
-        if(qty == 0){
-            toast.error("Please added the quantity first")
+        if(variation?.length > 0 )
+        {
+            if(variationalue == ''){
+                toast.error("Please Select the size")
+            } else  if(qty == 0){
+                toast.error("Please added the quantity first")
+            } else {
+                let price = productinfo?.base_price.replace(',', '')
+
+                var TemA = []
+        
+                variation?.forEach(element =>{
+                    TemA.push(element.value)
+                })
+            
+            
+                setloading(true)
+            
+                let body = {
+                    "product_id": productinfo?.id,
+                    "product_qty": qty,
+                    "product_rate": price,
+                    "variations": TemA
+                }
+            
+                const response = await AddCart(body)
+                setloading(false)
+            
+                if(response?.status){
+                  //  GetApiRequest()
+                    let responsedata =  await GetCart()
+                    dispatch(GetcartAction(responsedata?.data[0]?.cart_items))
+                    GetApiRequest()
+                    toast(response?.message)
+                } else {
+                    toast(response?.message)
+                }
+            }
+
         } else {
+            if(qty == 0){
+                toast.error("Please added the quantity first")
+            } else {
+                let price = productinfo?.base_price.replace(',', '')
 
-    
-
-        let price = productinfo?.base_price.replace(',', '')
-
-        var TemA = []
-
-        variation?.forEach(element =>{
-            TemA.push(element.value)
-        })
-    
-    
-        setloading(true)
-    
-        let body = {
-            "product_id": productinfo?.id,
-            "product_qty": qty,
-            "product_rate": price,
-            "variations": TemA
+                var TemA = []
+        
+                variation?.forEach(element =>{
+                    TemA.push(element.value)
+                })
+            
+            
+                setloading(true)
+            
+                let body = {
+                    "product_id": productinfo?.id,
+                    "product_qty": qty,
+                    "product_rate": price,
+                    "variations": TemA
+                }
+            
+                const response = await AddCart(body)
+                setloading(false)
+            
+                if(response?.status){
+                  //  GetApiRequest()
+                    let responsedata =  await GetCart()
+                    dispatch(GetcartAction(responsedata?.data[0]?.cart_items))
+                    GetApiRequest()
+                    toast(response?.message)
+                } else {
+                    toast(response?.message)
+                }
+            }
         }
+
     
-        const response = await AddCart(body)
-        setloading(false)
+
     
-        if(response?.status){
-          //  GetApiRequest()
-            let responsedata =  await GetCart()
-            dispatch(GetcartAction(responsedata?.data[0]?.cart_items))
-            GetApiRequest()
-            toast(response?.message)
-        } else {
-            toast(response?.message)
-        }
-    }
     }
 
 
@@ -202,7 +245,7 @@ export default function Page(){
         arr[i][key] = value
 
         setvariation(arr)
-
+        setvariationalue(value)
     }
 
      async function AddWishlistHandle(item) {
@@ -306,7 +349,6 @@ export default function Page(){
               }
     }
 
-    
 
 
   return (
@@ -325,7 +367,8 @@ export default function Page(){
                 </li>
             
                 <li>
-                    <b>{productinfo?.parent__category_name}</b>
+                <Link href={`/product/category/${productinfo?.main_category}`} >{productinfo?.parent__category_name} </Link>
+                
                 </li>
                 <li>
                 <img src={rightArrow.src} alt="icon" />
@@ -375,11 +418,11 @@ export default function Page(){
                             <span>{productinfo?.rating}</span>
                         </li>
                         <li>
-                            <label>{productinfo?.review_list?.length} (Reviews)</label>
+                            <label>{productinfo?.review_list?.length} <button onClick={()=>setdefaulttab('review')}>(Reviews)</button></label>
                         </li>
                         <li>
                             <label>SKU:</label>
-                            <b>{productinfo?.product_sku}</b>
+                            <b> {productinfo?.product_sku}</b>
                         </li>
                     </ul>
                     <div dangerouslySetInnerHTML={{__html: productinfo?.short_description}} />
@@ -447,9 +490,15 @@ export default function Page(){
                 <ul className='wishlist-sec'>
                         <li>
                              {productinfo?.is_wishlist == 1 ?
-                                                                            <span>
-                                                                              <img src={heartsolid.src} className='heartIcon' />
-                                                                            </span> 
+                                                                    <button onClick={()=>{
+                                                                        datareducer?.token != null ?
+                                                                        AddWishlistHandle(productinfo)
+                                                                        :
+                                                                     
+                                                                        router.push('/login')
+                                                                        }}>
+                                                                        <img src={heartsolid.src} className='heartIcon' />
+                                                                    </button> 
                                                                         :
                             <button onClick={()=>{
                                                 datareducer?.token != null ?
@@ -476,9 +525,10 @@ export default function Page(){
     
     <div className='pro-tab-details'>
     <Tabs
-      defaultActiveKey="description"
-      id="uncontrolled-tab-example"
+      activeKey={defaulttab}
+      id="controlled-tab-example"
       className="mb-3"
+      onSelect={(k) => setdefaulttab(k)}
     >
       <Tab eventKey="description" title="Description">
       <div dangerouslySetInnerHTML={{__html: productinfo?.long_description}} />
@@ -492,8 +542,12 @@ export default function Page(){
         return (
             <div className='reviewList' key={i}>
                 <div className='user-i'>
+                    <img src={reviews?.user_profile_image} />
+                    <div>
                     <b>{reviews?.name}</b>
                     <span>{reviews?.email}</span>
+                    </div>
+                   
 
                 </div>
                 <div className='user-r'>

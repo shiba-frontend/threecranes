@@ -12,6 +12,7 @@ import Cards from 'react-credit-cards-2';
 import 'react-credit-cards-2/dist/es/styles-compiled.css';
 import { GetcartAction, GetTransactionDetails } from '@/redux/reducer/DataflowReducer'
 import { useDispatch } from 'react-redux'
+import InputMask from 'react-input-mask';
 
 const Page = () => {
    const [loading, setloading] = useState(false)
@@ -260,12 +261,14 @@ let obj = {
  async function PaymantHandle() {
 
 
-   const numString = cards?.expiry.toString();
-   const year = numString.slice(2, 4); 
-   const month = numString.slice(0, 2); 
 
-   const formattedDate = `${year}-${month}`;
 
+   // const numString = cards?.expiry.toString();
+   // const year = numString.slice(2, 4); 
+   // const month = numString.slice(0, 2); 
+   const numString = cards?.expiry.split('/')
+
+   const formattedDate = `${numString[1]}-${numString[0]}`;
 
    setloading(true)
 
@@ -275,6 +278,8 @@ let obj = {
    data.append('expiry_date', formattedDate);
    data.append('card_code', cards.cvc);
    data.append('order_id', orderresponse[0]?.order_id);
+
+
 
  
 
@@ -604,7 +609,15 @@ let obj = {
    </div>
    <div className='col-lg-6'>
          <div className='form-group mb-3'>
-         <input
+         <InputMask mask="99/99" placeholder="MM/YY"
+          value={cards.expiry}
+          onChange={handleInputChange}
+          onFocus={handleInputFocus}
+         name="expiry"
+         className='form-control'
+         />
+
+         {/* <input
             type="text"
             name="expiry"
             placeholder="Expiry"
@@ -618,7 +631,7 @@ let obj = {
                    event.preventDefault();
                }
                }}
-         />
+         /> */}
          </div>
    </div>
    <div className='col-lg-6'>

@@ -8,10 +8,13 @@ import Sidebar from '../Sidebar'
 import { toast } from 'react-toastify'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCamera, faUserLarge } from '@fortawesome/free-solid-svg-icons'
+import { getToken } from '@/utils/getToken'
+import ApiConnection from '@/utils/ApiConnection'
 
 
 const Page = () => {
 
+const storedToken = getToken();
 
    const [loading, setloading] = useState(false)
    const [fname, setfname] = useState('')
@@ -20,6 +23,7 @@ const Page = () => {
    const [email, setemail] = useState('')
    const [dname, setdname] = useState('')
    const [pimage, setpimage] = useState('')
+   const [pfile, setpfile] = useState('')
    const [oldpassword, setoldpassword] = useState('')
    const [npassword, setnpassword] = useState('')
    const [cpassword, setcpassword] = useState('')
@@ -54,15 +58,29 @@ const Page = () => {
 
    async function UpdateProfileHandle() {
     setloading(true)
-    let obj = {
-        "first_name": fname,
-        "last_name": lname,
-        "phone":phone,
-        "email":email,
-        "display_name":dname,
-    }
 
-    const response = await UpdateProfile(obj)
+ 
+
+    const data = new FormData();
+    data.append('profile_image', pfile)
+    data.append('first_name', fname)
+    data.append('last_name', lname)
+    data.append('phone', phone)
+    data.append('email', email)
+    data.append('display_name', dname)
+    
+
+
+
+    // let obj = {
+    //     "first_name": fname,
+    //     "last_name": lname,
+    //     "phone":phone,
+    //     "email":email,
+    //     "display_name":dname,
+    // }
+
+    const response = await ApiConnection.post("update-profile", data)
     setloading(false)
     if(response){
         GetprofilApiRequest()
@@ -110,31 +128,33 @@ const Page = () => {
   
     reader.onloadend = async function (e) {
       const fsize = file.size;
+
       const fileSize = Math.round(fsize / 1024);
       if (fileSize >= 800) {
         toast.error('file size is too large');
       } else {
+        setpfile(file)
         setpimage(reader.result)
-        console.log(file)
-        let obj = {
-                 "profile_image": {
-                 "originalPath":reader.result,
-                 "type":file.type,
-                 "height": 400,
-                "width": 400,
-                "fileName": file.name,
-                "fileSize": fileSize,
-                "uri":reader.result,
-                "base64":reader.result
-            }
-        }
+        // console.log(file)
+        // let obj = {
+        //          "profile_image": {
+        //          "originalPath":reader.result,
+        //          "type":file.type,
+        //          "height": 400,
+        //         "width": 400,
+        //         "fileName": file.name,
+        //         "fileSize": fileSize,
+        //         "uri":reader.result,
+        //         "base64":reader.result
+        //     }
+        // }
 
-        let response = await ProfilePicture(obj)
-        if(response.status){
-            toast(response?.message)
-        } else {
-            toast.error(response?.message)
-        }
+        // let response = await ProfilePicture(obj)
+        // if(response.status){
+        //     toast(response?.message)
+        // } else {
+        //     toast.error(response?.message)
+        // }
 
 
       }
@@ -142,7 +162,7 @@ const Page = () => {
     reader.readAsDataURL(file);
   };
 
-
+console.log(pfile)
 
 
     return (
@@ -204,18 +224,8 @@ const Page = () => {
                                         />
                                     </div>
                                 </div>
-                                {/* <div className='col-lg-12'>
-                                    <div className='form-group'>
-                                        <input type='file' className='form-control' />
-                                    </div>
-                                </div> */}
                                 <div className='col-lg-12'>
-                                    <div className='form-group'>
-                                        <button className='themeBtn' onClick={UpdateProfileHandle}> Update Profile</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='profile-pic'>
+                                <div className='profile-pic mb-3'>
                                 {pimage !== null ?
                                       <img src={pimage} alt="profile"/>
                                       :
@@ -229,6 +239,14 @@ const Page = () => {
                                     <FontAwesomeIcon icon={faCamera} />
                                 </div>
                             </div>
+                                </div>
+                                <div className='col-lg-12'>
+                                    <div className='form-group'>
+                                        <button className='themeBtn' onClick={UpdateProfileHandle}> Update Profile</button>
+                                    </div>
+                                </div>
+                            </div>
+                           
                         </div>
                     </div>
                     <h4>Change Password</h4>

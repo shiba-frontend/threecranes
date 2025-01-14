@@ -85,10 +85,12 @@ const Page = () => {
                             return (
                               <tr key={i}>
                                   <td style={{width:'60%'}}>
+                                  <Link href={`/product/${item?.product_id}`}>
                                     <div className='d-flex align-items-center'>
                                       <img src={item?.product_cover_image} width="40" className='me-2' />
                                       {item?.product_name}
                                     </div>
+                                    </Link>
                                   </td>
                                   <td>$ {item?.product_base_price}</td>
                                    <td>{moment(item?.timestamp).format('DD-MM-YYYY')}</td>

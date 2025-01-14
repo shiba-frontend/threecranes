@@ -150,7 +150,9 @@ export default function Page() {
           if(!row.istoggle){
             setselectArr(TempArr)
             FilterApi(TempArr)
-          } 
+          } else {
+            FilterApi(TempArr)
+          }
     }
 
 

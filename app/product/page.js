@@ -162,7 +162,9 @@ export default function Page() {
             if(!row.istoggle){
               setselectArr(TempArr)
               FilterApi(pId,TempArr)
-            } 
+            } else {
+                FilterApi(pId,TempArr)
+            }
       }
   
   

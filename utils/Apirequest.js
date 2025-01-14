@@ -157,9 +157,19 @@ export const GetProfile = async () =>{
 }
 
 export const UpdateProfile = async (body) =>{
+
+    let headerss= { 
+        'Content-Type': 'multipart/form-data', 
+        'Key':'13ae7b7d7ba75ac286656a7a274905ca',
+        'Authorization': storedToken == null ? '' : storedToken,
+        'source': 'ANDROID',
+    }
+
+    console.log("sfd",`${_URL}update-profile`, headerss)
+
     try{
 
-        let response = await axios.post(`${_URL}update-profile`, body, {headers})
+        let response = await axios.post(`${_URL}update-profile`, body, headerss)
 
         return response?.data
 

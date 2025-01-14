@@ -10,7 +10,7 @@ const Banner = ({content}) => {
                 <div className='col-lg-6'>
                     <h1>{content?.banner_text}</h1>
                         <p>{content?.banner_text2}</p>
-                        <Link href="/" className='themeBtn'>Shop Now</Link>
+                        <Link href="/product" className='themeBtn'>Shop Now</Link>
                         {/* <ul>
                             <li>
                                 <b>2000 +</b>

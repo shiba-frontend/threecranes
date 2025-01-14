@@ -21,7 +21,6 @@ const RelatedProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
   const datareducer = useSelector((state) => state.Dataflowreducer.token)
   const router = useRouter();
 
-  console.log("content", content)
 
 
     var settings = {

@@ -61,7 +61,7 @@ const Page = () => {
               <th>Order No</th>
                     <th>Price</th>
                     <th>Order Date</th>
-                 
+                    <th>Status</th>
                     <th></th>
                     </tr>
                   
@@ -75,7 +75,7 @@ const Page = () => {
                               <td>{item?.order_no}</td>
                             <td>$ {item?.net_amt}</td>
                             <td>{item?.order_date}</td>
-                          
+                            <td>{item?.order_status}</td>
                             <td>
                               <Link href={`/account/myorder/${item?.order_id}`}><u>Details</u></Link>
                             </td>
@@ -98,8 +98,7 @@ const Page = () => {
                     </Table>
               </div>
               </Tab>
-              {OrderList?.cancelled_orders
-?.length > 0 && 
+            
               <Tab eventKey="corder" title="Cancel Order">
               <div className='table-responsive custom-table'>
               <Table striped bordered hover >
@@ -108,6 +107,7 @@ const Page = () => {
               <th>Order No</th>
                     <th>Price</th>
                     <th>Order Date</th>
+                    <th>Status</th>
 {/*                  
                     <th></th> */}
                     </tr>
@@ -124,7 +124,7 @@ const Page = () => {
                               <td>{item?.order_no}</td>
                             <td>$ {item?.net_amt}</td>
                             <td>{item?.order_date}</td>
-                          
+                            <td>{item?.order_status}</td>
                             {/* <td>
                               <Link href={`/account/myorder/${item?.order_id}`}><u>Details</u></Link>
                             </td> */}
@@ -147,8 +147,7 @@ const Page = () => {
                     </Table>
               </div>
               </Tab>
-}
-              {OrderList?.rejected_orders?.length > 0 &&
+
               <Tab eventKey="rorder" title="Rejected Order">
               <div className='table-responsive custom-table'>
               <Table striped bordered hover >
@@ -157,6 +156,8 @@ const Page = () => {
               <th>Order No</th>
                     <th>Price</th>
                     <th>Order Date</th>
+                    <th>Status</th>
+                  
 {/*                  
                     <th></th> */}
                     </tr>
@@ -173,7 +174,7 @@ const Page = () => {
                               <td>{item?.order_no}</td>
                             <td>$ {item?.net_amt}</td>
                             <td>{item?.order_date}</td>
-                          
+                            <td>{item?.order_status}</td>
                             {/* <td>
                               <Link href={`/account/myorder/${item?.order_id}`}><u>Details</u></Link>
                             </td> */}
@@ -196,7 +197,212 @@ const Page = () => {
                     </Table>
               </div>
               </Tab>
-}
+
+
+              <Tab eventKey="shipped" title="Shipped Order">
+              <div className='table-responsive custom-table'>
+              <Table striped bordered hover >
+              <thead>
+              <tr>
+              <th>Order No</th>
+                    <th>Price</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                  
+{/*                  
+                    <th></th> */}
+                    </tr>
+                  
+                    </thead>
+                    <tbody>
+                      {OrderList?.shipped_orders
+?.length > 0 ?
+
+                        OrderList?.shipped_orders
+                        ?.map((item, i)=>{
+                          return (
+                            <tr key={i}>
+                              <td>{item?.order_no}</td>
+                            <td>$ {item?.net_amt}</td>
+                            <td>{item?.order_date}</td>
+                            <td>{item?.order_status}</td>
+                            {/* <td>
+                              <Link href={`/account/myorder/${item?.order_id}`}><u>Details</u></Link>
+                            </td> */}
+                          </tr>
+                          )
+                        })
+
+                        :
+
+                        <tr>
+                          <td colSpan={5}>No shipped order found</td>
+
+                          </tr>
+
+                    
+                    }
+       
+       
+        </tbody>
+                    </Table>
+              </div>
+              </Tab>
+
+
+
+              <Tab eventKey="processing" title="Processing Order">
+              <div className='table-responsive custom-table'>
+              <Table striped bordered hover >
+              <thead>
+              <tr>
+              <th>Order No</th>
+                    <th>Price</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                  
+{/*                  
+                    <th></th> */}
+                    </tr>
+                  
+                    </thead>
+                    <tbody>
+                      {OrderList?.processing_orders
+?.length > 0 ?
+
+                        OrderList?.processing_orders
+                        ?.map((item, i)=>{
+                          return (
+                            <tr key={i}>
+                              <td>{item?.order_no}</td>
+                            <td>$ {item?.net_amt}</td>
+                            <td>{item?.order_date}</td>
+                            <td>{item?.order_status}</td>
+                            {/* <td>
+                              <Link href={`/account/myorder/${item?.order_id}`}><u>Details</u></Link>
+                            </td> */}
+                          </tr>
+                          )
+                        })
+
+                        :
+
+                        <tr>
+                          <td colSpan={5}>No processing order found</td>
+
+                          </tr>
+
+                    
+                    }
+       
+       
+        </tbody>
+                    </Table>
+              </div>
+              </Tab>
+
+              <Tab eventKey="complete" title="Completed Order">
+              <div className='table-responsive custom-table'>
+              <Table striped bordered hover >
+              <thead>
+              <tr>
+              <th>Order No</th>
+                    <th>Price</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                  
+{/*                  
+                    <th></th> */}
+                    </tr>
+                  
+                    </thead>
+                    <tbody>
+                      {OrderList?.
+complete_orders
+?.length > 0 ?
+
+                        OrderList?.
+                        complete_orders
+                        ?.map((item, i)=>{
+                          return (
+                            <tr key={i}>
+                              <td>{item?.order_no}</td>
+                            <td>$ {item?.net_amt}</td>
+                            <td>{item?.order_date}</td>
+                            <td>{item?.order_status}</td>
+                            {/* <td>
+                              <Link href={`/account/myorder/${item?.order_id}`}><u>Details</u></Link>
+                            </td> */}
+                          </tr>
+                          )
+                        })
+
+                        :
+
+                        <tr>
+                          <td colSpan={5}>No complete order found</td>
+
+                          </tr>
+
+                    
+                    }
+       
+       
+        </tbody>
+                    </Table>
+              </div>
+              </Tab>
+              <Tab eventKey="incomplete" title="Incompleted Order">
+              <div className='table-responsive custom-table'>
+              <Table striped bordered hover >
+              <thead>
+              <tr>
+              <th>Order No</th>
+                    <th>Price</th>
+                    <th>Order Date</th>
+                    <th>Status</th>
+                  
+{/*                  
+                    <th></th> */}
+                    </tr>
+                  
+                    </thead>
+                    <tbody>
+                      {OrderList?.
+incomplete_orders
+?.length > 0 ?
+
+                        OrderList?.
+                        incomplete_orders
+                        ?.map((item, i)=>{
+                          return (
+                            <tr key={i}>
+                              <td>{item?.order_no}</td>
+                            <td>$ {item?.net_amt}</td>
+                            <td>{item?.order_date}</td>
+                            <td>{item?.order_status}</td>
+                            {/* <td>
+                              <Link href={`/account/myorder/${item?.order_id}`}><u>Details</u></Link>
+                            </td> */}
+                          </tr>
+                          )
+                        })
+
+                        :
+
+                        <tr>
+                          <td colSpan={5}>No incomplete order found</td>
+
+                          </tr>
+
+                    
+                    }
+       
+       
+        </tbody>
+                    </Table>
+              </div>
+              </Tab>
               </Tabs>
             </div>
           </div>

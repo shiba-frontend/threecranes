@@ -52,13 +52,13 @@ useEffect(()=>{
             <div className='col-lg-4'>
                  
                 
-                    <img src={logo.src} alt="logo" className='footer-logo mb-3 w-100' />
+                    <img src={sitedata?.site_logo} alt="logo" className='footer-logo mb-3' />
                     <div className='footer-contact'>
                         <span>
                             <img src={call_icon.src} alt="call" />
                             </span>
                             <div className='footer-contact-right'>
-                                <label>Monday-Friday: 08am-9pm</label>
+                                <label>{sitedata?.timing}</label>
                                 <b><a href={`tel:${sitedata?.site_phone}`}>{sitedata?.site_phone}</a></b>
                             </div>
                     </div>
@@ -143,11 +143,15 @@ useEffect(()=>{
                             </div>
                         </div>
                     </div>
+                    <div className='map-view'>
+                         <div dangerouslySetInnerHTML={{__html:sitedata?.google_map_embed_code}} />
+                      
+                    </div>
                     </div>
               </div>
           
             <div className='copyright'>
-                <p>Copyright 2025 © ThreeCranesGallery. </p>
+                <p>© {new Date().getFullYear()} Three Cranes Gallery. ALL RIGHTS RESERVED</p>
                 <img src={card.src} alt="card" />
             </div>
         </div>

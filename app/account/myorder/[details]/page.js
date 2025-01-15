@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import Table from 'react-bootstrap/Table';
 import productIMg from '@/public/assets/image/banner_img.png'
 import Link from 'next/link';
-import { CancelOrder, GetOrderList, OrderDetails, PrintInvoice } from '@/utils/Apirequest';
+import { CancelOrder, GetcancelReason, GetOrderList, OrderDetails, PrintInvoice } from '@/utils/Apirequest';
 import Loader from '@/utils/Loader';
 import Sidebar from '../../Sidebar';
 import { useParams, useRouter } from 'next/navigation';
@@ -24,6 +24,7 @@ const Page = () => {
        const [reason, setreason] = useState('')
        const [description, setdescription] = useState('')
        const [show, setShow] = useState(false);
+       const [reasonList, setreasonList] = useState([])
     
 
           const handleClose = () => setShow(false);
@@ -44,11 +45,16 @@ const Page = () => {
          setloading(true)
                        
           let responsedata =  await OrderDetails(obj)
+          let response = await GetcancelReason()
         
           setloading(false)
         
           if(responsedata?.status){
             setdetailsdata(responsedata?.data)
+          }
+
+          if(response?.status){
+            setreasonList(response?.data)
           }
       }
 
@@ -247,10 +253,22 @@ const Page = () => {
         </Modal.Header>
         <Modal.Body>
         <div className='form-group mb-3'>
-          <input type='text' className='form-control' placeholder='Enter the reason'
+          <select className='form-control'
           value={reason}
           onChange={(e)=>setreason(e.target.value)}
-          />
+          >
+            <option>--Select Reason--</option>
+            {reasonList?.map((item, i)=>{
+              return (
+                <option key={i} value={item?.name}>{item?.name}</option>
+              )
+            })}
+          
+          </select>
+          {/* <input type='text' className='form-control' placeholder='Enter the reason'
+          value={reason}
+          onChange={(e)=>setreason(e.target.value)}
+          /> */}
         </div>
         <div className='form-group mb-3'>
           <textarea className='form-control' placeholder='Description'  value={description}

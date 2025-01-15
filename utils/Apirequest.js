@@ -415,6 +415,16 @@ export const Subscriber = async (body) =>{
 }
 
 
+export const GetcancelReason = async () =>{
+    try{
+
+        let response = await axios.get(`${_URL}cancel-order-reason`, {headers})
+
+        return response?.data
+
+    } catch(error){return error?.response}
+}
+
 
 
 

@@ -193,7 +193,9 @@ const Page = () => {
             </div> 
             </div>
             <div className='col-lg-12 mt-3'>
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3040.1269190941957!2d-74.95279242485319!3d40.36171005898758!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c3ff45ffbbf2e1%3A0x20f55118ce9228e2!2s82%20S%20Main%20St%2C%20New%20Hope%2C%20PA%2018938%2C%20USA!5e0!3m2!1sen!2sin!4v1736405304448!5m2!1sen!2sin" width="100%" height="300" allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
+            <div className='map-view'>
+            <div dangerouslySetInnerHTML={{__html:datareducer?.google_map_embed_code}} />
+            </div>
             </div>
             </div> 
         </div>

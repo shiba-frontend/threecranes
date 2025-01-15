@@ -357,7 +357,7 @@ export default function Page(){
           {loading && <Loader/>}
     <div className='container'>
        
-        <div className='breadcrames'>
+        <div className='breadcrames mb-5'>
             <ul>
                 <li>
                     <Link href="/" >Home </Link>
@@ -376,7 +376,12 @@ export default function Page(){
                 <li>
                     <b>{productinfo?.sub_category_name}</b>
                 </li>
-                
+                <li>
+                <img src={rightArrow.src} alt="icon" />
+                </li>
+                <li>
+                    <b>{productinfo?.name}</b>
+                </li>
             </ul>
         </div>
         <div className='row'>

@@ -420,7 +420,12 @@ let obj = {
                                   className="Price-currencySymbol">$ </span>{data?.tot_tax_amt}</bdi></span>
                       </div>
                    </div>
-                  
+                   <div className="cart-subtotal-list">
+                      <h2>Discount</h2>
+                      <div className="subtotal-price"><span className="Price-amount amount"><bdi><span
+                                  className="Price-currencySymbol">-$ </span>{data?.tot_disc_amt}</bdi></span>
+                      </div>
+                   </div>
                    <div className="cart-subtotal-list order-total">
                       <h2>Total</h2>
                       <div className="total-price"><strong><span className="amount"><bdi><span

@@ -1631,7 +1631,13 @@ ul.rating-list li label button {
   border-radius: 50%;
   object-fit: cover;
 }
-
+.map-view iframe {
+  width: 100%;
+  height: 250px;
+}
+.breadcrames ul li:last-child {
+  width: 70%;
+}
 
 
 

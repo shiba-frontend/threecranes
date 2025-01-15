@@ -102,9 +102,9 @@ const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) =
                             <Link href={`/product/${item?.id}`}>
                             <img src={item?.cover_image} />
                             </Link>
-                            {item?.price_percentage?.split('.')[0] > 0 && 
-                             <span className='discount-shape'>{item?.price_percentage?.split('.')[0]}%</span>
-                            }
+                        
+                             <span className='discount-shape'>{item?.discount_amount}%</span>
+                         
                                
                                 {item.product_qty <= 0 ?
                                 <div className='outofstock'>

@@ -12,10 +12,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AuthTokenAction, GetcartAction, GetMenuAction, GetWishlistAction, HeaderDropdown } from '@/redux/reducer/DataflowReducer'
 import { GetCart, GetParentCategory, GetProfile, GetWishlist, SearchSuggestion } from '@/utils/Apirequest'
 import { useRouter } from 'next/navigation'
-import fb_icon from '@/public/assets/image/fb_icon.png'
-import linkdin_icon from '@/public/assets/image/linkdin_icon.png'
-import instagram_icon from '@/public/assets/image/instagram_icon.png'
-import twitter_icon from '@/public/assets/image/twitter_icon.png'
+
 
 const Header = () => {
 
@@ -170,41 +167,23 @@ const handleKeyPress = (event) => {
     <div className='header'>
         <div className='top-header'>
             <div className='container'>
-                <div className='d-flex-header'>
                 <p>{cartreducer?.sitedata?.topbar_text}</p>
-                <ul className='social-footer'>
-                  <li>
-                      <a href={cartreducer?.sitedata?.facebook_profile} target='_blank' ><img src={fb_icon.src} alt="icon" /></a>
-                  </li>
-                  <li>
-                      <a href={cartreducer?.sitedata?.linkedin_profile} target='_blank' ><img src={linkdin_icon.src} alt="icon" /></a>
-                  </li>
-                  <li>
-                      <a href={cartreducer?.sitedata?.twitter_profile} target='_blank' ><img src={twitter_icon.src} alt="icon" /></a>
-                  </li>
-                  <li>
-                      <a href={cartreducer?.sitedata?.instagram_profile} target='_blank' ><img src={instagram_icon.src} alt="icon" /></a>
-                  </li>
-              </ul>
-                </div>
-                
             </div>
         </div>
         <div className='mid-header'>
             <div className='container'>
               <div className='row align-items-center'>
-                <div className='col-lg-3 col-12'>
+                <div className='col-lg-3 col-3'>
                   <div className='logo'>
                   <Link href="/">
                         <img src={cartreducer?.sitedata?.site_logo} alt='logo' className='logo' />
                   </Link>
-                  
+                  <h5>Threecranes Gallery</h5>
                   </div>
                  
 
                 </div>
-                <div className='col-lg-9 col-12'>
-                  <div className='search-box'>
+                <div className='col-lg-5 col-9'>
                     <div className='search-area'>
                       <input type='text' className='form-control' placeholder='Search for products, categories or brands...'
                        value={inputValue}
@@ -242,6 +221,8 @@ const handleKeyPress = (event) => {
                       }
                        
                     </div>
+                </div>
+                <div className='col-lg-4'>
                     <ul>
                       <li>
                       {datareducer != null ?
@@ -252,24 +233,17 @@ const handleKeyPress = (event) => {
                         <Link href="/login"> <img src={user_icon.src} alt='logo' /> <label> Login</label></Link>
                       }
                       </li>
-                      {datareducer != null ?
+                      {datareducer != null &&
                       <li>
                           <Link href="/account/wishlist"> <img src={heart_icon.src} alt='logo' /> <label>Wishlist</label> <span>{cartreducer?.wishlistItem?.length}</span></Link>
                       </li>
-                      :
-                      <li>
-                      <Link href="/login"> <img src={heart_icon.src} alt='logo' /> <label> Wishlist</label></Link>
-                      </li>
 }
- 
                       <li>
                           <Link href="/cart"> <img src={cart_icon.src} alt='logo' /> <label>Your Cart</label><span>{cartreducer
 ?.cartItem?.length}</span></Link>
                       </li>
                     </ul>
-                    </div>
-                </div>
-               
+                  </div>
               </div>
       
             </div>

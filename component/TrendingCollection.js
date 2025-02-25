@@ -42,14 +42,16 @@ const TrendingCollection = ({content, sendDataToParent, sendDataToParentWishlist
               settings: {
                 slidesToShow: 2,
                 slidesToScroll: 2,
-                initialSlide: 2
+                initialSlide: 2,
+                dots: false,
               }
             },
             {
               breakpoint: 480,
               settings: {
                 slidesToShow: 1,
-                slidesToScroll: 1
+                slidesToScroll: 1,
+                dots: false,
               }
             }
           ]
@@ -73,7 +75,7 @@ const TrendingCollection = ({content, sendDataToParent, sendDataToParentWishlist
 
 
   return (
-    <div className='product-sec'> 
+    <div className='product-sec tranding-collection'> 
     <div className='container'>
         <TitleStyle title={content?.sec4_title} sub={content?.sec4_description} />
 

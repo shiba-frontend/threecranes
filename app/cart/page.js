@@ -261,7 +261,7 @@ async function RemoveCouponHandle() {
                          <div className="cart-subtotal mb-2">
                             <div className="title">Subtotal</div>
                             <div data-title="Subtotal" className='text-end'><span className="amount"><bdi><span
-                                        className="Price-currencySymbol">$ </span>{cartinfo[0]?.tot_subtotal_amt}</bdi></span>
+                                        className="Price-currencySymbol">$ </span>{cartinfo[0]?.tot_total_amt}</bdi></span>
                             </div>
                          </div>
                          <div className="cart-subtotal mb-2">

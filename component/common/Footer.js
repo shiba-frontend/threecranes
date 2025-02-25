@@ -145,13 +145,14 @@ useEffect(()=>{
                     </div>
                     <div className='map-view'>
                          <div dangerouslySetInnerHTML={{__html:sitedata?.google_map_embed_code}} />
-                      
+                         
                     </div>
                     </div>
               </div>
           
             <div className='copyright'>
-                <p>© {new Date().getFullYear()} Three Cranes Gallery. ALL RIGHTS RESERVED</p>
+            <div dangerouslySetInnerHTML={{__html:sitedata?.footer_text}} />
+          
                 <img src={card.src} alt="card" />
             </div>
         </div>

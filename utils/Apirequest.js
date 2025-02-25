@@ -6,7 +6,7 @@ const storedToken = getToken();
 
 
 
-const _URL = "https://threecranes-dev.itiffyconsultants.com/api/"
+const _URL = "https://admin.threecranesgallery.com/api/"
 
 let headers= { 
     'Content-Type': 'application/json', 

@@ -140,16 +140,24 @@ ul, li{
   background: rgba(255,255,255,0.9);
   z-index: 9999;
 }
-
-
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.logo h5 {
+  margin: 0;
+  font-family: "Libre Baskerville", serif;
+  /* font-style: italic; */
+}
 .top-header {
-  background: #000;
+  background: #dfcdaf;
   padding: 10px 0;
 }
 .top-header p {
   margin: 0;
   font-size: 13px;
-  color: #fff;
+  color: #000;
 }
 .top-header p span{
   color: #FF5700;
@@ -182,6 +190,7 @@ ul, li{
 }
 .search-area {
   position: relative;
+  width: 41%;
 }
 .search-area button {
   position: absolute;
@@ -189,6 +198,12 @@ ul, li{
   right: 13px;
   background: transparent;
   border: none;
+}
+.search-box {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 37px;
 }
 .mid-header {
   padding: 20px 0;
@@ -208,8 +223,8 @@ ul, li{
   align-items: center;
 }
 .menu-header {
-  border-top: 1px solid #030712;
-  border-bottom: 1px solid #030712;
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
   padding: 15px 0;
 }
 .menu-header ul {
@@ -219,9 +234,17 @@ ul, li{
 }
 .menu-header ul li a {
   color: #030712;
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 14px;
+  font-weight: 400;
   display: block;
+}
+.product-sec.tranding-collection {
+  background: #dfcdaf;
+  padding: 30px 0 79px 0;
+  margin-top: 30px;
+}
+.product-sec.tranding-collection .product-img {
+  border: 1px solid #000000;
 }
 .banner h1 {
   font-size: 58px;
@@ -257,13 +280,15 @@ img.banner-img {
   width: 332px;
   max-width: 100%;
 }
+.bannerInfo {
+  background: #dfcdaf;
+}
 .bannerInfo ul {
   display: flex;
   justify-content: space-between;
   padding: 25px 0;
   flex-wrap: wrap;
   text-align: center;
-  border-bottom: 1px solid #000;
 }
 .bannerInfo ul h5 {
   color: #272727;
@@ -464,6 +489,8 @@ display: none;
 }
 .testimonial-sec {
   padding: 40px 0;
+  background: #dfcdaf;
+  margin-top: 30px;
 }
 .testimonial-sec .pageHeading{
   text-align: center;
@@ -533,7 +560,7 @@ display: none;
   justify-content: center;
 }
 .footer-sec {
-  background: #F3F4F6;
+  background: #dfcdaf;
   padding: 36px 0 0 0;
 }
 .footer-contact {
@@ -1617,7 +1644,7 @@ img.heartIcon {
   position: relative;
 }
 img.logo {
-  width: 86px;
+  width: 262px;
 }
 ul.rating-list li label button {
   border: none;
@@ -1638,10 +1665,20 @@ ul.rating-list li label button {
 .breadcrames ul li:last-child {
   width: 70%;
 }
-
-
-
-
+img.footer-logo {
+  width: 200px !important;
+}
+.copyright p a {
+  text-decoration: underline;
+}
+.d-flex-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.d-flex-header ul.social-footer li img {
+  width: 28px;
+}
 
 
 
@@ -1674,13 +1711,55 @@ img.banner-img {
   font-size: 15px;
 }
 .menu-header ul {
-  gap: 15px;
+  gap: 11px;
 }
 .menu-header ul li a {
-  font-size: 14px;
+  font-size: 12px;
 }
 .search-area {
   position: relative;
+  margin-bottom: 0px;
+  width: 55%;
+}
+.search-area button {
+ display: none;
+}
+.product-info a {
+  min-height: auto;
+}
+.product-img img {
+  display: block;
+}
+.breadcrames ul li a {
+  color: #9CA3AF;
+  font-size: 12px;
+}
+.breadcrames ul li b {
+  font-size: 12px;
+}
+.breadcrames ul li {
+  line-height: 1.1;
+}
+.product-details h2 {
+  font-size: 15px;
+}
+.cart-details-list .cart-collaterals {
+  margin-top: 20px;
+}
+.add-d-flex {
+  flex-direction: column;
+}
+.product-category-listing .panel {
   margin-bottom: 20px;
+}
+img.footer-logo {
+  width: 200px !important;
+}
+.copyright {
+
+  flex-direction: column-reverse;
+}
+.banner {
+  padding: 50px 0 26px 0;
 }
 }

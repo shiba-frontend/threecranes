@@ -5,12 +5,12 @@ import { getToken } from '@/utils/getToken';
 const storedToken = getToken();
 
 console.log("localstorage", storedToken)
-const URL = "https://threecranes-dev.itiffyconsultants.com/api/"
+const URL = "https://admin.threecranesgallery.com/api/"
 
 export default axios.create({
     baseURL:URL,
     headers: { 
-        'Content-Type': 'application/json', 
+        'Content-Type': 'multipart/form-data', 
         'Authorization': 'Bearer '+storedToken,
         'Key':'13ae7b7d7ba75ac286656a7a274905ca',
         'source': 'WEB',

@@ -25,11 +25,13 @@ const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) =
 
     var settings = {
         dots: true,
-        infinite: true,
+        infinite: false,
         speed: 500,
         slidesToShow: 4,
         slidesToScroll: 1,
         initialSlide: 4,
+        centerMode: false,
+        initialSlide: 0,
         responsive: [
           
             {
@@ -37,7 +39,7 @@ const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) =
                 settings: {
                   slidesToShow: 2,
                   slidesToScroll: 2,
-                  initialSlide: 2
+
                 }
               },
             {
@@ -45,7 +47,6 @@ const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) =
               settings: {
                 slidesToShow: 2,
                 slidesToScroll: 2,
-                initialSlide: 2,
                 dots: false,
               }
             },

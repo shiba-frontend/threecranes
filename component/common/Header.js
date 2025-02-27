@@ -185,7 +185,19 @@ const handleKeyPress = (event) => {
                   <li>
                       <a href={cartreducer?.sitedata?.instagram_profile} target='_blank' ><img src={instagram_icon.src} alt="icon" /></a>
                   </li>
+                  <li>
+                  {datareducer != null ?
+                          <Link href="/account/dashboard">Dashboard </Link>
+                        :
+                        <Link href="/login">
+                        Sign up/Login
+                  </Link>
+                      }
+                 
+                  </li>
+                 
               </ul>
+
                 </div>
                 
             </div>
@@ -292,7 +304,7 @@ const handleKeyPress = (event) => {
                           <Link href="/product">All Products</Link>
                       </li>
                       <li>
-                          <Link href="/faq">Faq</Link>
+                          <Link href="/faq">FAQs</Link>
                       </li>
                       <li>
                           <Link href="/contact-us">Contact</Link>

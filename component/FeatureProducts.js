@@ -26,7 +26,6 @@ const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
         speed: 500,
         slidesToShow: 4,
         slidesToScroll: 1,
-        initialSlide: 4,
         responsive: [
           
             {
@@ -34,7 +33,7 @@ const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
                 settings: {
                   slidesToShow: 2,
                   slidesToScroll: 2,
-                  initialSlide: 2
+             
                 }
               },
             {
@@ -42,7 +41,7 @@ const FeatureProducts = ({content, sendDataToParent, sendDataToParentWishlist}) 
               settings: {
                 slidesToShow: 2,
                 slidesToScroll: 2,
-                initialSlide: 2,
+         
                 dots: false,
               }
             },

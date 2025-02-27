@@ -81,20 +81,24 @@
   font-weight: normal;
   font-family: 'Karla';
   font-display: swap;
-  src: url('../public/fonts/karla-v15-latin-regular.woff2') format('woff2'),
+  src: url('https://static.freepeople.com/static/v3/fonts/karla-v15-latin-regular.woff2') format('woff2'),
+       url('https://static.freepeople.com/static/v3/fonts/karla-v15-latin-regular.ttf') format('truetype');
 }
 
 @font-face {
   font-weight: 700;
   font-family: 'Karla';
   font-display: swap;
-  src: url('../public/fonts/karla-v15-latin-700.woff2') format('woff2'),
+  src: url('https://static.freepeople.com/static/v3/fonts/karla-v15-latin-700.woff2') format('woff2'),
+       url('https://static.freepeople.com/static/v3/fonts/karla-v15-latin-700.ttf') format('truetype');
 }
 
 @font-face {
   font-family: 'Brewery';
   font-display: swap;
-  src: url('../public/fonts/Brewery.woff2') format('woff2'),
+  src: url('https://static.freepeople.com/static/v3/fonts/Brewery.woff2') format('woff2'),
+       url('https://static.freepeople.com/static/v3/fonts/BreweryStd-Regular.woff') format('woff'),
+       url('https://static.freepeople.com/static/v3/fonts/BreweryStd-Regular.ttf') format('truetype');
 }
 
 
@@ -106,11 +110,9 @@
 
 html,
 body {
-  font-family: 'Brewery' !important;
+  font-family: "Inter", sans-serif !important;
 }
-p {
-  font-family: 'Karla';
-}
+
 body {
   /* color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -203,7 +205,6 @@ ul, li{
   font-weight: 500;
   line-height: 1;
   pointer-events: none;
-  font-family: 'Karla';
 }
 .search-area .form-control {
   background: #F3F4F6;
@@ -261,7 +262,6 @@ ul, li{
   font-size: 14px;
   font-weight: 400;
   display: block;
-  font-family: 'Karla';
 }
 .product-sec.tranding-collection {
   background: #dfcdaf;
@@ -279,7 +279,6 @@ ul, li{
 }
 .banner p {
   font-size: 18px;
-  font-family: 'Karla';
 }
 .themeBtn {
   background: #0E0E0E;
@@ -327,7 +326,6 @@ img.banner-img {
   margin: 0;
   color: #272727;
   font-size: 16px;
-  font-family: 'Karla';
 }
 .bannerInfo ul li {
   flex: 1;
@@ -341,6 +339,7 @@ img.banner-img {
   padding: 50px 0;
 }
 .pageHeading h2 {
+  font-family: "Libre Baskerville", serif;
   color: #272727;
   font-size: 56px;
   font-weight: 700;
@@ -348,6 +347,7 @@ img.banner-img {
 .pageHeading h2 sub {
   color: #323232;
   font-size: 20px;
+  font-family: "Inter", sans-serif !important;
   font-weight: 400;
 }
 .pageHeading {
@@ -457,7 +457,6 @@ img.banner-img {
   color: #323232 !important;
   font-size: 13px !important;
   width: 63%;
-  font-family: 'Karla';
 }
 .product-info-t ul {
   display: flex;
@@ -470,14 +469,12 @@ img.banner-img {
   margin: 0 0 8px 0;
   display: block;
   min-height: 48px;
-  font-family: 'Karla';
 }
 .product-info h5 {
   margin: 0;
   color: #74CA4D;
   font-size: 13px;
   font-weight: 600;
-  font-family: 'Karla';
 }
 .product-info h5 span {
   margin: 0;
@@ -602,12 +599,10 @@ display: none;
   display: block;
   color: #111827;
   font-size: 18px;
-  font-family: 'Karla';
 }
 .footer-contact b {
   color: #111827;
   font-size: 20px;
-  font-family: 'Karla';
 }
 ul.social-footer {
   display: flex;
@@ -618,14 +613,12 @@ ul.social-footer {
   font-size: 20px;
   font-weight: 700;
   margin: 0 0 15px 0;
-  font-family: 'Karla';
 }
 .footer-widget ul li a {
   color: #606060;
   font-size: 16px;
   display: block;
   padding: 0 0 12px 0;
-  font-family: 'Karla';
 }
 .copyright {
   display: flex;
@@ -638,7 +631,6 @@ ul.social-footer {
 .copyright p {
   margin: 0;
   color: #6B7280;
-  font-family: 'Karla';
 }
 .breadcrames ul {
   display: flex;
@@ -746,7 +738,6 @@ ul.rating-list li span {
 .product-details p {
   color: #4B5563;
   font-size: 16px;
-  font-family: 'Karla';
 }
 .product-details h5 {
   color: #DC2626;

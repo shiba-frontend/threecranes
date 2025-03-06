@@ -39,14 +39,16 @@ const getData = async () =>{
 }
 
 useEffect(()=>{
+
     getData() 
+  
 },[])
 
 
 
   return (
-    <div className='footer-sec'>
-            {loading && <Loader/>}
+    <div className='footer-sec' id="Footer">
+            {/* {loading && <Loader/>} */}
         <div className='container'>
             <div className='row'>
             <div className='col-lg-4'>

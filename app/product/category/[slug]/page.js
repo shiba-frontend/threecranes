@@ -1,7 +1,7 @@
 "use client"
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { IMAGE } from '@/utils/Theme'
 import Accordion from 'react-bootstrap/Accordion';
 import { Button, Card } from 'react-bootstrap'
@@ -19,6 +19,23 @@ import { useDispatch, useSelector } from 'react-redux'
 import cart_icon from '@/public/assets/image/cart_icon.png'
 import MultiRangeSlider from "multi-range-slider-react";
 import heartsolid from '@/public/assets/image/heart.png'
+import Image from 'next/image'
+import ribon from '@/public/assets/image/ribon.png'
+
+
+const useDebouncedEffect = (effect, deps, delay) => {
+    const callback = useCallback(effect, deps);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            callback();
+        }, delay);
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [callback, delay]);
+};
 
 export default function Page() {
     const {slug} = useParams()
@@ -31,25 +48,22 @@ export default function Page() {
     const [maxrange, setmaxrange] = useState(null)
     const [selectArr, setselectArr] = useState([])
     const datareducer = useSelector((state) => state.Dataflowreducer)
+    const [ploading, setpLoading] = useState(false); 
+    const [page, setPage] = useState(1); 
+    const [Totalproduct, setTotalproduct] = useState(1); 
+
+    
+
 
     const router = useRouter();
     let dispatch = useDispatch()
 
-    useEffect(()=>{
-      
-      
-          GetApiRequest()
 
-          if(datareducer?.isToggle){
-             dispatch(HeaderDropdown(false))
-          }
-
-
-    }, [])
 
     const GetApiRequest = async () =>{
         let payload = {
-            "parent_id": slug
+            "parent_id": slug,
+            "page_no":page
         }
 
         setloading(true)
@@ -67,7 +81,8 @@ export default function Page() {
             });
 
             setsubcategory(TempArr)
-            setproductList(responsedata?.data?.product_list)
+            setTotalproduct(responsedata?.data?.total_product_count)
+           //setproductList(responsedata?.data?.product_list)
             setproinfo(responsedata?.data?.parent_category_name)
             setminrange(responsedata?.data?.min_price)
             setmaxrange(responsedata?.data?.max_price)
@@ -205,12 +220,116 @@ export default function Page() {
         GetApiRequest()
     }
     function truncateText(text, wordCount) {
-        const words = text.split(" "); 
-        if (words.length > wordCount) {
-          return words.slice(0, wordCount).join(" ") + "..."; 
+        const words = text?.split(" "); 
+        if (words?.length > wordCount) {
+          return words?.slice(0, wordCount).join(" ") + "..."; 
         }
         return text; 
       }
+
+    //   const fetchProducts = async (pages) => {
+    //     setpLoading(true);
+    //     // Simulate an API call with setTimeout
+    //     setTimeout( async () => {
+
+    //         let payload = {
+    //             "parent_id": slug,
+    //             "page_no":pages
+    //         }
+    //         let responsedata =  await GetParentCategoryWiseProduct(payload)
+
+    //        console.log("responsedata")
+        
+    //         //setproductList((prevProducts) => [...prevProducts]);
+    //       //setproductList((prevProducts) => [responsedata?.data?.product_list]);
+    //       setpLoading(false);
+    //     }, 1000); // Simulate a delay of 1 second   
+    //   };
+
+
+    //   const handleScroll = () => {
+    //     const scrollPosition = window.innerHeight + document.documentElement.scrollTop;
+    //     const bottomPosition = document.documentElement.offsetHeight -500;
+
+    //     console.log("bottomPosition", bottomPosition)
+    //     console.log("scrollPosition", scrollPosition)
+        
+    //     // Check if we reached the bottom of the page
+    //     if (scrollPosition === bottomPosition && !ploading) {
+    //       setPage((prevPage) => {
+    //         const nextPage = prevPage + 1;
+    //         fetchProducts(nextPage);
+    //         return nextPage;
+    //       });
+    //     }
+    //   };
+
+    //   useEffect(() => {
+      
+    //     fetchProducts(page); 
+    //     window.addEventListener('scroll', handleScroll);
+     
+    //     return () => {
+    //       window.removeEventListener('scroll', handleScroll);
+    //     };
+    //   }, [page]);
+
+    
+const fetchProducts = async (pages, setProductList, setpLoading) => {
+    setpLoading(true);
+    // Simulate an API call with setTimeout
+    setTimeout(async () => {
+        let payload = {
+            "parent_id": slug,
+            "page_no": pages
+        }
+        let responsedata = await GetParentCategoryWiseProduct(payload);
+
+        console.log("responsedata");
+
+        // Uncomment this line to update the product list
+         setProductList((prevProducts) => [...prevProducts, ...responsedata?.data?.product_list]);
+        
+        setpLoading(false);
+    }, 1000); // Simulate a delay of 1 second
+};
+
+    const handleScroll = () => {
+
+          // Get the current scroll position and the document height
+    const scrollPosition = window.innerHeight + document.documentElement.scrollTop;
+    const documentHeight = document.documentElement.scrollHeight;
+    
+    // If the user is within 200px of the bottom of the page, load more products
+    // if (scrollPosition + 400 >= documentHeight && !ploading) {
+    //     setPage((prevPage) => prevPage + 1)
+    // }
+
+        const bottom = Math.ceil(window.innerHeight + document.documentElement.scrollTop) >= document.documentElement.scrollHeight;
+        if (bottom && !ploading) {
+            setPage((prevPage) => prevPage + 1)
+        }
+        
+        // if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
+        // setPage((prevPage) => prevPage + 1);
+       
+     
+    };
+
+    useDebouncedEffect(() => {
+        if(Totalproduct > productList?.length)
+        fetchProducts(page, setproductList, setpLoading);
+    }, [page], 500);
+
+    useEffect(() => {
+        GetApiRequest()
+        window.addEventListener('scroll', handleScroll);
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
 
   return (
     <div className='inner-sec py-3'>
@@ -314,10 +433,25 @@ export default function Page() {
                         <div className='product-box' key={index}>
                             <div className='product-img'>
                             <Link href={`/product/${item?.id}`}>
-                            <img src={item?.cover_image} />
+                            <Image 
+                                src={item?.cover_image}
+                                alt={item?.name}
+                                width={200} 
+                                height={300}
+                                loading="lazy"
+                                placeholder="blur"
+                                blurDataURL="data:..."
+                            />
                             </Link>
+
+                            {item?.price_percentage == 'PERCENTAGE' && 
+                                   <div className='ribbon'>
+                                                                 <img src={ribon.src} />
+                                                                 <span className='discount-shape'>{item?.discount_amount}% <br></br> <sub>Off</sub></span>
+                                                                 </div>
+                            }
                         
-                             <span className='discount-shape'>{item?.discount_amount}%</span>
+                      
                             
                                 {item.product_qty <= 0 ?
 
@@ -387,7 +521,11 @@ Out of stock
                                 </ul>
                             </div>
                             <Link href={`/product/${item?.id}`}> {truncateText(item?.name, 5)}</Link>
-                                    <h5>${item?.base_price} <span>₹ {item?.markup_price}</span></h5>
+                            {item?.price_percentage == 'PERCENTAGE' ?  <h5>${item?.base_price} <span>₹ {item?.markup_price}</span></h5> :
+                            
+                            <h5>${item?.base_price} </h5>
+                            }
+                                   
                             </div>
                         </div>
                         </div>
@@ -397,6 +535,7 @@ Out of stock
                     :
                     <h4>No Product Found</h4>
 }
+{ploading && <h5 style={{textAlign:'center', fontWeight:'bold'}}>Loading more products...</h5>}
                 </div>
             </div>
         </div>

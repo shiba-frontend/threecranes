@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from '@/utils/Loader';
 import cart_icon from '@/public/assets/image/cart_icon.png'
 import { useRouter } from 'next/navigation';
-
+import ribon from '@/public/assets/image/ribon.png'
 
 const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) => {
 
@@ -32,6 +32,7 @@ const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) =
         initialSlide: 4,
         centerMode: false,
         initialSlide: 0,
+        centerPadding:'50px',
         responsive: [
           
             {
@@ -106,7 +107,12 @@ const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) =
                             <img src={item?.cover_image} />
                             </Link>
                         
-                             <span className='discount-shape'>{item?.discount_amount}%</span>
+                            {item?.price_percentage == 'PERCENTAGE' && 
+                                  <div className='ribbon'>
+                                                                 <img src={ribon.src} />
+                                                                 <span className='discount-shape'>{item?.discount_amount}% <br></br> <sub>Off</sub></span>
+                                                                 </div>
+                            }
                          
                                
                                 {item.product_qty <= 0 ?
@@ -175,7 +181,10 @@ const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) =
                                 </ul>
                             </div>
                                     <Link href={`/product/${item?.id}`}>  {truncateText(item?.name, 5)  }</Link>
-                                    <h5>${item?.base_price} <span>₹ {item?.markup_price}</span></h5>
+                                    {item?.price_percentage == 'PERCENTAGE' ?  <h5>${item?.base_price} <span>₹ {item?.markup_price}</span></h5> :
+                            
+                            <h5>${item?.base_price} </h5>
+                            }
                             </div>
                         </div>
                     )

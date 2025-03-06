@@ -1,7 +1,7 @@
 "use client"
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useTransition } from 'react'
 import { IMAGE } from '@/utils/Theme'
 import Accordion from 'react-bootstrap/Accordion';
 import { Button, Card } from 'react-bootstrap'
@@ -12,6 +12,7 @@ import bag from '@/public/assets/image/bag_icon.png'
 import star_fill from '@/public/assets/image/start_fill.png'
 import star_default from '@/public/assets/image/star_default.png'
 import grid_icon from '@/public/assets/image/grid_icon.png'
+import ribon from '@/public/assets/image/ribon.png'
 
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '@/utils/Loader'
@@ -19,6 +20,7 @@ import { AddCart, AddWishlist, AllProducts, AllProductsFilter, FilterProduct, Ge
 import { GetcartAction, GetWishlistAction, HeaderDropdown } from '@/redux/reducer/DataflowReducer'
 import { toast } from 'react-toastify'
 import cart_icon from '@/public/assets/image/cart_icon.png'
+import Image from 'next/image';
 
 export default function Page() {
 
@@ -30,6 +32,7 @@ export default function Page() {
     const [maxrange, setmaxrange] = useState(null)
     const [selectArr, setselectArr] = useState([])
     const datareducer = useSelector((state) => state.Dataflowreducer)
+    const [isPending, startTransition] = useTransition();
   
 
     let dispatch = useDispatch()
@@ -45,37 +48,51 @@ export default function Page() {
     const GetApiRequest = async () =>{
       
 
-        setloading(true)
-        let responsedata =  await AllProducts()
-        setloading(false)
-        if(responsedata?.response_code == 200){
 
-            var TempArr = []
+        startTransition(async function () {
 
-            responsedata?.data?.filter_bar?.forEach(element => {
-                var childcategory = []
+            let responsedata =  await AllProducts()
+      
+            startTransition(() => {
+      
+                if(responsedata?.response_code == 200){
 
-                element?.child_category.forEach(elem =>{
-                    childcategory.push({
-                        ...elem,
-                        istoggle:false 
-                     })
-                })
-
-             
-
-                TempArr.push({
-                   ...element,
-                   childcategory
-                })
+                    var TempArr = []
+        
+                    responsedata?.data?.filter_bar?.forEach(element => {
+                        var childcategory = []
+        
+                        element?.child_category.forEach(elem =>{
+                            childcategory.push({
+                                ...elem,
+                                istoggle:false 
+                             })
+                        })
+        
+                     
+        
+                        TempArr.push({
+                           ...element,
+                           childcategory
+                        })
+                    });
+        
+                    setsubcategory(TempArr)
+                    setproductList(responsedata?.data?.product_list)
+                    setproinfo(responsedata?.data?.parent_category_name)
+                    setminrange(responsedata?.data?.min_price)
+                    setmaxrange(responsedata?.data?.max_price)
+                }
+      
             });
+      
+          });
 
-            setsubcategory(TempArr)
-            setproductList(responsedata?.data?.product_list)
-            setproinfo(responsedata?.data?.parent_category_name)
-            setminrange(responsedata?.data?.min_price)
-            setmaxrange(responsedata?.data?.max_price)
-        }
+
+       // setloading(true)
+       
+       // setloading(false)
+        
        
       }
 
@@ -206,7 +223,7 @@ export default function Page() {
 
   return (
     <div className='inner-sec py-3'>
-         {loading && <Loader/>}
+         {isPending && <Loader/>}
         <div className='container'>
             <div className='breadcrames'>
                 <ul>
@@ -276,10 +293,25 @@ export default function Page() {
                         <div className='product-box' key={index}>
                             <div className='product-img'>
                             <Link href={`/product/${item?.id}`}>
-                            <img src={item?.cover_image} />
+                            <Image 
+                                src={item?.cover_image}
+                                alt={item?.name}
+                                width={200} 
+                                height={300}
+                                loading="lazy"
+                                placeholder="blur"
+                                blurDataURL="data:..."
+                            />
+                           
                             </Link>
                           
-                             <span className='discount-shape'>{item?.discount_amount}%</span>
+                            {item?.price_percentage == 'PERCENTAGE' && 
+                            <div className='ribbon'>
+                                <img src={ribon.src} />
+                                <span className='discount-shape'>{item?.discount_amount}% <br></br> <sub>Off</sub></span>
+                                </div>
+                                   
+                            }
                             
                                 {item.product_qty <= 0 ?
 
@@ -340,7 +372,10 @@ Out of stock
                                 </ul>
                             </div>
                             <Link href={`/product/${item?.id}`}> {truncateText(item?.name, 5)}</Link>
-                                    <h5>${item?.base_price} <span>₹ {item?.markup_price}</span></h5>
+                            {item?.price_percentage == 'PERCENTAGE' ?  <h5>${item?.base_price} <span>₹ {item?.markup_price}</span></h5> :
+                            
+                            <h5>${item?.base_price} </h5>
+                            }
                             </div>
                         </div>
                         </div>

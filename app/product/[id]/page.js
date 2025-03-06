@@ -432,7 +432,11 @@ export default function Page(){
                     </ul>
                     <div dangerouslySetInnerHTML={{__html: productinfo?.short_description}} />
                     {/* <p>{productinfo?.short_description}</p> */}
-                        <h5>$ {productinfo?.base_price} <span>$ {productinfo?.markup_price}</span></h5>
+                    {productinfo?.price_percentage == 'PERCENTAGE' ?  <h5>${productinfo?.base_price} <span>₹ {productinfo?.markup_price}</span></h5> :
+                            
+                            <h5>${productinfo?.base_price} </h5>
+                            }
+                   
 
                 <ul className='product-varient'>
                     {variation?.length > 0 &&

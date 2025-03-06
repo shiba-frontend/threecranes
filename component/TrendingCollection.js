@@ -12,7 +12,7 @@ import cart_icon from '@/public/assets/image/cart_icon.png'
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import heartsolid from '@/public/assets/image/heart.png'
-
+import ribon from '@/public/assets/image/ribon.png'
 
 const TrendingCollection = ({content, sendDataToParent, sendDataToParentWishlist}) => {
 
@@ -91,7 +91,12 @@ var rate = Number(item?.rating)
                             <img src={item?.cover_image} />
                             </Link>
                           
-                             <span className='discount-shape'>{item?.discount_amount}%</span>
+                            {item?.price_percentage == 'PERCENTAGE' && 
+                                <div className='ribbon'>
+                                                               <img src={ribon.src} />
+                                                               <span className='discount-shape'>{item?.discount_amount}% <br></br> <sub>Off</sub></span>
+                                                               </div>
+                            }
                         
                             {item.product_qty <= 0 ?
                                 <div className='outofstock'>
@@ -162,7 +167,10 @@ var rate = Number(item?.rating)
                             </ul>
                         </div>
                                 <Link href={`/product/${item?.id}`}> {truncateText(item?.name, 5)  }</Link>
-                                <h5>${item?.base_price} <span>₹ {item?.markup_price}</span></h5>
+                                {item?.price_percentage == 'PERCENTAGE' ?  <h5>${item?.base_price} <span>₹ {item?.markup_price}</span></h5> :
+                            
+                            <h5>${item?.base_price} </h5>
+                            }
                         </div>
                     </div>
                 )

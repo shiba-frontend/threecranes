@@ -7,7 +7,7 @@ import TrendingCollection from "@/component/TrendingCollection";
 import FeatureProducts from "@/component/FeatureProducts";
 import Testimonial from "@/component/home/Testimonial";
 import NewsLetter from "@/component/home/NewsLetter";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { AddCart, AddWishlist, GetCart, GetHome, GetWishlist } from "@/utils/Apirequest";
 import Loader from "@/utils/Loader";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +18,7 @@ export default function Home() {
 
   const [homedata, sethomedata] = useState('')
   const [loading, setloading] = useState(false)
+      const [isPending, startTransition] = useTransition();
   const datareducer = useSelector((state) => state.Dataflowreducer)
   let dispatch = useDispatch()
 
@@ -32,13 +33,25 @@ export default function Home() {
   },[])
 
   const GetApiRequest = async () =>{
-    setloading(true)
-    let responsedata =  await GetHome()
-    setloading(false)
-    if(responsedata?.response_code == 200){
-      sethomedata(responsedata?.data)
 
-    }
+
+ startTransition(async function () {
+
+  let responsedata =  await GetHome()
+      
+            startTransition(() => {
+      
+              if(responsedata?.response_code == 200){
+                sethomedata(responsedata?.data)
+          
+              }
+      
+            });
+      
+          });
+
+
+  
    
   }
 
@@ -97,7 +110,7 @@ async function AddWishList(item) {
 
   return (
     <div className="home">
-        {loading && <Loader/>}
+        {isPending && <Loader/>}
         <Banner content={homedata?.section1} />
         <BannerInfo content={homedata?.section2} />
         <ArrivalProduct content={homedata?.section3} sendDataToParent={AddCartHandle} sendDataToParentWishlist={AddWishList}  />

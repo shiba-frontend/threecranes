@@ -107,12 +107,12 @@ const ArrivalProduct = ({content, sendDataToParent, sendDataToParentWishlist}) =
                             <img src={item?.cover_image} />
                             </Link>
                         
-                            {item?.price_percentage == 'PERCENTAGE' && 
+                            {/* {item?.price_percentage == 'PERCENTAGE' && 
                                   <div className='ribbon'>
                                                                  <img src={ribon.src} />
                                                                  <span className='discount-shape'>{item?.discount_amount}% <br></br> <sub>Off</sub></span>
                                                                  </div>
-                            }
+                            } */}
                          
                                
                                 {item.product_qty <= 0 ?
